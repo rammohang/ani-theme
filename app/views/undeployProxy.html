@@ -1,0 +1,35 @@
+<div data-ng-include="'views/navbar.html'"></div>
+<div>
+UndeployProxy 
+<form>
+	 <!--  ROW BEGIN -->
+	<div class="row">
+		<!--  column1 -->
+		<div class="col-md-4">
+			
+
+		</div>
+		<!--  column1 END -->
+		<!--  column2 -->
+		<div class="col-md-4">
+			
+				<div class="form-group">
+	    			<label for="proxyName">Proxy Name</label>
+	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+	    			<input type="text" ng-model="apiProxyName" class="form-control" id="apiProxyName" placeholder="Enter Proxy Name">
+	    			<input type="text" ng-model="environment" class="form-control" id="environment" placeholder="Enter Environment">
+	    			<input type="text" ng-model="revision" class="form-control" id="revision" placeholder="Enter Revision">
+  				</div>
+				<button class="btn btn-default" ng-click="undeployProxy('mraviteja48@gmail.com','ravi548$',organization, apiProxyName, environment, revision)">UnDeploy</button>
+		
+		</div>
+		<!--  column2 END -->
+
+		<!--  column3 -->
+		<div class="col-md-4"></div>
+		<!--  column3 END-->
+	</div>
+	<!--  ROW END -->
+		</form>
+</div>
+<div data-ng-include="'views/footer.html'"></div>

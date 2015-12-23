@@ -1,0 +1,33 @@
+<div data-ng-include="'views/navbar.html'"></div>
+<div>
+Delete API Proxy
+<form>
+	 <!--  ROW BEGIN -->
+	<div class="row">
+		<!--  column1 -->
+		<div class="col-md-4">
+			
+
+		</div>
+		<!--  column1 END -->
+		<!--  column2 -->
+		<div class="col-md-4">
+			
+				<div class="form-group">
+	    			<label for="proxyName">Proxy Name</label>
+	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+	    			<input type="text" ng-model="apiProxyName" class="form-control" id="apiProxyName" placeholder="Enter Proxy Name">
+  				</div>
+				<button class="btn btn-default" ng-click="deleteApiProxy('mraviteja48@gmail.com','ravi548$',organization, apiProxyName)">Delete API Proxy</button>
+		
+		</div>
+		<!--  column2 END -->
+
+		<!--  column3 -->
+		<div class="col-md-4"></div>
+		<!--  column3 END-->
+	</div>
+	<!--  ROW END -->
+		</form>
+</div>
+<div data-ng-include="'views/footer.html'"></div>
