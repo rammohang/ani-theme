@@ -14,7 +14,6 @@ var app = angular
     'ngAnimate'
   ]);
 
-
 app.config(function($routeProvider) {
     $routeProvider.
     
@@ -47,4 +46,9 @@ app.config(function($routeProvider) {
     otherwise({
         redirectTo: '/login'
     });
+});
+
+// declare global constants here
+app.run(function ($rootScope) {
+    $rootScope.baseUrl = "http://localhost://8080/apigee_rest/services/";
 });

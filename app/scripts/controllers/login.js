@@ -15,7 +15,9 @@ app.controller('LoginCtrl', function($scope, $location, $rootScope) {
 		$rootScope.password = $scope.password;
 		
 		// write authentication api call here.
-		$userLoggedIn = true; // this should be set to true, if authentication is successful 
+		$scope.userLoggedIn = true; // this should be set to true, if authentication is successful 
+		
+		// use $rootScope.baseUrl as prefix all the api calls
 		
 		// redirect to dashboard upon successful authentication.
 		$location.path('/dashboard');
