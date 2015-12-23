@@ -8,43 +8,43 @@
  *
  * Main module of the application.
  */
-angular
+var app = angular
   .module('yapp', [
-    'ui.router',
+    'ngRoute',
     'ngAnimate'
-  ])
-  .config(function($stateProvider, $urlRouterProvider) {
+  ]);
 
-    $urlRouterProvider.when('/dashboard', '/dashboard/overview');
-    $urlRouterProvider.otherwise('/login');
 
-    $stateProvider
-      .state('base', {
-        abstract: true,
-        url: '',
-        templateUrl: 'views/base.html'
-      })
-        .state('login', {
-          url: '/login',
-          parent: 'base',
-          templateUrl: 'views/login.html',
-          controller: 'LoginCtrl'
-        })
-        .state('dashboard', {
-          url: '/dashboard',
-          parent: 'base',
-          templateUrl: 'views/dashboard.html',
-          controller: 'DashboardCtrl'
-        })
-          .state('overview', {
-            url: '/overview',
-            parent: 'dashboard',
-            templateUrl: 'views/dashboard/overview.html'
-          })
-          .state('reports', {
-            url: '/reports',
-            parent: 'dashboard',
-            templateUrl: 'views/dashboard/reports.html'
-          });
-
-  });
+app.config(function($routeProvider) {
+    $routeProvider.
+    
+    when('/login', {
+        templateUrl: 'views/login.html',
+        controller: 'LoginCtrl'
+       
+    }).
+    when('/dashboard', {
+        templateUrl: 'views/dashboard.html',
+        controller: 'DashboardCtrl'
+       
+    }).
+    when('/restoreOrg', {
+        templateUrl: 'views/restoreOrg.html',
+        controller: 'restoreOrgController'
+       
+    }).
+    when('/deleteProxy', {
+        templateUrl: 'views/deleteProxy.html',
+        controller: 'delteProxyController'
+       
+    }).  
+    when('/undeployProxy', {
+        templateUrl: 'views/undeployProxy.html',
+        controller: 'undeployProxyController'
+       
+    }).
+    
+    otherwise({
+        redirectTo: '/login'
+    });
+});

@@ -8,8 +8,6 @@
  * Controller of yapp
  */
 angular.module('yapp')
-  .controller('DashboardCtrl', function($scope, $state) {
-
-    $scope.$state = $state;
-
+  .controller('DashboardCtrl', function($scope, $location) {
+	 
   });

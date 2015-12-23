@@ -1,24 +1,100 @@
-<div class="dashboard-page">
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-sm-3 col-md-2 sidebar">
+<!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">APIGEE DevOps</a>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+              <li class="active1 dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Org  <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#/backUpOrg">BackUp</a></li>
+                  <li><a href="#/cleanOrg">Clean</a></li>
+                  <li><a href="#/restoreOrg">Restore</a></li>
+                 
+                </ul>
+			  </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">API Proxies <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                   <li><a href="#">BackUp</a></li>
+                  <li><a href="#">Clean</a></li>
+                  <li><a href="#">Restore</a></li>
+                 
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Resources <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                   <li><a href="#">BackUp</a></li>
+                  <li><a href="#">Clean</a></li>
+                  <li><a href="#">Restore</a></li>
+                 
+                </ul>
+              </li>
+			  <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Apps <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                   <li><a href="#">BackUp</a></li>
+                  <li><a href="#">Clean</a></li>
+                  <li><a href="#">Restore</a></li>
+                 
+                </ul>
+              </li>			 
+			 <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> API Products <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                   <li><a href="#">BackUp</a></li>
+                  <li><a href="#">Clean</a></li>
+                  <li><a href="#">Restore</a></li>
+                 
+                </ul>
+              </li>	
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">APP Developers <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                   <li><a href="#">BackUp</a></li>
+                  <li><a href="#">Clean</a></li>
+                  <li><a href="#">Restore</a></li>
+                 
+                </ul>
+              </li>
+           		<li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">APIS <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                   <li><a href="#/deleteProxy">Delete Proxy</a></li>
+                  <li><a href="#/undeployProxy">Undeploy Proxy</a></li>
+                  <li><a href="#/deleteProxy">Deploy Proxy</a></li>
+                  <li><a href="#/deleteProxy">Delete Revision</a></li>
+                 
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+              <li class="active1"><a href="./">Welcome Darshan! <span class="sr-only">(current)</span></a></li>
+              
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>
+    
+     <div>
 
-       <div class="text-center">
-        <h2 class="brand">Ani Theme <small>Free Edition</small></h2>
-        <img src="images/flat-avatar.png" class="user-avatar" /><br />
-        <a ui-sref="login" class="btn btn-white btn-outline btn-rounded btn-sm">Logout</a>
-      </div>
+<!-- <div ng-view>
 
-      <ul class="nav nav-sidebar">
-        <li ng-class="{active: $state.includes('overview')}"><a ui-sref="overview">Overview <span class="sr-only">(current)</span></a></li>
-        <li ng-class="{active: $state.includes('reports')}"><a ui-sref="reports">Reports</a></li>
-        <li><a href="http://startreact.com/product/ani-theme/">Free React version</a></li>
-        <li><a href="http://www.strapui.com/ani-angularjs-theme">Angular Premium Edition</a></li>
-      </ul>
+		</div> -->
 
-    </div>
-    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" ui-view>
-    </div>
-  </div>
-</div>
-</div>
+
+      <hr>
+
+      <footer>
+        <p>&copy; Prokarma, Inc.</p>
+      </footer>
+    </div> <!-- /container -->
