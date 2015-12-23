@@ -33,7 +33,8 @@ app.controller('delteProxyController', function($http,$scope) {
 		   var responsePromise = $http.post("http://localhost:8080/apigee_rest/services/apigee/deleteapi", commonConfiguration, {});
 		   
 		   responsePromise.success(function(data, status, headers, config) {
-              
+              $scope.organization = "";
+              $scope.apiProxyName = "";
 			   alert("success"+data)
            });
 		   
@@ -122,7 +123,7 @@ app.controller('deployProxyController', function($http,$scope) {
 });
 
 
-app.controller('createProxyController', function($http,$scope) {
+app.controller('createProxyController', function($http,$scope,$rootScope) {
 	
 	   $scope.createAPIProxy = function(userName,password,organization,apiProxyName,environment, revision){
 		   
@@ -135,7 +136,7 @@ app.controller('createProxyController', function($http,$scope) {
 		   console.log(commonConfiguration);
 		   
 	       
-		   var responsePromise = $http.post("http://localhost:8080/apigee_rest/services/apigee/createproxy", commonConfiguration, {});
+		   var responsePromise = $http.post($rootScope.baseUrl+"apigee/createproxy", commonConfiguration, {});
 		   
 		   responsePromise.success(function(data, status, headers, config) {
 			   $scope.organization = "";
