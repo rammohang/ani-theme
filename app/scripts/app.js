@@ -15,7 +15,7 @@ var app = angular
   ]);
 
 
-app.controller('delteProxyController', function($http,$scope) {
+app.controller('delteProxyController', function($http,$scope,$rootScope) {
 	
 	   $scope.deleteApiProxy = function(userName,password,organization,apiProxyName){
 		   
@@ -27,10 +27,27 @@ app.controller('delteProxyController', function($http,$scope) {
 		            
 				   
 		        };
-		   console.log(commonConfiguration);
+		   var targetUrl = $rootScope.baseUrl + "apigee/deleteapi";
+		   var req = {
+				   method: 'POST',
+				   url: targetUrl,
+				   headers: {
+				     'Content-Type': "application/json",
+				     'Accept' : "application/json"
+				   },
+				   data: commonConfiguration
+				  }
 		   
 	       
-		   var responsePromise = $http.post("http://localhost:8080/apigee_rest/services/apigee/deleteapi", commonConfiguration, {});
+		   $http(req).then(function successCallback(response) {
+			   alert("successCallback");
+			    // this callback will be called asynchronously
+			    // when the response is available
+			  }, function errorCallback(response) {
+				  alert("errorCallback");
+			    // called asynchronously if an error occurs
+			    // or server returns response with an error status.
+			  });
 		   
 		   responsePromise.success(function(data, status, headers, config) {
               $scope.organization = "";
@@ -41,14 +58,13 @@ app.controller('delteProxyController', function($http,$scope) {
 		   responsePromise.error(function(data, status, headers, config) {
                alert("Submitting form failed!");
             });
-		   
 		   	
 	    }
 	
 	
 });
 
-app.controller('undeployProxyController', function($http,$scope) {
+app.controller('undeployProxyController', function($http,$scope,$rootScope) {
 	
 	   $scope.undeployProxy = function(userName,password,organization,apiProxyName,environment, revision){
 		   
@@ -65,7 +81,7 @@ app.controller('undeployProxyController', function($http,$scope) {
 		   console.log(commonConfiguration);
 		   
 	       
-		   var responsePromise = $http.post("http://localhost:8080/apigee_rest/services/apigee/undeployproxy", commonConfiguration, {});
+		   var responsePromise = $http.post($rootScope.baseUrl + "apigee/undeployproxy", commonConfiguration, {});
 		   
 		   responsePromise.success(function(data, status, headers, config) {
 			   $scope.organization = "";
@@ -85,7 +101,7 @@ app.controller('undeployProxyController', function($http,$scope) {
 	
 });
 
-app.controller('deployProxyController', function($http,$scope) {
+app.controller('deployProxyController', function($http,$scope,$rootScope) {
 	
 	   $scope.deployProxy = function(userName,password,organization,apiProxyName,environment, revision){
 		   
@@ -102,7 +118,7 @@ app.controller('deployProxyController', function($http,$scope) {
 		   console.log(commonConfiguration);
 		   
 	       
-		   var responsePromise = $http.post("http://localhost:8080/apigee_rest/services/apigee/deployapiproxy", commonConfiguration, {});
+		   var responsePromise = $http.post($rootScope.baseUrl + "apigee/deployapiproxy", commonConfiguration, {});
 		   
 		   responsePromise.success(function(data, status, headers, config) {
 			   $scope.organization = "";
@@ -136,7 +152,7 @@ app.controller('createProxyController', function($http,$scope,$rootScope) {
 		   console.log(commonConfiguration);
 		   
 	       
-		   var responsePromise = $http.post($rootScope.baseUrl+"apigee/createproxy", commonConfiguration, {});
+		   var responsePromise = $http.post($rootScope.baseUrl + "apigee/createproxy", commonConfiguration, {});
 		   
 		   responsePromise.success(function(data, status, headers, config) {
 			   $scope.organization = "";
@@ -210,5 +226,5 @@ app.config(function($routeProvider) {
 
 // declare global constants here
 app.run(function ($rootScope) {
-    $rootScope.baseUrl = "http://localhost:/8080/apigee_rest/services/";
+    $rootScope.baseUrl = "http://172.16.203.103:8080/apigee_rest/services/";
 });
