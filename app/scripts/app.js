@@ -189,3 +189,27 @@ app.controller('GetProxyCtrl', function($scope, $location, $rootScope, $http) {
 		});
 	}
 });
+
+app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
+	$scope.proxyData = "";
+	$scope.backUpOrg = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization,
+			"backupLocation" : $scope.backupLocation
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/backuporg", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.organization = "";
+			$scope.apiProxyName = "";
+			$scope.proxyData = data;
+			console.log($scope.proxyData);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+});

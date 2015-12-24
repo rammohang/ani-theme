@@ -1,7 +1,33 @@
 <div data-ng-include="'views/navbar.html'"></div>
-<div ng-controller="backUpOrgController">
+<div>
+Create API Proxy
+<form>
+	 <!--  ROW BEGIN -->
+	<div class="row">
+		<!--  column1 -->
+		<div class="col-md-4">
+			
 
-Hi this is backup org controller
+		</div>
+		<!--  column1 END -->
+		<!--  column2 -->
+		<div class="col-md-4">
+			
+				<div class="form-group">
+	    			<label for="proxyName">Backup Organization</label>
+	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+	    			<input type="text" ng-model="backupLocation" class="form-control" id="backupLocation" placeholder="Enter backup location">
+  				</div>
+				<button class="btn btn-default" ng-click="backUpOrg()">Backup Org</button>
+		
+		</div>
+		<!--  column2 END -->
 
+		<!--  column3 -->
+		<div class="col-md-4"></div>
+		<!--  column3 END-->
+	</div>
+	<!--  ROW END -->
+		</form>
 </div>
 <div data-ng-include="'views/footer.html'"></div>
