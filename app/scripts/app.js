@@ -1,5 +1,4 @@
 'use strict';
-
 /**
  * @ngdoc overview
  * @name yapp
@@ -8,223 +7,157 @@
  *
  * Main module of the application.
  */
-var app = angular
-  .module('yapp', [
-    'ngRoute',
-    'ngAnimate'
-  ]);
-
-
-app.controller('delteProxyController', function($http,$scope,$rootScope) {
-	
-	   $scope.deleteApiProxy = function(userName,password,organization,apiProxyName){
-		   
-		   var commonConfiguration = {
-		           "userName" : "mraviteja48@gmail.com",
-		           "password" : "Ravi548$",
-		           "organization" : $scope.organization,
-		           "apiProxyName" : $scope.apiProxyName
-		            
-				   
-		        };
-		   var targetUrl = $rootScope.baseUrl + "apigee/deleteapi";
-		   var req = {
-				   method: 'POST',
-				   url: targetUrl,
-				   headers: {
-				     'Content-Type': "application/json",
-				     'Accept' : "application/json"
-				   },
-				   data: commonConfiguration
-				  }
-		   
-	       
-		   $http(req).then(function successCallback(response) {
-			   alert("successCallback");
-			    // this callback will be called asynchronously
-			    // when the response is available
-			  }, function errorCallback(response) {
-				  alert("errorCallback");
-			    // called asynchronously if an error occurs
-			    // or server returns response with an error status.
-			  });
-		   
-		   responsePromise.success(function(data, status, headers, config) {
-              $scope.organization = "";
-              $scope.apiProxyName = "";
-			   alert("success"+data)
-           });
-		   
-		   responsePromise.error(function(data, status, headers, config) {
-               alert("Submitting form failed!");
-            });
-		   	
-	    }
-	
-	
-});
-
-app.controller('undeployProxyController', function($http,$scope,$rootScope) {
-	
-	   $scope.undeployProxy = function(userName,password,organization,apiProxyName,environment, revision){
-		   
-		   var commonConfiguration = {
-		           "userName" : "mraviteja48@gmail.com",
-		           "password" : "Ravi548$",
-		           "organization" : $scope.organization,
-		           "apiProxyName" : $scope.apiProxyName,
-		           "environment" : $scope.environment,
-		           "revision" : $scope.revision
-		            
-				   
-		        };
-		   console.log(commonConfiguration);
-		   
-	       
-		   var responsePromise = $http.post($rootScope.baseUrl + "apigee/undeployproxy", commonConfiguration, {});
-		   
-		   responsePromise.success(function(data, status, headers, config) {
-			   $scope.organization = "";
-			   $scope.apiProxyName = "";
-			   $scope.environment = "";
-			   $scope.revision = "";
-			   alert("success"+data)
-        });
-		   
-		   responsePromise.error(function(data, status, headers, config) {
-            alert("Submitting form failed!");
-         });
-		   
-		   	
-	    }
-	
-	
-});
-
-app.controller('deployProxyController', function($http,$scope,$rootScope) {
-	
-	   $scope.deployProxy = function(userName,password,organization,apiProxyName,environment, revision){
-		   
-		   var commonConfiguration = {
-		           "userName" : "mraviteja48@gmail.com",
-		           "password" : "Ravi548$",
-		           "organization" : $scope.organization,
-		           "apiProxyName" : $scope.apiProxyName,
-		           "environment" : $scope.environment,
-		           "revision" : $scope.revision
-		            
-				   
-		        };
-		   console.log(commonConfiguration);
-		   
-	       
-		   var responsePromise = $http.post($rootScope.baseUrl + "apigee/deployapiproxy", commonConfiguration, {});
-		   
-		   responsePromise.success(function(data, status, headers, config) {
-			   $scope.organization = "";
-			   $scope.apiProxyName = "";
-			   $scope.environment = "";
-			   $scope.revision = "";
-			   alert("success"+data)
-     });
-		   
-		   responsePromise.error(function(data, status, headers, config) {
-         alert("Submitting form failed!");
-      });
-		   
-		   	
-	    }
-	
-	
-});
-
-
-app.controller('createProxyController', function($http,$scope,$rootScope) {
-	
-	   $scope.createAPIProxy = function(userName,password,organization,apiProxyName,environment, revision){
-		   
-		   var commonConfiguration = {
-		           "userName" : "mraviteja48@gmail.com",
-		           "password" : "Ravi548$",
-		           "organization" : $scope.organization,
-		           "apiProxyName" : $scope.apiProxyName
-		        };
-		   console.log(commonConfiguration);
-		   
-	       
-		   var responsePromise = $http.post($rootScope.baseUrl + "apigee/createproxy", commonConfiguration, {});
-		   
-		   responsePromise.success(function(data, status, headers, config) {
-			   $scope.organization = "";
-			   $scope.apiProxyName = "";
-			   alert("success"+data)
-  });
-		   
-		   responsePromise.error(function(data, status, headers, config) {
-      alert("Submitting form failed!");
-   });
-		   
-		   	
-	    }
-	
-	
-});
+var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate' ]);
 
 app.config(function($routeProvider) {
-    $routeProvider.
-    when('/login', {
-        templateUrl: 'views/login.html',
-        controller: 'LoginCtrl'
-       
-    }).
-    when('/dashboard', {
-        templateUrl: 'views/dashboard.html',
-        controller: 'DashboardCtrl'
-       
-    }).
-    when('/backUpOrg', {
-        templateUrl: 'views/backUpOrg.html',
-        controller: 'backUpOrgController'
-       
-    }).
-    when('/cleanOrg', {
-        templateUrl: 'views/cleanOrg.html',
-        controller: 'cleanOrgController'
-       
-    }).
-    when('/restoreOrg', {
-        templateUrl: 'views/restoreOrg.html',
-        controller: 'restoreOrgController'
-       
-    }).
-    when('/deleteProxy', {
-        templateUrl: 'views/deleteProxy.html',
-        controller: 'delteProxyController'
-       
-    }).  
-    when('/undeployProxy', {
-        templateUrl: 'views/undeployProxy.html',
-        controller: 'undeployProxyController'
-       
-    }).
-    when('/deployProxy', {
-        templateUrl: 'views/deployProxy.html',
-        controller: 'deployProxyController'
-       
-    }).
-    
-    when('/createProxy', {
-        templateUrl: 'views/createProxy.html',
-        controller: 'createProxyController'
-       
-    }).
-    
-    otherwise({
-        redirectTo: '/login'
-    });
+	$routeProvider.when('/login', {
+		templateUrl : 'views/login.html',
+		controller : 'LoginCtrl'
+	}).when('/dashboard', {
+		templateUrl : 'views/dashboard.html',
+		controller : 'DashboardCtrl'
+	}).when('/backUpOrg', {
+		templateUrl : 'views/backUpOrg.html',
+		controller : 'BackUpOrgCtrl'
+	}).when('/cleanOrg', {
+		templateUrl : 'views/cleanOrg.html',
+		controller : 'CleanOrgCtrl'
+	}).when('/restoreOrg', {
+		templateUrl : 'views/restoreOrg.html',
+		controller : 'RestoreOrgCtrl'
+	}).when('/deleteProxy', {
+		templateUrl : 'views/deleteProxy.html',
+		controller : 'DeleteProxyCtrl'
+	}).when('/undeployProxy', {
+		templateUrl : 'views/undeployProxy.html',
+		controller : 'UndeployProxyCtrl'
+	}).when('/deployProxy', {
+		templateUrl : 'views/deployProxy.html',
+		controller : 'DeployProxyCtrl'
+	}).when('/createProxy', {
+		templateUrl : 'views/createProxy.html',
+		controller : 'CreateProxyCtrl'
+	}).otherwise({
+		redirectTo : '/login'
+	});
 });
 
 // declare global constants here
-app.run(function ($rootScope) {
-    $rootScope.baseUrl = "http://172.16.203.103:8080/apigee_rest/services/";
+app.run(function($rootScope) {
+	$rootScope.baseUrl = "http://172.16.203.103:8080/apigee_rest/services/";
+	$rootScope.userName = "mraviteja48@gmail.com";
+	$rootScope.password = "Ravi548$";
+});
+
+app.controller('LoginCtrl', function($scope, $location, $rootScope) {
+	$scope.submit = function() {
+		$rootScope.userId = $scope.userId;
+		$rootScope.password = $scope.password;
+		// write authentication api call here.
+		$scope.userLoggedIn = true; // this should be set to true, if authentication is successful
+		// use $rootScope.baseUrl as prefix all the api calls
+		// redirect to dashboard upon successful authentication.
+		$location.path('/dashboard');
+		return false;
+	}
+});
+
+app.controller('DashboardCtrl', function($scope, $location) {
+	
+});
+
+app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
+	$scope.deleteApiProxy = function(userName, password, organization,
+			apiProxyName) {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization,
+			"apiProxyName" : $scope.apiProxyName
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/deleteapi", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.organization = "";
+			$scope.apiProxyName = "";
+			alert("success" + data)
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
+	$scope.undeployProxy = function(userName, password, organization,
+			apiProxyName, environment, revision) {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization,
+			"apiProxyName" : $scope.apiProxyName,
+			"environment" : $scope.environment,
+			"revision" : $scope.revision
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/undeployproxy", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.organization = "";
+			$scope.apiProxyName = "";
+			$scope.environment = "";
+			$scope.revision = "";
+			alert("success" + data)
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+app.controller('DeployProxyCtrl', function($http, $scope, $rootScope) {
+	$scope.deployProxy = function(userName, password, organization,
+			apiProxyName, environment, revision) {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization,
+			"apiProxyName" : $scope.apiProxyName,
+			"environment" : $scope.environment,
+			"revision" : $scope.revision
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/deployapiproxy", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.organization = "";
+			$scope.apiProxyName = "";
+			$scope.environment = "";
+			$scope.revision = "";
+			alert("success" + data)
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+app.controller('CreateProxyCtrl', function($http, $scope, $rootScope) {
+	$scope.createAPIProxy = function(userName, password, organization,
+			apiProxyName, environment, revision) {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization,
+			"apiProxyName" : $scope.apiProxyName
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/createproxy", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.organization = "";
+			$scope.apiProxyName = "";
+			alert("success" + data)
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
 });
