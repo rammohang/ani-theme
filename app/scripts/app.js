@@ -197,7 +197,7 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
 			"organization" : $scope.organization,
-			"backupLocation" : $scope.backupLocation
+			"backUpLocation" : $scope.backUpLocation
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl

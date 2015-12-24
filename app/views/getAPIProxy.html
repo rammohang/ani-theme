@@ -1,21 +1,28 @@
 <div data-ng-include="'views/navbar.html'"></div>
 <div>
-GET API Proxy
+Get API Proxy
 <form>
 	 <!--  ROW BEGIN -->
 	<div class="row">
 		<!--  column1 -->
 		<div class="col-md-4">
-			<div class="form-group">
-	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
-	    			<input type="text" ng-model="apiProxyName" class="form-control" id="apiProxyName" placeholder="Enter Proxy Name">
-  				</div>
-				<button class="btn btn-default" ng-click="getAPIProxy('mraviteja48@gmail.com','Ravi548$',organization, apiProxyName)">GET Proxy</button>
-		
+			
 
 		</div>
 		<!--  column1 END -->
 		<!--  column2 -->
+		<div class="col-md-4">
+			
+				<div class="form-group">
+	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+	    			<input type="text" ng-model="apiProxyName" class="form-control" id="apiProxyName" placeholder="Enter Proxy Name">
+  				</div>
+				<button class="btn btn-default" ng-click="getAPIProxy()">GET Proxy</button>
+		
+		</div>
+		<!--  column2 END -->
+
+		<!--  column3 -->
 		<div class="col-md-4" ng-if="proxyData.name">
 			<table>
 			<tr>
@@ -29,13 +36,6 @@ GET API Proxy
 				
 		
 		</div>
-		<div>
-		
-		</div>
-		<!--  column2 END -->
-
-		<!--  column3 -->
-		<div class="col-md-4"></div>
 		<!--  column3 END-->
 	</div>
 	<!--  ROW END -->
