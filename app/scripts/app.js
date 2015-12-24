@@ -70,8 +70,7 @@ app.controller('DashboardCtrl', function($scope, $location) {
 });
 
 app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
-	$scope.deleteApiProxy = function(userName, password, organization,
-			apiProxyName) {
+	$scope.deleteApiProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
@@ -92,8 +91,7 @@ app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
 });
 
 app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
-	$scope.undeployProxy = function(userName, password, organization,
-			apiProxyName, environment, revision) {
+	$scope.undeployProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
@@ -118,8 +116,7 @@ app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
 });
 
 app.controller('DeployProxyCtrl', function($http, $scope, $rootScope) {
-	$scope.deployProxy = function(userName, password, organization,
-			apiProxyName, environment, revision) {
+	$scope.deployProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
@@ -144,8 +141,7 @@ app.controller('DeployProxyCtrl', function($http, $scope, $rootScope) {
 });
 
 app.controller('CreateProxyCtrl', function($http, $scope, $rootScope) {
-	$scope.createAPIProxy = function(userName, password, organization,
-			apiProxyName, environment, revision) {
+	$scope.createAPIProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
@@ -167,8 +163,7 @@ app.controller('CreateProxyCtrl', function($http, $scope, $rootScope) {
 
 app.controller('GetProxyCtrl', function($scope, $location, $rootScope, $http) {
 	$scope.proxyData = "";
-	$scope.getAPIProxy = function(userName, password, organization,
-			apiProxyName) {
+	$scope.getAPIProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
