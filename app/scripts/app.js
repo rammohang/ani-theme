@@ -219,6 +219,12 @@ app.config(function($routeProvider) {
        
     }).
     
+    when('/getProxy', {
+        templateUrl: 'views/getAPIProxy.html',
+        controller: 'GetProxyCtrl'
+       
+    }).
+    
     otherwise({
         redirectTo: '/login'
     });
@@ -226,5 +232,5 @@ app.config(function($routeProvider) {
 
 // declare global constants here
 app.run(function ($rootScope) {
-    $rootScope.baseUrl = "http://172.16.203.103:8080/apigee_rest/services/";
+    $rootScope.baseUrl = "http://localhost:8080/apigee_rest/services/";
 });

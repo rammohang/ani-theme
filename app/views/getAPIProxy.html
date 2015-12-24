@@ -1,0 +1,44 @@
+<div data-ng-include="'views/navbar.html'"></div>
+<div ng-controller="GetProxyCtrl">
+GET API Proxy
+<form>
+	 <!--  ROW BEGIN -->
+	<div class="row">
+		<!--  column1 -->
+		<div class="col-md-4">
+			<div class="form-group">
+	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+	    			<input type="text" ng-model="apiProxyName" class="form-control" id="apiProxyName" placeholder="Enter Proxy Name">
+  				</div>
+				<button class="btn btn-default" ng-click="getAPIProxy('mraviteja48@gmail.com','Ravi548$',organization, apiProxyName)">GET Proxy</button>
+		
+
+		</div>
+		<!--  column1 END -->
+		<!--  column2 -->
+		<div class="col-md-4" ng-if="proxyData.name">
+			<table>
+			<tr>
+			<td>Proxy Name</td> </td>{{proxyData.name}}</td>
+			
+			</tr>
+			<tr>
+			<td> Revisions available</td><td>{{proxyData.revision.length}}</td>
+			</tr>
+			</table>
+				
+		
+		</div>
+		<div>
+		
+		</div>
+		<!--  column2 END -->
+
+		<!--  column3 -->
+		<div class="col-md-4"></div>
+		<!--  column3 END-->
+	</div>
+	<!--  ROW END -->
+		</form>
+</div>
+<div data-ng-include="'views/footer.html'"></div>
