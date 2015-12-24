@@ -37,6 +37,9 @@ app.config(function($routeProvider) {
 	}).when('/createProxy', {
 		templateUrl : 'views/createProxy.html',
 		controller : 'CreateProxyCtrl'
+	}).when('/getProxy', {
+		templateUrl : 'views/getAPIProxy.html',
+		controller : 'GetProxyCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
@@ -155,6 +158,31 @@ app.controller('CreateProxyCtrl', function($http, $scope, $rootScope) {
 			$scope.organization = "";
 			$scope.apiProxyName = "";
 			alert("success" + data)
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+app.controller('GetProxyCtrl', function($scope, $location, $rootScope, $http) {
+	$scope.proxyData = "";
+	$scope.getAPIProxy = function(userName, password, organization,
+			apiProxyName) {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization,
+			"apiProxyName" : $scope.apiProxyName
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/getapiproxy", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.organization = "";
+			$scope.apiProxyName = "";
+			$scope.proxyData = data;
+			console.log($scope.proxyData);
 		});
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");
