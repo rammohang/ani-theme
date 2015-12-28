@@ -196,6 +196,7 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
 	$scope.backUpDev = "";
 	$scope.backUpProd = "";
 	$scope.backUpRes = "";
+	$scope.backUpzip = "";
 	
 	$scope.proxyData = "";
 	$scope.backUpOrg = function() {
@@ -207,59 +208,14 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/backuporg?backup="+"apiProxy", commonConfiguration, {});
+				+ "apigee/backuporg", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-			$scope.backUpSuccess = "Backup Of API Proxies has beeen done Successfully";
-			// call internally backup apps
-			var responsePromise = $http.post($rootScope.baseUrl
-					+ "apigee/backuporg?backup="+"apps", commonConfiguration, {});
-			responsePromise.success(function(data, status, headers, config) {
-				$scope.backUpApps+= "Backup Of APPS has beeen done Successfully\n";
-				//call internally backup dev
-				var responsePromise = $http.post($rootScope.baseUrl
-						+ "apigee/backuporg?backup="+"apiDevs", commonConfiguration, {});
-				responsePromise.success(function(data, status, headers, config) {
-					$scope.backUpDev+= "Backup Of Developers has beeen done Successfully\n";
-					// call of backup products
-					var responsePromise = $http.post($rootScope.baseUrl
-							+ "apigee/backuporg?backup="+"apiProds", commonConfiguration, {});
-					responsePromise.success(function(data, status, headers, config) {
-						$scope.backUpProd+= "Backup Of Products has beeen done Successfully\n";
-								// call of backup resources
-						var responsePromise = $http.post($rootScope.baseUrl
-								+ "apigee/backuporg?backup="+"apiRes", commonConfiguration, {});
-						responsePromise.success(function(data, status, headers, config) {
-							$scope.backUpRes+= "Backup Of Resources has beeen done Successfully\n";
-							$scope.organization = "";
-							$scope.backUpLocation = "";
-							$scope.proxyData = data;
-							console.log($scope.proxyData);
-						});
-						responsePromise.error(function(data, status, headers, config) {
-							alert("Submitting form failed!");
-						});
-								// resources call done
-					});
-					responsePromise.error(function(data, status, headers, config) {
-						alert("Submitting form failed!");
-					});
-							
-					// products backup done
-				});
-				responsePromise.error(function(data, status, headers, config) {
-					alert("Submitting form failed!");
-				});
-						
-				
-				
-				
-				//backup dev done
-			});
-			responsePromise.error(function(data, status, headers, config) {
-				alert("Submitting form failed!");
-			});
-			//internal call done
-		});
+					$scope.backUpzip+= "Backup zip created\n";
+					$scope.organization = "";
+					$scope.backUpLocation = "";
+					$scope.proxyData = data;
+					console.log($scope.proxyData);
+				});		
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");
 		});
