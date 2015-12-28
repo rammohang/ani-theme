@@ -29,5 +29,22 @@ Backup Organization
 	</div>
 	<!--  ROW END -->
 		</form>
+		<div class="alert alert-success" role="alert" ng-if="backUpSuccess">
+			{{backUpSuccess}}
+		</div>
+		<div class="alert alert-success" role="alert" ng-if="backUpApps">
+			{{backUpApps}}
+		</div>
+		<div class="alert alert-success" role="alert" ng-if="backUpApps">
+			{{backUpDev}}
+		</div>
+		<div class="alert alert-success" role="alert" ng-if="backUpApps">
+			{{backUpProd}}
+		</div>
+		<div class="alert alert-success" role="alert" ng-if="backUpApps">
+			{{backUpRes}}
+		</div>
+		
+		
 </div>
 <div data-ng-include="'views/footer.html'"></div>
