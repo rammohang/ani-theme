@@ -26,7 +26,7 @@ app.config(function($routeProvider) {
 		controller : 'BackUpOrgCtrl'
 	}).when('/cleanOrg', {
 		templateUrl : 'views/cleanOrg.html',
-		controller : 'CleanOrgCtrl'
+			controller : 'CleanUpOrgCtrl'	
 	}).when('/restoreOrg', {
 		templateUrl : 'views/restoreOrg.html',
 			controller : 'RestoreOrgCtrl'
@@ -235,6 +235,33 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 				+ "apigee/restoreorg", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 					$scope.backUpzip+= "Restored Organization Successfully\n";
+					$scope.organization = "";
+					$scope.proxyData = data;
+					console.log($scope.proxyData);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+
+app.controller('CleanUpOrgCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	
+	$scope.cleanUpOrg = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/cleanorg", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.backUpzip+= "Cleaned Organization Successfully\n";
 					$scope.organization = "";
 					$scope.proxyData = data;
 					console.log($scope.proxyData);
