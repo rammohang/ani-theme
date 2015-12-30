@@ -29,7 +29,7 @@ app.config(function($routeProvider) {
 		controller : 'CleanOrgCtrl'
 	}).when('/restoreOrg', {
 		templateUrl : 'views/restoreOrg.html',
-		controller : 'RestoreOrgCtrl'
+			controller : 'RestoreOrgCtrl'
 	}).when('/deleteProxy', {
 		templateUrl : 'views/deleteProxy.html',
 		controller : 'DeleteProxyCtrl'
@@ -191,28 +191,51 @@ app.controller('GetProxyCtrl', function($scope, $location, $rootScope, $http) {
 });
 
 app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
-	$scope.backUpSuccess = "";
-	$scope.backUpApps = "";
-	$scope.backUpDev = "";
-	$scope.backUpProd = "";
-	$scope.backUpRes = "";
-	$scope.backUpzip = "";
 	
+	$scope.backUpzip = "";
 	$scope.proxyData = "";
+	
 	$scope.backUpOrg = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
-			"organization" : $scope.organization,
-			"backUpLocation" : $scope.backUpLocation
+			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/backuporg", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-					$scope.backUpzip+= "Backup zip created\n";
+					$scope.backUpzip+= "Backup Created Successfully\n";
 					$scope.organization = "";
-					$scope.backUpLocation = "";
+					$scope.proxyData = data;
+					console.log($scope.proxyData);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+
+
+
+app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	
+	$scope.restoreOrg = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.backUpzip+= "Restored Organization Successfully\n";
+					$scope.organization = "";
 					$scope.proxyData = data;
 					console.log($scope.proxyData);
 				});		
