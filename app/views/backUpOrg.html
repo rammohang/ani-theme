@@ -12,12 +12,18 @@ Backup Organization
 		<!--  column1 END -->
 		<!--  column2 -->
 		<div class="col-md-4">
-			
+		
 				<div class="form-group">
 	    			<label for="proxyName">Backup Organization</label>
-	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+	    			<input type="text" ng-change="catchKeys()" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
   				</div>
-				<button class="btn btn-default" ng-click="backUpOrg()">Backup Org</button>
+  				<div class="form-group">
+					<button class="btn btn-default" ng-click="backUpOrg()" ng-disabled="enable">Backup Org</button>
+					<div class="throbber-loader" ng-show="showLoader=='Y'">
+  Loading…
+</div>
+				</div>
+				
 		
 		</div>
 		<!--  column2 END -->

@@ -53,8 +53,8 @@ app.config(function($routeProvider) {
 // declare global constants here
 app.run(function($rootScope) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
-	$rootScope.userName = "mraviteja48@gmail.com";
-	$rootScope.password = "Ravi548$";
+	$rootScope.userName = "itsmevenkee@gmail.com";
+	$rootScope.password = "Venkat@3765";
 });
 
 app.controller('LoginCtrl', function($scope, $location, $rootScope) {
@@ -194,13 +194,27 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
+	$scope.showLoader = "N";
+	$scope.enable = true;
+	
+	$scope.catchKeys = function(){
+		if($scope.organization.length > 0){
+			$scope.enable = false;
+		}else{
+			$scope.enable = true;
+		}
+	}
 	
 	$scope.backUpOrg = function() {
+		
+	
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
 			"organization" : $scope.organization
 		};
+		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/backuporg", commonConfiguration, {});
@@ -209,8 +223,10 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
 					$scope.organization = "";
 					$scope.proxyData = data;
 					console.log($scope.proxyData);
+					$scope.showLoader = "N";
 				});		
 		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
 			alert("Submitting form failed!");
 		});
 	}
@@ -223,8 +239,9 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
-	
+	$scope.showLoader = "N";
 	$scope.restoreOrg = function() {
+		$scope.showLoader = "Y";
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
@@ -234,12 +251,14 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/restoreorg", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
 					$scope.backUpzip+= "Restored Organization Successfully\n";
 					$scope.organization = "";
 					$scope.proxyData = data;
 					console.log($scope.proxyData);
 				});		
 		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
 			alert("Submitting form failed!");
 		});
 	}
@@ -250,13 +269,14 @@ app.controller('CleanUpOrgCtrl', function($scope, $location, $rootScope, $http) 
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
-	
+	$scope.showLoader = "N";
 	$scope.cleanUpOrg = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
 			"organization" : $scope.organization
 		};
+		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/cleanorg", commonConfiguration, {});
@@ -265,8 +285,10 @@ app.controller('CleanUpOrgCtrl', function($scope, $location, $rootScope, $http) 
 					$scope.organization = "";
 					$scope.proxyData = data;
 					console.log($scope.proxyData);
+					$scope.showLoader = "N";
 				});		
 		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
 			alert("Submitting form failed!");
 		});
 	}
