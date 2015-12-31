@@ -53,8 +53,8 @@ app.config(function($routeProvider) {
 // declare global constants here
 app.run(function($rootScope) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
-	$rootScope.userName = "itsmevenkee@gmail.com";
-	$rootScope.password = "Venkat@3765";
+	$rootScope.userName = "mraviteja48@gmail.com";
+	$rootScope.password = "Ravi548$";
 });
 
 app.controller('LoginCtrl', function($scope, $location, $rootScope) {
@@ -96,6 +96,7 @@ app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
 });
 
 app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
+	$scope.undeployMessage = "";
 	$scope.undeployProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
@@ -108,6 +109,7 @@ app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/undeployproxy", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
+			$scope.undeployMessage = "Proxy Undeployed Successfully";
 			$scope.organization = "";
 			$scope.apiProxyName = "";
 			$scope.environment = "";
