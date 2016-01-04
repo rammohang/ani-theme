@@ -31,5 +31,8 @@ UndeployProxy
 	</div>
 	<!--  ROW END -->
 		</form>
+		<div class="alert alert-success" role="alert" ng-if="undeployMessage">
+			{{undeployMessage}}
+		</div>
 </div>
 <div data-ng-include="'views/footer.html'"></div>
