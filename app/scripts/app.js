@@ -53,19 +53,34 @@ app.config(function($routeProvider) {
 // declare global constants here
 app.run(function($rootScope) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
-	$rootScope.userName = "mraviteja48@gmail.com";
-	$rootScope.password = "Ravi548$";
+	$rootScope.userName = "";
+	$rootScope.password = "";
+	$rootScope.userLoggedIn = false;
 });
 
-app.controller('LoginCtrl', function($scope, $location, $rootScope) {
+app.controller('LoginCtrl', function($scope, $http, $location, $rootScope) {
 	$scope.submit = function() {
-		$rootScope.userId = $scope.userId;
-		$rootScope.password = $scope.password;
-		// write authentication api call here.
-		$scope.userLoggedIn = true; // this should be set to true, if authentication is successful
-		// use $rootScope.baseUrl as prefix all the api calls
-		// redirect to dashboard upon successful authentication.
-		$location.path('/dashboard');
+		var userDetails = {
+			"userName" : $scope.userName,
+			"password" : $scope.password
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "user/authenticate", userDetails, {});
+		responsePromise.success(function(data, status, headers, config) {
+			alert("success" + data);
+			if(data.userName) {
+				$rootScope.userName = data.userName;
+				$rootScope.password = data.password;
+				$scope.userLoggedIn = true;
+				$location.path('/dashboard');
+			} else {
+				alert("Invalid username/password. Please try again !!");
+			}
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+		
 		return false;
 	}
 });
@@ -96,7 +111,6 @@ app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
 });
 
 app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
-	$scope.undeployMessage = "";
 	$scope.undeployProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
@@ -109,7 +123,6 @@ app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/undeployproxy", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-			$scope.undeployMessage = "Proxy Undeployed Successfully";
 			$scope.organization = "";
 			$scope.apiProxyName = "";
 			$scope.environment = "";
@@ -241,8 +254,10 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
+	$scope.orgHis = "";
 	$scope.showLoader = "N";
-	$scope.restoreOrg = function() {
+	
+	/*$scope.restoreOrg = function() {
 		$scope.showLoader = "Y";
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
@@ -263,7 +278,60 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 			$scope.showLoader = "N";
 			alert("Submitting form failed!");
 		});
+	}*/
+	
+	
+	$scope.fetchOrgHistory = function() {
+		$scope.showLoader = "Y";
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/getorgbackuphistory", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.backUpzip+= "Org Data Fetched successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
 	}
+	
+	$scope.restoreOrg = function(oid,filename) {
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
+		$scope.showLoader = "Y";
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename, commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.backUpzip+= "Organization Restored successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	
+	
 });
 
 
