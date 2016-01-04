@@ -55,17 +55,32 @@ app.run(function($rootScope) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
 	$rootScope.userName = "itsmevenkee@gmail.com";
 	$rootScope.password = "Venkat@3765";
+	$rootScope.userLoggedIn = false;
 });
 
-app.controller('LoginCtrl', function($scope, $location, $rootScope) {
+app.controller('LoginCtrl', function($scope, $http, $location, $rootScope) {
 	$scope.submit = function() {
-		$rootScope.userId = $scope.userId;
-		$rootScope.password = $scope.password;
-		// write authentication api call here.
-		$scope.userLoggedIn = true; // this should be set to true, if authentication is successful
-		// use $rootScope.baseUrl as prefix all the api calls
-		// redirect to dashboard upon successful authentication.
-		$location.path('/dashboard');
+		var userDetails = {
+			"userName" : $scope.userName,
+			"password" : $scope.password
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "user/authenticate", userDetails, {});
+		responsePromise.success(function(data, status, headers, config) {
+			alert("success" + data);
+			if(data.userName) {
+				$rootScope.userName = data.userName;
+				$rootScope.password = data.password;
+				$scope.userLoggedIn = true;
+				$location.path('/dashboard');
+			} else {
+				alert("Invalid username/password. Please try again !!");
+			}
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+		
 		return false;
 	}
 });
