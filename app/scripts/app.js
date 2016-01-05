@@ -248,14 +248,59 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
 });
 
 
-
+app.filter('pagination', function()
+		{
+	 return function(input, start)
+	 {
+	  start = +start;
+	  return input.slice(start);
+	 };
+	});
 
 app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) {
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
+	$scope.orgHis = "";
 	$scope.showLoader = "N";
-	$scope.restoreOrg = function() {
+	
+	
+	
+	
+	$scope.fetchOrgHistory = function() {
+		$scope.showLoader = "Y";
+		
+		 $scope.curPage = 0;
+		 $scope.pageSize = 3;
+		 $scope.numberOfPages = function() {
+				return Math.ceil($scope.orgHis.length / $scope.pageSize);
+			};
+		
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/getorgbackuphistory", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.backUpzip+= "Org Data Fetched successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	$scope.restoreOrg = function(oid,filename) {
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
 		$scope.showLoader = "Y";
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
@@ -264,19 +309,22 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/restoreorg", commonConfiguration, {});
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 					$scope.showLoader = "N";
-					$scope.backUpzip+= "Restored Organization Successfully\n";
+					$scope.backUpzip+= "Organization Restored successfully\n";
 					$scope.organization = "";
-					$scope.proxyData = data;
-					console.log($scope.proxyData);
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
 				});		
 		responsePromise.error(function(data, status, headers, config) {
 			$scope.showLoader = "N";
 			alert("Submitting form failed!");
 		});
 	}
+	
+	
+	
 });
 
 
