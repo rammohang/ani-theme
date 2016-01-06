@@ -53,15 +53,15 @@ app.config(function($routeProvider) {
 // declare global constants here
 app.run(function($rootScope) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
-	$rootScope.userName = "itsmevenkee@gmail.com";
-	$rootScope.password = "Venkat@3765";
+	$rootScope.userName = "mraviteja48@gmail.com";
+	$rootScope.password = "Ravi548$";
 	$rootScope.userLoggedIn = false;
 });
 
 app.controller('LoginCtrl', function($scope, $http, $location, $rootScope) {
 	$scope.submit = function() {
 		var userDetails = {
-			"userName" : $scope.userName,
+			"email" : $scope.email,
 			"password" : $scope.password
 		};
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -69,7 +69,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope) {
 		responsePromise.success(function(data, status, headers, config) {
 			alert("success" + data);
 			if(data.userName) {
-				$rootScope.userName = data.userName;
+				$rootScope.userName = data.email;
 				$rootScope.password = data.password;
 				$scope.userLoggedIn = true;
 				$location.path('/dashboard');
@@ -90,6 +90,31 @@ app.controller('DashboardCtrl', function($scope, $location) {
 });
 
 app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
+	$scope.proxiesList = "";
+	$scope.disable = false;
+	
+	$scope.getAPIProxies = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/listapiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.disable = true;
+			$scope.apiProxyName = "";
+			$scope.proxiesList = data;
+			console.log($scope.proxiesList);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+	
+	
+	
+	
 	$scope.deleteApiProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
@@ -102,6 +127,7 @@ app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
 		responsePromise.success(function(data, status, headers, config) {
 			$scope.organization = "";
 			$scope.apiProxyName = "";
+			$scope.disable = false;
 			alert("success" + data)
 		});
 		responsePromise.error(function(data, status, headers, config) {
@@ -111,13 +137,71 @@ app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
 });
 
 app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
+	$scope.proxiesList = [];
+	$scope.envList = [];
+	$scope.environment = {};
+	$scope.revision = "";
+	
+	$scope.changeEnv = function() {
+		$scope.revision = "";
+		var selectedEnv = $scope.environment;
+		if(selectedEnv.revision != null) {
+			var revisions = selectedEnv.revision || [];
+			if(revisions.length > 0) {
+				$scope.revision = revisions[0].name;
+			}
+		}
+	};
+	
+	$scope.getDeployedEnv = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization,
+			"apiProxyName" : $scope.apiProxyName
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/apiproxy/deployments", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.disable = true;
+			$scope.envList = data.environment;
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+	
+	
+	
+	
+	$scope.getAPIProxies = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/listapiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.disable = true;
+			$scope.apiProxyName = "";
+			$scope.proxiesList = data;
+			console.log($scope.proxiesList);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+	
+	
+	
 	$scope.undeployProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
 			"organization" : $scope.organization,
 			"apiProxyName" : $scope.apiProxyName,
-			"environment" : $scope.environment,
+			"environment" : $scope.environment.name,
 			"revision" : $scope.revision
 		};
 		var responsePromise = $http.post($rootScope.baseUrl

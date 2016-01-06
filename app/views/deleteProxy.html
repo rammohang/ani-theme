@@ -1,6 +1,5 @@
 <div data-ng-include="'views/navbar.html'"></div>
 <div>
-Delete API Proxy
 <form>
 	 <!--  ROW BEGIN -->
 	<div class="row">
@@ -12,14 +11,25 @@ Delete API Proxy
 		<!--  column1 END -->
 		<!--  column2 -->
 		<div class="col-md-4">
-			
+			<form>
 				<div class="form-group">
-	    			<label for="proxyName">Proxy Name</label>
-	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
-	    			<input type="text" ng-model="apiProxyName" class="form-control" id="apiProxyName" placeholder="Enter Proxy Name">
+	    			<label for="proxyName">Delete API Proxy</label>
+	    		</div>
+	    		
+	    		<div class="form-group">
+	    			<input type="text" ng-disabled="disable" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+	    			<button class="btn btn-default" ng-click="getAPIProxies()">Fetch Proxies</button>
+	    		</div>
+	    		<div class="form-group">
+	    			<select ng-model="apiProxyName" class="form-control" id="apiProxyName" ng-options="proxy for proxy in proxiesList">
+	    				<option value="">Select API</option>
+	    			</select>
+	    			
+	    			<!--input type="text" ng-model="apiProxyName" class="form-control" id="apiProxyName" placeholder="Enter Proxy Name"-->
   				</div>
 				<button class="btn btn-default" ng-click="deleteApiProxy()">Delete API Proxy</button>
-		
+				
+		</form>
 		</div>
 		<!--  column2 END -->
 
