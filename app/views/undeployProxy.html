@@ -27,7 +27,9 @@ UndeployProxy
 	    				<option value="">Select Environment</option>
 	    			</select>
 	    			
-	    			<input type="text" ng-model="revision" class="form-control" id="revision" placeholder="revision" readonly="readonly">
+	    			<select ng-model="revision"  class="form-control" id="revision"  ng-options="rev.name for rev in revisionList">
+	    				<option value="">Select Revision</option>
+	    			</select>
   				</div>
 				<button class="btn btn-default" ng-click="undeployProxy()">UnDeploy</button>
 		
