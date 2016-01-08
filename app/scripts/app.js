@@ -45,6 +45,9 @@ app.config(function($routeProvider) {
 	}).when('/getProxy', {
 		templateUrl : 'views/getAPIProxy.html',
 		controller : 'GetProxyCtrl'
+	}).when('/exportProxy',{
+		templateUrl :'views/exportAPIProxy.html',
+		controller : 'ExportProxyCtrl'
 	}).when('/backupProxy', {
 		templateUrl : 'views/backUpProxy.html',
 		controller : 'BackUpProxyCtrl'
@@ -82,9 +85,9 @@ app.config(function($routeProvider) {
 
 // declare global constants here
 app.run(function($rootScope) {
-	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
-	$rootScope.userName = "mraviteja48@gmail.com";
-	$rootScope.password = "Ravi548$";
+	$rootScope.baseUrl = "http://localhost:8080/apigee_rest/services/";
+	$rootScope.userName = "itsmevenkee@gmail.com";
+	$rootScope.password = "Venkat@3765";
 	$rootScope.userLoggedIn = false;
 });
 
@@ -170,14 +173,16 @@ app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
 	$scope.proxiesList = [];
 	$scope.envList = [];
 	$scope.environment = {};
-	$scope.revision = {};
-	$scope.revisionList = [];
+	$scope.revision = "";
 	
 	$scope.changeEnv = function() {
 		$scope.revision = "";
 		var selectedEnv = $scope.environment;
 		if(selectedEnv.revision != null) {
-			$scope.revisionList = selectedEnv.revision || [];
+			var revisions = selectedEnv.revision || [];
+			if(revisions.length > 0) {
+				$scope.revision = revisions[0].name;
+			}
 		}
 	};
 	
@@ -230,7 +235,7 @@ app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
 			"organization" : $scope.organization,
 			"apiProxyName" : $scope.apiProxyName,
 			"environment" : $scope.environment.name,
-			"revision" : $scope.revision.name
+			"revision" : $scope.revision
 		};
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/undeployproxy", commonConfiguration, {});
@@ -295,30 +300,7 @@ app.controller('CreateProxyCtrl', function($http, $scope, $rootScope) {
 
 app.controller('GetProxyCtrl', function($scope, $location, $rootScope, $http) {
 	$scope.proxyData = "";
-	$scope.proxiesList = [];
-	
-	$scope.getAPIProxies = function() {
-		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
-			"organization" : $scope.organization
-		};
-		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/listapiproxies", commonConfiguration, {});
-		responsePromise.success(function(data, status, headers, config) {
-			$scope.disable = true;
-			$scope.apiProxyName = "";
-			$scope.proxiesList = data;
-			console.log($scope.proxiesList);
-		});
-		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
-		});
-	}
-	
-	
-	
-	$scope.getAPIProxyDetails = function() {
+	$scope.getAPIProxy = function() {
 		var commonConfiguration = {
 			"userName" : $rootScope.userName,
 			"password" : $rootScope.password,
@@ -329,6 +311,8 @@ app.controller('GetProxyCtrl', function($scope, $location, $rootScope, $http) {
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/getapiproxy", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
+			$scope.organization = "";
+			$scope.apiProxyName = "";
 			$scope.proxyData = data;
 			console.log($scope.proxyData);
 		});
@@ -491,7 +475,30 @@ app.controller('CleanUpOrgCtrl', function($scope, $location, $rootScope, $http) 
 });
 
 
-
+app.controller('ExportProxyCtrl', function($scope, $rootScope, $http) {
+	$scope.proxyData = {};
+	$scope.exportAPIProxy = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization,
+			"apiProxyName" : $scope.apiProxyName,
+			"revision" : $scope.revision
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/exportapiproxy", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.organization = "";
+			$scope.apiProxyName = "";
+			$scope.proxyData = data;
+			console.log($scope.proxyData);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+});
 
 app.controller('BackUpProxyCtrl', function($scope, $location, $rootScope, $http) {
 	
