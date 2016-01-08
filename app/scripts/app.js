@@ -45,6 +45,9 @@ app.config(function($routeProvider) {
 	}).when('/getProxy', {
 		templateUrl : 'views/getAPIProxy.html',
 		controller : 'GetProxyCtrl'
+	}).when('/exportProxy',{
+		templateUrl :'views/exportAPIProxy.html',
+		controller : 'ExportProxyCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
@@ -436,6 +439,32 @@ app.controller('CleanUpOrgCtrl', function($scope, $location, $rootScope, $http) 
 				});		
 		responsePromise.error(function(data, status, headers, config) {
 			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+
+app.controller('ExportProxyCtrl', function($scope, $rootScope, $http) {
+	$scope.proxyData = {};
+	$scope.exportAPIProxy = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization,
+			"apiProxyName" : $scope.apiProxyName,
+			"revision" : $scope.revision
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/exportapiproxy", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.organization = "";
+			$scope.apiProxyName = "";
+			$scope.proxyData = data;
+			console.log($scope.proxyData);
+		});
+		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");
 		});
 	}
