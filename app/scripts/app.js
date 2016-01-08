@@ -60,6 +60,21 @@ app.config(function($routeProvider) {
 	}).when('/backUpDevelopers', {
 		templateUrl : 'views/backUpDevelopers.html',
 		controller : 'BackUpOrgDevCtrl'
+	}).when('/cleanUpProxy', {
+		templateUrl : 'views/cleanUpProxy.html',
+		controller : 'CleanUpOrgProxyCtrl'
+	}).when('/cleanUpResource', {
+		templateUrl : 'views/cleanUpResource.html',
+		controller : 'CleanUpOrgResourceCtrl'
+	}).when('/cleanUpApp', {
+		templateUrl : 'views/cleanUpApp.html',
+		controller : 'CleanUpOrgAppCtrl'
+	}).when('/cleanUpProducts', {
+		templateUrl : 'views/cleanUpProducts.html',
+		controller : 'CleanUpOrgProductsCtrl'
+	}).when('/cleanUpDevelopers', {
+		templateUrl : 'views/cleanUpDevelopers.html',
+		controller : 'CleanUpOrgDevelopersCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
@@ -631,3 +646,160 @@ app.controller('BackUpOrgDevCtrl', function($scope, $location, $rootScope, $http
 		});
 	}
 });
+
+
+app.controller('CleanUpOrgProxyCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.showLoader = "N";
+	
+	$scope.cleanUpOrgAPIProxy = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		$scope.showLoader = "Y";
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/cleanupsubsystems?sys="+"apiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.backUpzip+= "API Proxies cleaned Successfully\n";
+					$scope.organization = "";
+					$scope.proxyData = data;
+					console.log($scope.proxyData);
+					$scope.showLoader = "N";
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+
+
+app.controller('CleanUpOrgResourceCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.showLoader = "N";
+	
+	$scope.cleanUpOrgResource = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		$scope.showLoader = "Y";
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/cleanupsubsystems?sys="+"resources", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.backUpzip+= "Resources cleaned Successfully\n";
+					$scope.organization = "";
+					$scope.proxyData = data;
+					console.log($scope.proxyData);
+					$scope.showLoader = "N";
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+
+app.controller('CleanUpOrgAppCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.showLoader = "N";
+	
+	$scope.cleanUpOrgApps = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		$scope.showLoader = "Y";
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/cleanupsubsystems?sys="+"apps", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.backUpzip+= "APPS cleaned Successfully\n";
+					$scope.organization = "";
+					$scope.proxyData = data;
+					console.log($scope.proxyData);
+					$scope.showLoader = "N";
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+
+app.controller('CleanUpOrgProductsCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.showLoader = "N";
+	
+	$scope.cleanUpOrgProducts = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		$scope.showLoader = "Y";
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/cleanupsubsystems?sys="+"apiproducts", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.backUpzip+= "Products cleaned Successfully\n";
+					$scope.organization = "";
+					$scope.proxyData = data;
+					console.log($scope.proxyData);
+					$scope.showLoader = "N";
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+});
+
+
+app.controller('CleanUpOrgDevelopersCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.showLoader = "N";
+	
+	$scope.cleanUpOrgDevelopers = function() {
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		$scope.showLoader = "Y";
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/cleanupsubsystems?sys="+"appdevelopers", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.backUpzip+= "Developers cleaned Successfully\n";
+					$scope.organization = "";
+					$scope.proxyData = data;
+					console.log($scope.proxyData);
+					$scope.showLoader = "N";
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+});
+
