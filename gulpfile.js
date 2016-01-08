@@ -115,7 +115,8 @@ gulp.task('wiredep', function() {
     'jquery',
     'es5-shim',
     'json3',
-    'angular-scenario'
+    'angular-scenario',
+    'angular-material'
   ];
 
   gulp.src('app/styles/*.less')

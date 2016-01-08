@@ -1,0 +1,56 @@
+<div data-ng-include="'views/navbar.html'"></div>
+<div>
+<form>
+	 <!--  ROW BEGIN -->
+	<div class="row">
+		<!--  column1 -->
+		<div class="col-md-4">
+			
+
+		</div>
+		<!--  column1 END -->
+		<!--  column2 -->
+		<div class="col-md-4">
+		
+				<div class="form-group">
+	    			<label for="proxyName">Backup APPS</label>
+	    			<input type="text" ng-change="catchKeys()" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+  				</div>
+  				<div class="form-group">
+					<button class="btn btn-default" ng-click="backUpOrgApp()" ng-disabled="enable">Backup APPS</button>
+					<div class="throbber-loader" ng-show="showLoader=='Y'">
+  Loading…
+</div>
+				</div>
+				
+		
+		</div>
+		<!--  column2 END -->
+
+		<!--  column3 -->
+		<div class="col-md-4"></div>
+		<!--  column3 END-->
+	</div>
+	<!--  ROW END -->
+		</form>
+		<div class="alert alert-success" role="alert" ng-if="backUpSuccess">
+			{{backUpSuccess}}
+		</div>
+		<div class="alert alert-success" role="alert" ng-if="backUpApps">
+			{{backUpApps}}
+		</div>
+		<div class="alert alert-success" role="alert" ng-if="backUpDev">
+			{{backUpDev}}
+		</div>
+		<div class="alert alert-success" role="alert" ng-if="backUpProd">
+			{{backUpProd}}
+		</div>
+		<div class="alert alert-success" role="alert" ng-if="backUpRes">
+			{{backUpRes}}
+		</div>
+		<div class="alert alert-success" role="alert" ng-if="backUpzip">
+			{{backUpzip}}
+		</div>
+		
+</div>
+<div data-ng-include="'views/footer.html'"></div>
