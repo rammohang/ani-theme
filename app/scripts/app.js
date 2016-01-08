@@ -70,9 +70,9 @@ app.config(function($routeProvider) {
 
 // declare global constants here
 app.run(function($rootScope) {
-	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
-	$rootScope.userName = "mraviteja48@gmail.com";
-	$rootScope.password = "Ravi548$";
+	$rootScope.baseUrl = "http://localhost:8080/apigee_rest/services/";
+	$rootScope.userName = "itsmevenkee@gmail.com";
+	$rootScope.password = "Venkat@3765";
 	$rootScope.userLoggedIn = false;
 });
 
