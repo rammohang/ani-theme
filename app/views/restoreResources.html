@@ -1,0 +1,82 @@
+<div data-ng-include="'views/navbar.html'"></div>
+<div>
+<form>
+	 <!--  ROW BEGIN -->
+	<div class="row">
+		<!--  column1 -->
+		<div class="col-md-4">
+			
+
+		</div>
+		<!--  column1 END -->
+		<!--  column2 -->
+		<div class="col-md-4">
+			
+				<div class="form-group">
+	    			<label for="proxyName">Restore APIProxies</label>
+	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+  				</div>
+  				<div class="form-group">
+					<button class="btn btn-default" ng-click="fetchOrgHistory()">Fetch History</button>
+					<div class="throbber-loader" ng-show="showLoader=='Y'">
+  Loading…
+</div>
+				</div>
+		
+		</div>
+		<!--  column2 END -->
+
+		<!--  column3 -->
+		<div class="col-md-4"></div>
+		<!--  column3 END-->
+	</div>
+	<!--  ROW END -->
+		</form>
+		
+		<div class="row">
+		<!--  column1 -->
+		<div class="col-md-4">
+		</div>
+		
+		<div class="col-md-4" ng-if="orgHis">
+		
+		
+		<table class="table table-hover">
+		<tr>
+		<th>Uploaded On</th><th>Organization</th><th>#</th>
+		</tr>
+        <tr ng-repeat="item in orgHis | pagination: curPage * pageSize | limitTo: pageSize">
+        <td>{{item.uploadDate.$date}}</td><td>{{item.filename}}</td><td> <button class="btn btn-default" ng-click="restoreOrg(item._id.$oid,item.filename)">Restore</button></td>
+        </tr>    
+           
+		</table>
+		
+		
+			
+			        <ul class="pagination-controle pagination">
+       <li>
+        <button type="button" class="btn btn-primary" ng-disabled="curPage == 0"
+       ng-click="curPage=curPage-1"> &lt; PREV</button>
+       </li>
+       <li>
+       <span>Page {{curPage + 1}} of {{ numberOfPages() }}</span>
+       </li>
+       <li>
+       <button type="button" class="btn btn-primary"
+       ng-disabled="curPage >= orgHis.length/pageSize - 1"
+       ng-click="curPage = curPage+1">NEXT &gt;</button>
+       </li>
+      </ul>
+		
+		</div>
+		
+		<div class="col-md-4">
+		</div>
+		
+		</div>
+		
+		<div class="alert alert-success" role="alert" ng-if="backUpzip">
+			{{backUpzip}}
+		</div>
+</div>
+<div data-ng-include="'views/footer.html'"></div>

@@ -78,6 +78,21 @@ app.config(function($routeProvider) {
 	}).when('/cleanUpDevelopers', {
 		templateUrl : 'views/cleanUpDevelopers.html',
 		controller : 'CleanUpOrgDevelopersCtrl'
+	}).when('/restoreProxy', {
+		templateUrl : 'views/restoreApiProxy.html',
+		controller : 'RestoreOrgProxyCtrl'
+	}).when('/restoreResource', {
+		templateUrl : 'views/restoreResources.html',
+		controller : 'RestoreOrgResourceCtrl'
+	}).when('/restoreApps', {
+		templateUrl : 'views/restoreApps.html',
+		controller : 'RestoreOrgAppsCtrl'
+	}).when('/restoreProducts', {
+		templateUrl : 'views/restoreProducts.html',
+		controller : 'RestoreOrgProductsCtrl'
+	}).when('/restoreDevelopers', {
+		templateUrl : 'views/restoreDevelopers.html',
+		controller : 'RestoreOrgDevelopersCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
@@ -85,9 +100,9 @@ app.config(function($routeProvider) {
 
 // declare global constants here
 app.run(function($rootScope) {
-	$rootScope.baseUrl = "http://localhost:8080/apigee_rest/services/";
-	$rootScope.userName = "itsmevenkee@gmail.com";
-	$rootScope.password = "Venkat@3765";
+	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
+	$rootScope.userName = "mraviteja48@gmail.com";
+	$rootScope.password = "Ravi548$";
 	$rootScope.userLoggedIn = false;
 });
 
@@ -349,7 +364,7 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/backuporg", commonConfiguration, {});
+				+ "apigee/backupsubsystems?sys="+"org", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 					$scope.backUpzip+= "Backup Created Successfully\n";
 					$scope.organization = "";
@@ -400,7 +415,7 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/getorgbackuphistory", commonConfiguration, {});
+				+ "apigee/getorgbackuphistory?sys="+"org", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 					$scope.showLoader = "N";
 					$scope.backUpzip+= "Org Data Fetched successfully\n";
@@ -426,7 +441,7 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename, commonConfiguration, {});
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"org", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 					$scope.showLoader = "N";
 					$scope.backUpzip+= "Organization Restored successfully\n";
@@ -459,7 +474,7 @@ app.controller('CleanUpOrgCtrl', function($scope, $location, $rootScope, $http) 
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/cleanorg", commonConfiguration, {});
+				+ "apigee/cleanupsubsystems?sys="+"org", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 					$scope.backUpzip+= "Cleaned Organization Successfully\n";
 					$scope.organization = "";
@@ -810,3 +825,358 @@ app.controller('CleanUpOrgDevelopersCtrl', function($scope, $location, $rootScop
 	}
 });
 
+app.controller('RestoreOrgProxyCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.orgHis = "";
+	$scope.showLoader = "N";
+	
+	
+	
+	
+	$scope.fetchOrgHistory = function() {
+		$scope.showLoader = "Y";
+		
+		 $scope.curPage = 0;
+		 $scope.pageSize = 3;
+		 $scope.numberOfPages = function() {
+				return Math.ceil($scope.orgHis.length / $scope.pageSize);
+			};
+		
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/getorgbackuphistory?sys="+"apiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.backUpzip+= "Restored API Proxies successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	$scope.restoreOrg = function(oid,filename) {
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
+		$scope.showLoader = "Y";
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"apiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.backUpzip+= "Organization Restored successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	
+	
+});
+
+
+
+app.controller('RestoreOrgResourceCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.orgHis = "";
+	$scope.showLoader = "N";
+	
+	
+	
+	
+	$scope.fetchOrgHistory = function() {
+		$scope.showLoader = "Y";
+		
+		 $scope.curPage = 0;
+		 $scope.pageSize = 3;
+		 $scope.numberOfPages = function() {
+				return Math.ceil($scope.orgHis.length / $scope.pageSize);
+			};
+		
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/getorgbackuphistory?sys="+"resources", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					//$scope.backUpzip+= "Restored API Proxies successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	$scope.restoreOrg = function(oid,filename) {
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
+		$scope.showLoader = "Y";
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"resources", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.backUpzip+= "Resources Restored successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	
+	
+});
+
+
+app.controller('RestoreOrgAppsCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.orgHis = "";
+	$scope.showLoader = "N";
+	
+	
+	
+	
+	$scope.fetchOrgHistory = function() {
+		$scope.showLoader = "Y";
+		
+		 $scope.curPage = 0;
+		 $scope.pageSize = 3;
+		 $scope.numberOfPages = function() {
+				return Math.ceil($scope.orgHis.length / $scope.pageSize);
+			};
+		
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/getorgbackuphistory?sys="+"apps", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					//$scope.backUpzip+= "Restored API Proxies successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	$scope.restoreApps = function(oid,filename) {
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
+		$scope.showLoader = "Y";
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"apps", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.backUpzip+= "Resources Restored successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	
+	
+});
+
+
+app.controller('RestoreOrgProductsCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.orgHis = "";
+	$scope.showLoader = "N";
+	
+	
+	
+	
+	$scope.fetchOrgHistory = function() {
+		$scope.showLoader = "Y";
+		
+		 $scope.curPage = 0;
+		 $scope.pageSize = 3;
+		 $scope.numberOfPages = function() {
+				return Math.ceil($scope.orgHis.length / $scope.pageSize);
+			};
+		
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/getorgbackuphistory?sys="+"apiproducts", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					//$scope.backUpzip+= "Restored API Proxies successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	$scope.restoreProducts = function(oid,filename) {
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
+		$scope.showLoader = "Y";
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"apiproducts", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.backUpzip+= "Resources Restored successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	
+	
+});
+
+
+
+app.controller('RestoreOrgDevelopersCtrl', function($scope, $location, $rootScope, $http) {
+	
+	$scope.backUpzip = "";
+	$scope.proxyData = "";
+	$scope.orgHis = "";
+	$scope.showLoader = "N";
+	
+	
+	
+	
+	$scope.fetchOrgHistory = function() {
+		$scope.showLoader = "Y";
+		
+		 $scope.curPage = 0;
+		 $scope.pageSize = 3;
+		 $scope.numberOfPages = function() {
+				return Math.ceil($scope.orgHis.length / $scope.pageSize);
+			};
+		
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/getorgbackuphistory?sys="+"appdevelopers", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					//$scope.backUpzip+= "Restored API Proxies successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	$scope.restoreDevelopers = function(oid,filename) {
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
+		$scope.showLoader = "Y";
+		var commonConfiguration = {
+			"userName" : $rootScope.userName,
+			"password" : $rootScope.password,
+			"organization" : $scope.organization
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"appdevelopers", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.backUpzip+= "Developers Restored successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
+	}
+	
+	
+	
+});
