@@ -101,8 +101,9 @@ app.config(function($routeProvider) {
 // declare global constants here
 app.run(function($rootScope) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
-	$rootScope.userName = "mraviteja48@gmail.com";
-	$rootScope.password = "Ravi548$";
+	$rootScope.userName = "";
+	$rootScope.password = "";
+	$rootScope.displayName = "";
 	$rootScope.userLoggedIn = false;
 });
 
@@ -115,10 +116,10 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope) {
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "user/authenticate", userDetails, {});
 		responsePromise.success(function(data, status, headers, config) {
-			alert("success" + data);
 			if(data.userName) {
 				$rootScope.userName = data.email;
 				$rootScope.password = data.password;
+				$rootScope.displayName = data.userName;
 				$scope.userLoggedIn = true;
 				$location.path('/dashboard');
 			} else {
@@ -133,7 +134,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope) {
 	}
 });
 
-app.controller('DashboardCtrl', function($scope, $location) {
+app.controller('DashboardCtrl', function($rootScope,$scope, $location) {
 	
 });
 
