@@ -109,10 +109,6 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope,$local
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 	if(userDetails && userDetails.userLoggedIn == true) {
-		$rootScope.userName = userDetails.userName;
-		$rootScope.password = userDetails.password;
-		$rootScope.displayName = userDetails.displayName;
-		$rootScope.userLoggedIn = userDetails.userLoggedIn;
 		$location.path('/dashboard');
 	}
 	
@@ -126,10 +122,11 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope,$local
 		responsePromise.success(function(data, status, headers, config) {
 			if(data.userName) {
 				var userDetails = {};
-				$rootScope.userName = userDetails.userName = data.email;
-				$rootScope.password = userDetails.password = data.password;
-				$rootScope.displayName = userDetails.displayName = data.userName;
-				$rootScope.userLoggedIn = userDetails.userLoggedIn = true;
+				userDetails.userName = data.email;
+				userDetails.password = data.password;
+				userDetails.displayName = data.userName;
+				userDetails.userLoggedIn = true;
+				$rootScope.userDetails = userDetails;
 				$localStorage.userDetails = userDetails;
 				$location.path('/dashboard');
 			} else {
@@ -143,18 +140,35 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope,$local
 	}
 });
 
-app.controller('DashboardCtrl', function($rootScope,$scope, $location) {
-	
+app.controller('DashboardCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
 });
 
-app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
+app.controller('DeleteProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+	
 	$scope.proxiesList = "";
 	$scope.disable = false;
 	
 	$scope.getAPIProxies = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -175,8 +189,8 @@ app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
 	
 	$scope.deleteApiProxy = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization,
 			"apiProxyName" : $scope.apiProxyName
 		};
@@ -194,7 +208,17 @@ app.controller('DeleteProxyCtrl', function($http, $scope, $rootScope) {
 	}
 });
 
-app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
+app.controller('UndeployProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.proxiesList = [];
 	$scope.envList = [];
 	$scope.environment = {};
@@ -213,8 +237,8 @@ app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
 	
 	$scope.getDeployedEnv = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization,
 			"apiProxyName" : $scope.apiProxyName
 		};
@@ -234,8 +258,8 @@ app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
 	
 	$scope.getAPIProxies = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -255,8 +279,8 @@ app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
 	
 	$scope.undeployProxy = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization,
 			"apiProxyName" : $scope.apiProxyName,
 			"environment" : $scope.environment.name,
@@ -277,11 +301,21 @@ app.controller('UndeployProxyCtrl', function($http, $scope, $rootScope) {
 	}
 });
 
-app.controller('DeployProxyCtrl', function($http, $scope, $rootScope) {
+app.controller('DeployProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.deployProxy = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization,
 			"apiProxyName" : $scope.apiProxyName,
 			"environment" : $scope.environment,
@@ -302,11 +336,21 @@ app.controller('DeployProxyCtrl', function($http, $scope, $rootScope) {
 	}
 });
 
-app.controller('CreateProxyCtrl', function($http, $scope, $rootScope) {
+app.controller('CreateProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.createAPIProxy = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization,
 			"apiProxyName" : $scope.apiProxyName
 		};
@@ -323,12 +367,22 @@ app.controller('CreateProxyCtrl', function($http, $scope, $rootScope) {
 	}
 });
 
-app.controller('GetProxyCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.proxyData = "";
 	$scope.getAPIProxy = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization,
 			"apiProxyName" : $scope.apiProxyName
 		};
@@ -347,7 +401,17 @@ app.controller('GetProxyCtrl', function($scope, $location, $rootScope, $http) {
 	}
 });
 
-app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -367,8 +431,8 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http) {
 	
 		
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -399,7 +463,17 @@ app.filter('pagination', function()
 	 };
 	});
 
-app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -419,8 +493,8 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 			};
 		
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -445,8 +519,8 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 		$scope.filename = filename;
 		$scope.showLoader = "Y";
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -470,15 +544,25 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http) 
 });
 
 
-app.controller('CleanUpOrgCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('CleanUpOrgCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
 	$scope.showLoader = "N";
 	$scope.cleanUpOrg = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -500,12 +584,22 @@ app.controller('CleanUpOrgCtrl', function($scope, $location, $rootScope, $http) 
 });
 
 
-app.controller('ExportProxyCtrl', function($scope, $rootScope, $http) {
+app.controller('ExportProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.proxyData = {};
 	$scope.exportAPIProxy = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization,
 			"apiProxyName" : $scope.apiProxyName,
 			"revision" : $scope.revision
@@ -525,7 +619,17 @@ app.controller('ExportProxyCtrl', function($scope, $rootScope, $http) {
 	}
 });
 
-app.controller('BackUpProxyCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('BackUpProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -533,8 +637,8 @@ app.controller('BackUpProxyCtrl', function($scope, $location, $rootScope, $http)
 	
 	$scope.backUpAPIProxy = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -557,7 +661,17 @@ app.controller('BackUpProxyCtrl', function($scope, $location, $rootScope, $http)
 
 
 
-app.controller('BackUpOrgResourceCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -565,8 +679,8 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $location, $rootScope, 
 	
 	$scope.backUpOrgResource = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -588,7 +702,17 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $location, $rootScope, 
 });
 
 
-app.controller('BackUpOrgAppCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('BackUpOrgAppCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -596,8 +720,8 @@ app.controller('BackUpOrgAppCtrl', function($scope, $location, $rootScope, $http
 	
 	$scope.backUpOrgApp = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -618,7 +742,17 @@ app.controller('BackUpOrgAppCtrl', function($scope, $location, $rootScope, $http
 	}
 });
 
-app.controller('BackUpOrgProdCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('BackUpOrgProdCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -626,8 +760,8 @@ app.controller('BackUpOrgProdCtrl', function($scope, $location, $rootScope, $htt
 	
 	$scope.backUpOrgProd = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -649,7 +783,17 @@ app.controller('BackUpOrgProdCtrl', function($scope, $location, $rootScope, $htt
 });
 
 
-app.controller('BackUpOrgDevCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('BackUpOrgDevCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -657,8 +801,8 @@ app.controller('BackUpOrgDevCtrl', function($scope, $location, $rootScope, $http
 	
 	$scope.backUpOrgDev = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -680,7 +824,17 @@ app.controller('BackUpOrgDevCtrl', function($scope, $location, $rootScope, $http
 });
 
 
-app.controller('CleanUpOrgProxyCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('CleanUpOrgProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -688,8 +842,8 @@ app.controller('CleanUpOrgProxyCtrl', function($scope, $location, $rootScope, $h
 	
 	$scope.cleanUpOrgAPIProxy = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -712,7 +866,17 @@ app.controller('CleanUpOrgProxyCtrl', function($scope, $location, $rootScope, $h
 
 
 
-app.controller('CleanUpOrgResourceCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('CleanUpOrgResourceCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -720,8 +884,8 @@ app.controller('CleanUpOrgResourceCtrl', function($scope, $location, $rootScope,
 	
 	$scope.cleanUpOrgResource = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -743,7 +907,17 @@ app.controller('CleanUpOrgResourceCtrl', function($scope, $location, $rootScope,
 });
 
 
-app.controller('CleanUpOrgAppCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('CleanUpOrgAppCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -751,8 +925,8 @@ app.controller('CleanUpOrgAppCtrl', function($scope, $location, $rootScope, $htt
 	
 	$scope.cleanUpOrgApps = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -774,7 +948,17 @@ app.controller('CleanUpOrgAppCtrl', function($scope, $location, $rootScope, $htt
 });
 
 
-app.controller('CleanUpOrgProductsCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('CleanUpOrgProductsCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -782,8 +966,8 @@ app.controller('CleanUpOrgProductsCtrl', function($scope, $location, $rootScope,
 	
 	$scope.cleanUpOrgProducts = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -805,7 +989,17 @@ app.controller('CleanUpOrgProductsCtrl', function($scope, $location, $rootScope,
 });
 
 
-app.controller('CleanUpOrgDevelopersCtrl', function($scope, $location, $rootScope, $http) {
+app.controller('CleanUpOrgDevelopersCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
@@ -813,8 +1007,8 @@ app.controller('CleanUpOrgDevelopersCtrl', function($scope, $location, $rootScop
 	
 	$scope.cleanUpOrgDevelopers = function() {
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		$scope.showLoader = "Y";
@@ -835,8 +1029,17 @@ app.controller('CleanUpOrgDevelopersCtrl', function($scope, $location, $rootScop
 	}
 });
 
-app.controller('RestoreOrgProxyCtrl', function($scope, $location, $rootScope, $http) {
-	
+app.controller('RestoreOrgProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
 	$scope.orgHis = "";
@@ -855,8 +1058,8 @@ app.controller('RestoreOrgProxyCtrl', function($scope, $location, $rootScope, $h
 			};
 		
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -881,8 +1084,8 @@ app.controller('RestoreOrgProxyCtrl', function($scope, $location, $rootScope, $h
 		$scope.filename = filename;
 		$scope.showLoader = "Y";
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -907,8 +1110,17 @@ app.controller('RestoreOrgProxyCtrl', function($scope, $location, $rootScope, $h
 
 
 
-app.controller('RestoreOrgResourceCtrl', function($scope, $location, $rootScope, $http) {
-	
+app.controller('RestoreOrgResourceCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
 	$scope.orgHis = "";
@@ -927,8 +1139,8 @@ app.controller('RestoreOrgResourceCtrl', function($scope, $location, $rootScope,
 			};
 		
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -953,8 +1165,8 @@ app.controller('RestoreOrgResourceCtrl', function($scope, $location, $rootScope,
 		$scope.filename = filename;
 		$scope.showLoader = "Y";
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -978,8 +1190,17 @@ app.controller('RestoreOrgResourceCtrl', function($scope, $location, $rootScope,
 });
 
 
-app.controller('RestoreOrgAppsCtrl', function($scope, $location, $rootScope, $http) {
-	
+app.controller('RestoreOrgAppsCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
 	$scope.orgHis = "";
@@ -998,8 +1219,8 @@ app.controller('RestoreOrgAppsCtrl', function($scope, $location, $rootScope, $ht
 			};
 		
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -1024,8 +1245,8 @@ app.controller('RestoreOrgAppsCtrl', function($scope, $location, $rootScope, $ht
 		$scope.filename = filename;
 		$scope.showLoader = "Y";
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -1049,8 +1270,17 @@ app.controller('RestoreOrgAppsCtrl', function($scope, $location, $rootScope, $ht
 });
 
 
-app.controller('RestoreOrgProductsCtrl', function($scope, $location, $rootScope, $http) {
-	
+app.controller('RestoreOrgProductsCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
 	$scope.orgHis = "";
@@ -1069,8 +1299,8 @@ app.controller('RestoreOrgProductsCtrl', function($scope, $location, $rootScope,
 			};
 		
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -1095,8 +1325,8 @@ app.controller('RestoreOrgProductsCtrl', function($scope, $location, $rootScope,
 		$scope.filename = filename;
 		$scope.showLoader = "Y";
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -1121,8 +1351,17 @@ app.controller('RestoreOrgProductsCtrl', function($scope, $location, $rootScope,
 
 
 
-app.controller('RestoreOrgDevelopersCtrl', function($scope, $location, $rootScope, $http) {
-	
+app.controller('RestoreOrgDevelopersCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
 	$scope.orgHis = "";
@@ -1141,8 +1380,8 @@ app.controller('RestoreOrgDevelopersCtrl', function($scope, $location, $rootScop
 			};
 		
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);
@@ -1167,8 +1406,8 @@ app.controller('RestoreOrgDevelopersCtrl', function($scope, $location, $rootScop
 		$scope.filename = filename;
 		$scope.showLoader = "Y";
 		var commonConfiguration = {
-			"userName" : $rootScope.userName,
-			"password" : $rootScope.password,
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
 			"organization" : $scope.organization
 		};
 		console.log(commonConfiguration);

@@ -76,10 +76,10 @@
             <ul class="nav navbar-nav navbar-right">
               
               <li class="dropdown active1">
-                <a href="./">Welcome {{displayName}}! <span class="sr-only">(current)</span></a>
+                <a href="./">Welcome {{userDetails.displayName}}! <span class="sr-only">(current)</span></a>
                
                 <ul class="dropdown-menu">
-                   <li><a href="#/logout">Logout</a></li>
+                   <li><a href="#" ng-click="logout()">Logout</a></li>
                  
                 </ul>
               </li>
