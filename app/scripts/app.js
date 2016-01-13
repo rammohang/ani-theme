@@ -7,7 +7,7 @@
  *
  * Main module of the application.
  */
-var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate' ]);
+var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate','ngStorage' ]);
 
 app.config(function($httpProvider) {
 	 $httpProvider.defaults.timeout = 50000;
@@ -99,15 +99,23 @@ app.config(function($routeProvider) {
 });
 
 // declare global constants here
-app.run(function($rootScope) {
-	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
-	$rootScope.userName = "";
-	$rootScope.password = "";
-	$rootScope.displayName = "";
-	$rootScope.userLoggedIn = false;
+app.run(function($rootScope,$localStorage) {
+	$rootScope.baseUrl = "http://localhost:8080/apigee_rest/services/";
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
 });
 
-app.controller('LoginCtrl', function($scope, $http, $location, $rootScope) {
+app.controller('LoginCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if(userDetails && userDetails.userLoggedIn == true) {
+		$rootScope.userName = userDetails.userName;
+		$rootScope.password = userDetails.password;
+		$rootScope.displayName = userDetails.displayName;
+		$rootScope.userLoggedIn = userDetails.userLoggedIn;
+		$location.path('/dashboard');
+	}
+	
 	$scope.submit = function() {
 		var userDetails = {
 			"email" : $scope.email,
@@ -117,10 +125,12 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope) {
 				+ "user/authenticate", userDetails, {});
 		responsePromise.success(function(data, status, headers, config) {
 			if(data.userName) {
-				$rootScope.userName = data.email;
-				$rootScope.password = data.password;
-				$rootScope.displayName = data.userName;
-				$scope.userLoggedIn = true;
+				var userDetails = {};
+				$rootScope.userName = userDetails.userName = data.email;
+				$rootScope.password = userDetails.password = data.password;
+				$rootScope.displayName = userDetails.displayName = data.userName;
+				$rootScope.userLoggedIn = userDetails.userLoggedIn = true;
+				$localStorage.userDetails = userDetails;
 				$location.path('/dashboard');
 			} else {
 				alert("Invalid username/password. Please try again !!");
@@ -130,7 +140,6 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope) {
 			alert("Submitting form failed!");
 		});
 		
-		return false;
 	}
 });
 
