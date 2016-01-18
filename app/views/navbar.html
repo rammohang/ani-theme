@@ -8,29 +8,30 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">APIGEE DevOps</a>
+            <h3 class="apigee"><a href="#"></a></h3>
           </div>
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-              <li class="active1 dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Org  <span class="caret"></span></a>
+           	  <li class="active1 dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dashboard  <span class="caret"></span></a>
+			  </li>
+              <li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Organization  <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#/backUpOrg">BackUp</a></li>
-                  <li><a href="#/cleanOrg">Clean</a></li>
-                  <li><a href="#/restoreOrg">Restore</a></li>
-                 
+                  <li><a href="#/backUpOrg">BackUp Organization</a></li>
+                  <li><a href="#/cleanOrg">Clean Organization</a></li>
+                  <li><a href="#/restoreOrg">Restore Organization</a></li>
                 </ul>
 			  </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">API Proxies <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backupProxy">BackUp</a></li>
-                  <li><a href="#/cleanUpProxy">Clean</a></li>
-                  <li><a href="#/restoreProxy">Restore</a></li>
+                   <li><a href="#/backupProxy">BackUp Proxy</a></li>
+                  <li><a href="#/cleanUpProxy">Clean Proxy</a></li>
+                  <li><a href="#/restoreProxy">Restore Proxy</a></li>
                    <li><a href="#/deleteProxy">Delete Proxy</a></li>
                   <li><a href="#/undeployProxy">Undeploy Proxy</a></li>
                   <li><a href="#/deployProxy">Deploy Proxy</a></li>
-                  <li><a href="#/createProxy">Create Proxy</a></li>
                   <li><a href="#/getProxy">Get Proxy</a></li>
                  <li><a href="#/exportProxy">Export Proxy</a></li>
                 </ul>
@@ -38,36 +39,36 @@
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Resources <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backUpResource">BackUp</a></li>
-                  <li><a href="#/cleanUpResource">Clean</a></li>
-                  <li><a href="#/restoreResource">Restore</a></li>
+                   <li><a href="#/backUpResource">BackUp Resources</a></li>
+                  <li><a href="#/cleanUpResource">Clean Resources</a></li>
+                  <li><a href="#/restoreResource">Restore Resources</a></li>
                  
                 </ul>
               </li>
 			  <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Apps <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backUpApp">BackUp</a></li>
-                  <li><a href="#/cleanUpApp">Clean</a></li>
-                  <li><a href="#/restoreApps">Restore</a></li>
+                   <li><a href="#/backUpApp">BackUp Apps</a></li>
+                  <li><a href="#/cleanUpApp">Clean Apps</a></li>
+                  <li><a href="#/restoreApps">Restore Apps</a></li>
                  
                 </ul>
               </li>			 
 			 <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> API Products <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backUpProducts">BackUp</a></li>
-                  <li><a href="#/cleanUpProducts">Clean</a></li>
-                  <li><a href="#/restoreProducts">Restore</a></li>
+                   <li><a href="#/backUpProducts">BackUp Products</a></li>
+                  <li><a href="#/cleanUpProducts">Clean Products</a></li>
+                  <li><a href="#/restoreProducts">Restore Products</a></li>
                  
                 </ul>
               </li>	
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">APP Developers <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backUpDevelopers">BackUp</a></li>
-                  <li><a href="#/cleanUpDevelopers">Clean</a></li>
-                  <li><a href="#/restoreDevelopers">Restore</a></li>
+                   <li><a href="#/backUpDevelopers">BackUp Developers</a></li>
+                  <li><a href="#/cleanUpDevelopers">Clean Developers</a></li>
+                  <li><a href="#/restoreDevelopers">Restore Developers</a></li>
                  
                 </ul>
               </li>
@@ -76,7 +77,7 @@
             <ul class="nav navbar-nav navbar-right">
               
               <li class="dropdown active1">
-                <a href="./">Welcome {{userDetails.displayName}}! <span class="sr-only">(current)</span></a>
+                <a href="./">Welcome {{userDetails.displayName}} ! <span class="sr-only">(current)</span></a>
                
                 <ul class="dropdown-menu">
                    <li><a href="#" ng-click="logout()">Logout</a></li>
