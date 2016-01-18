@@ -13,7 +13,6 @@ app.config(function($httpProvider) {
 	 $httpProvider.defaults.timeout = 50000;
 });
 
-
 app.config(function($routeProvider) {
 	$routeProvider.when('/login', {
 		templateUrl : 'views/login.html',
@@ -126,6 +125,7 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope,$local
 				userDetails.password = data.password;
 				userDetails.displayName = data.userName;
 				userDetails.userLoggedIn = true;
+				userDetails.organizations = data.organizations || [];
 				$rootScope.userDetails = userDetails;
 				$localStorage.userDetails = userDetails;
 				$location.path('/dashboard');
@@ -152,6 +152,22 @@ app.controller('DashboardCtrl', function($scope, $http, $location, $rootScope,$l
 });
 
 app.controller('DeleteProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -166,10 +182,14 @@ app.controller('DeleteProxyCtrl', function($scope, $http, $location, $rootScope,
 	$scope.disable = false;
 	
 	$scope.getAPIProxies = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/listapiproxies", commonConfiguration, {});
@@ -188,10 +208,15 @@ app.controller('DeleteProxyCtrl', function($scope, $http, $location, $rootScope,
 	
 	
 	$scope.deleteApiProxy = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization,
+			"organization" : org,
 			"apiProxyName" : $scope.apiProxyName
 		};
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -209,6 +234,22 @@ app.controller('DeleteProxyCtrl', function($scope, $http, $location, $rootScope,
 });
 
 app.controller('UndeployProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -236,6 +277,10 @@ app.controller('UndeployProxyCtrl', function($scope, $http, $location, $rootScop
 	};
 	
 	$scope.getDeployedEnv = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
@@ -260,7 +305,7 @@ app.controller('UndeployProxyCtrl', function($scope, $http, $location, $rootScop
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/listapiproxies", commonConfiguration, {});
@@ -278,10 +323,14 @@ app.controller('UndeployProxyCtrl', function($scope, $http, $location, $rootScop
 	
 	
 	$scope.undeployProxy = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization,
+			"organization" : org,
 			"apiProxyName" : $scope.apiProxyName,
 			"environment" : $scope.environment.name,
 			"revision" : $scope.revision
@@ -302,7 +351,23 @@ app.controller('UndeployProxyCtrl', function($scope, $http, $location, $rootScop
 });
 
 app.controller('DeployProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
-
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
+	
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 	if(!userDetails || !userDetails.userLoggedIn) {
@@ -313,10 +378,15 @@ app.controller('DeployProxyCtrl', function($scope, $http, $location, $rootScope,
 	};
 
 	$scope.deployProxy = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization,
+			"organization" : org,
 			"apiProxyName" : $scope.apiProxyName,
 			"environment" : $scope.environment,
 			"revision" : $scope.revision
@@ -337,6 +407,22 @@ app.controller('DeployProxyCtrl', function($scope, $http, $location, $rootScope,
 });
 
 app.controller('CreateProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -348,10 +434,15 @@ app.controller('CreateProxyCtrl', function($scope, $http, $location, $rootScope,
 	};
 
 	$scope.createAPIProxy = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization,
+			"organization" : org,
 			"apiProxyName" : $scope.apiProxyName
 		};
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -368,7 +459,23 @@ app.controller('CreateProxyCtrl', function($scope, $http, $location, $rootScope,
 });
 
 app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
-
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
+	
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 	if(!userDetails || !userDetails.userLoggedIn) {
@@ -380,10 +487,15 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,$lo
 
 	$scope.proxyData = "";
 	$scope.getAPIProxy = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization,
+			"organization" : org,
 			"apiProxyName" : $scope.apiProxyName
 		};
 		console.log(commonConfiguration);
@@ -412,30 +524,42 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http,$l
 		$localStorage.userDetails = undefined;
 	};
 
-	
 	$scope.backUpzip = "";
 	$scope.proxyData = "";
-	$scope.showLoader = "N";
+	$scope.showLoader = false;
 	$scope.enable = true;
 	
-	$scope.catchKeys = function(){
-		if($scope.organization.length > 0){
-			$scope.enable = false;
-		}else{
-			$scope.enable = true;
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
 		}
 	}
 	
 	$scope.backUpOrg = function() {
-		
-	
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
-		$scope.showLoader = "Y";
+		$scope.showLoader = true;
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/backupsubsystems?sys="+"org", commonConfiguration, {});
@@ -444,10 +568,10 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http,$l
 					$scope.organization = "";
 					$scope.proxyData = data;
 					console.log($scope.proxyData);
-					$scope.showLoader = "N";
+					$scope.showLoader = false;
 				});		
 		responsePromise.error(function(data, status, headers, config) {
-			$scope.showLoader = "N";
+			$scope.showLoader = false;
 			alert("Submitting form failed!");
 		});
 	}
@@ -480,10 +604,29 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http,$
 	$scope.orgHis = "";
 	$scope.showLoader = "N";
 	
-	
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 	
 	
 	$scope.fetchOrgHistory = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		$scope.showLoader = "Y";
 		
 		 $scope.curPage = 0;
@@ -495,7 +638,7 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http,$
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -514,6 +657,10 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http,$
 	}
 	
 	$scope.restoreOrg = function(oid,filename) {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		alert(oid);
 		$scope.oid = oid;
 		$scope.filename = filename;
@@ -521,7 +668,7 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http,$
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -545,6 +692,22 @@ app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http,$
 
 
 app.controller('CleanUpOrgCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -560,10 +723,15 @@ app.controller('CleanUpOrgCtrl', function($scope, $http, $location, $rootScope,$
 	$scope.proxyData = "";
 	$scope.showLoader = "N";
 	$scope.cleanUpOrg = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -585,7 +753,23 @@ app.controller('CleanUpOrgCtrl', function($scope, $http, $location, $rootScope,$
 
 
 app.controller('ExportProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
-
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
+	
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 	if(!userDetails || !userDetails.userLoggedIn) {
@@ -597,10 +781,15 @@ app.controller('ExportProxyCtrl', function($scope, $http, $location, $rootScope,
 
 	$scope.proxyData = {};
 	$scope.exportAPIProxy = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization,
+			"organization" : org,
 			"apiProxyName" : $scope.apiProxyName,
 			"revision" : $scope.revision
 		};
@@ -620,6 +809,23 @@ app.controller('ExportProxyCtrl', function($scope, $http, $location, $rootScope,
 });
 
 app.controller('BackUpProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -636,10 +842,15 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location, $rootScope,
 	$scope.showLoader = "N";
 	
 	$scope.backUpAPIProxy = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -662,6 +873,22 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location, $rootScope,
 
 
 app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -678,10 +905,14 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location, $root
 	$scope.showLoader = "N";
 	
 	$scope.backUpOrgResource = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -703,6 +934,22 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location, $root
 
 
 app.controller('BackUpOrgAppCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -719,10 +966,14 @@ app.controller('BackUpOrgAppCtrl', function($scope, $http, $location, $rootScope
 	$scope.showLoader = "N";
 	
 	$scope.backUpOrgApp = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -752,6 +1003,23 @@ app.controller('BackUpOrgProdCtrl', function($scope, $http, $location, $rootScop
 	$scope.logout = function() {
 		$localStorage.userDetails = undefined;
 	};
+	
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	
 	$scope.backUpzip = "";
@@ -759,10 +1027,14 @@ app.controller('BackUpOrgProdCtrl', function($scope, $http, $location, $rootScop
 	$scope.showLoader = "N";
 	
 	$scope.backUpOrgProd = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -784,6 +1056,22 @@ app.controller('BackUpOrgProdCtrl', function($scope, $http, $location, $rootScop
 
 
 app.controller('BackUpOrgDevCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -800,10 +1088,14 @@ app.controller('BackUpOrgDevCtrl', function($scope, $http, $location, $rootScope
 	$scope.showLoader = "N";
 	
 	$scope.backUpOrgDev = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -825,7 +1117,23 @@ app.controller('BackUpOrgDevCtrl', function($scope, $http, $location, $rootScope
 
 
 app.controller('CleanUpOrgProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
-
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
+	
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 	if(!userDetails || !userDetails.userLoggedIn) {
@@ -841,10 +1149,15 @@ app.controller('CleanUpOrgProxyCtrl', function($scope, $http, $location, $rootSc
 	$scope.showLoader = "N";
 	
 	$scope.cleanUpOrgAPIProxy = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -867,7 +1180,23 @@ app.controller('CleanUpOrgProxyCtrl', function($scope, $http, $location, $rootSc
 
 
 app.controller('CleanUpOrgResourceCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
-
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
+	
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 	if(!userDetails || !userDetails.userLoggedIn) {
@@ -883,10 +1212,15 @@ app.controller('CleanUpOrgResourceCtrl', function($scope, $http, $location, $roo
 	$scope.showLoader = "N";
 	
 	$scope.cleanUpOrgResource = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -908,6 +1242,22 @@ app.controller('CleanUpOrgResourceCtrl', function($scope, $http, $location, $roo
 
 
 app.controller('CleanUpOrgAppCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -924,10 +1274,15 @@ app.controller('CleanUpOrgAppCtrl', function($scope, $http, $location, $rootScop
 	$scope.showLoader = "N";
 	
 	$scope.cleanUpOrgApps = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -949,6 +1304,22 @@ app.controller('CleanUpOrgAppCtrl', function($scope, $http, $location, $rootScop
 
 
 app.controller('CleanUpOrgProductsCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -965,10 +1336,15 @@ app.controller('CleanUpOrgProductsCtrl', function($scope, $http, $location, $roo
 	$scope.showLoader = "N";
 	
 	$scope.cleanUpOrgProducts = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -990,6 +1366,22 @@ app.controller('CleanUpOrgProductsCtrl', function($scope, $http, $location, $roo
 
 
 app.controller('CleanUpOrgDevelopersCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -1006,10 +1398,15 @@ app.controller('CleanUpOrgDevelopersCtrl', function($scope, $http, $location, $r
 	$scope.showLoader = "N";
 	
 	$scope.cleanUpOrgDevelopers = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -1030,6 +1427,22 @@ app.controller('CleanUpOrgDevelopersCtrl', function($scope, $http, $location, $r
 });
 
 app.controller('RestoreOrgProxyCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -1049,6 +1462,11 @@ app.controller('RestoreOrgProxyCtrl', function($scope, $http, $location, $rootSc
 	
 	
 	$scope.fetchOrgHistory = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		$scope.showLoader = "Y";
 		
 		 $scope.curPage = 0;
@@ -1060,7 +1478,7 @@ app.controller('RestoreOrgProxyCtrl', function($scope, $http, $location, $rootSc
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -1079,6 +1497,11 @@ app.controller('RestoreOrgProxyCtrl', function($scope, $http, $location, $rootSc
 	}
 	
 	$scope.restoreOrg = function(oid,filename) {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		alert(oid);
 		$scope.oid = oid;
 		$scope.filename = filename;
@@ -1086,7 +1509,7 @@ app.controller('RestoreOrgProxyCtrl', function($scope, $http, $location, $rootSc
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -1111,6 +1534,22 @@ app.controller('RestoreOrgProxyCtrl', function($scope, $http, $location, $rootSc
 
 
 app.controller('RestoreOrgResourceCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -1130,6 +1569,11 @@ app.controller('RestoreOrgResourceCtrl', function($scope, $http, $location, $roo
 	
 	
 	$scope.fetchOrgHistory = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		$scope.showLoader = "Y";
 		
 		 $scope.curPage = 0;
@@ -1141,7 +1585,7 @@ app.controller('RestoreOrgResourceCtrl', function($scope, $http, $location, $roo
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -1160,6 +1604,11 @@ app.controller('RestoreOrgResourceCtrl', function($scope, $http, $location, $roo
 	}
 	
 	$scope.restoreOrg = function(oid,filename) {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		alert(oid);
 		$scope.oid = oid;
 		$scope.filename = filename;
@@ -1167,7 +1616,7 @@ app.controller('RestoreOrgResourceCtrl', function($scope, $http, $location, $roo
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -1191,6 +1640,22 @@ app.controller('RestoreOrgResourceCtrl', function($scope, $http, $location, $roo
 
 
 app.controller('RestoreOrgAppsCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -1210,6 +1675,11 @@ app.controller('RestoreOrgAppsCtrl', function($scope, $http, $location, $rootSco
 	
 	
 	$scope.fetchOrgHistory = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		$scope.showLoader = "Y";
 		
 		 $scope.curPage = 0;
@@ -1221,7 +1691,7 @@ app.controller('RestoreOrgAppsCtrl', function($scope, $http, $location, $rootSco
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -1240,6 +1710,11 @@ app.controller('RestoreOrgAppsCtrl', function($scope, $http, $location, $rootSco
 	}
 	
 	$scope.restoreApps = function(oid,filename) {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		alert(oid);
 		$scope.oid = oid;
 		$scope.filename = filename;
@@ -1247,7 +1722,7 @@ app.controller('RestoreOrgAppsCtrl', function($scope, $http, $location, $rootSco
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -1271,6 +1746,22 @@ app.controller('RestoreOrgAppsCtrl', function($scope, $http, $location, $rootSco
 
 
 app.controller('RestoreOrgProductsCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -1290,6 +1781,11 @@ app.controller('RestoreOrgProductsCtrl', function($scope, $http, $location, $roo
 	
 	
 	$scope.fetchOrgHistory = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		$scope.showLoader = "Y";
 		
 		 $scope.curPage = 0;
@@ -1301,7 +1797,7 @@ app.controller('RestoreOrgProductsCtrl', function($scope, $http, $location, $roo
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -1320,6 +1816,11 @@ app.controller('RestoreOrgProductsCtrl', function($scope, $http, $location, $roo
 	}
 	
 	$scope.restoreProducts = function(oid,filename) {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		alert(oid);
 		$scope.oid = oid;
 		$scope.filename = filename;
@@ -1327,7 +1828,7 @@ app.controller('RestoreOrgProductsCtrl', function($scope, $http, $location, $roo
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -1352,6 +1853,22 @@ app.controller('RestoreOrgProductsCtrl', function($scope, $http, $location, $roo
 
 
 app.controller('RestoreOrgDevelopersCtrl', function($scope, $http, $location, $rootScope,$localStorage) {
+	$scope.orgs = [];
+	$scope.showOther = false;
+	$scope.orgText = "";
+	var orgs = $rootScope.userDetails.organizations || [];
+	for(var i = 0; i < orgs.length; i++) {
+		$scope.orgs.push(orgs[i]);
+	}
+	$scope.orgs.push('Other');
+	$scope.changeOrg = function(event) {
+		if($scope.organization == 'Other') {
+			$scope.orgText = "";
+			$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+		}
+	}
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -1371,6 +1888,11 @@ app.controller('RestoreOrgDevelopersCtrl', function($scope, $http, $location, $r
 	
 	
 	$scope.fetchOrgHistory = function() {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		$scope.showLoader = "Y";
 		
 		 $scope.curPage = 0;
@@ -1382,7 +1904,7 @@ app.controller('RestoreOrgDevelopersCtrl', function($scope, $http, $location, $r
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -1401,6 +1923,11 @@ app.controller('RestoreOrgDevelopersCtrl', function($scope, $http, $location, $r
 	}
 	
 	$scope.restoreDevelopers = function(oid,filename) {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
 		alert(oid);
 		$scope.oid = oid;
 		$scope.filename = filename;
@@ -1408,7 +1935,7 @@ app.controller('RestoreOrgDevelopersCtrl', function($scope, $http, $location, $r
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : $scope.organization
+			"organization" : org
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl

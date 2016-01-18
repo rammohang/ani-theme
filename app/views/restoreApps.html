@@ -14,7 +14,12 @@
 			
 				<div class="form-group">
 	    			<label for="proxyName">Restore APPS</label>
-	    			<input type="text" ng-model="organization" class="form-control" id="organization" placeholder="Enter Organization">
+	    			<p>
+			        <select ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs">
+			          <option value="">Select Organization</option>
+			        </select>
+			        <input ng-model="orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="showOther" />
+			      </p>
   				</div>
   				<div class="form-group">
 					<button class="btn btn-default" ng-click="fetchOrgHistory()">Fetch History</button>
