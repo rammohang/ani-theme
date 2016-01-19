@@ -99,7 +99,7 @@ app.config(function($routeProvider) {
 
 // declare global constants here
 app.run(function($rootScope,$localStorage) {
-	$rootScope.baseUrl = "http://localhost:8080/apigee_rest/services/";
+	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 });
@@ -524,8 +524,17 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http,$l
 		$localStorage.userDetails = undefined;
 	};
 
-	$scope.backUpzip = "";
+	$scope.proxyMessageStatus = "";
+	$scope.resourceMessageStatus = "";
+	$scope.appsMessageStatus = "";
+	$scope.productsMessageStatus = "";
+	$scope.developersMessageStatus = "";
+	
+	$scope.filedir = "";
+	
 	$scope.proxyData = "";
+	$scope.resourceData = "";
+
 	$scope.showLoader = false;
 	$scope.enable = true;
 	
@@ -561,19 +570,92 @@ app.controller('BackUpOrgCtrl', function($scope, $location, $rootScope, $http,$l
 		};
 		$scope.showLoader = true;
 		console.log(commonConfiguration);
+		//1.call for backup proxies
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/backupsubsystems?sys="+"org", commonConfiguration, {});
+				+ "apigee/backupsubsystems?sys="+"apiproxies"+"&saveandzip=false", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-					$scope.backUpzip+= "Backup Created Successfully\n";
+					$scope.proxyMessageStatus+= "Proxies Backed Successfully";
 					$scope.organization = "";
 					$scope.proxyData = data;
 					console.log($scope.proxyData);
+					$scope.filedir = $scope.proxyData.dir;
 					$scope.showLoader = false;
+					
+					//1.backup proxies done
+					
+					
+					//2.call for resources
+					
+					var responsePromise = $http.post($rootScope.baseUrl
+							+ "apigee/backupsubsystems?sys="+"resources"+"&saveandzip=false&filedir="+$scope.filedir, commonConfiguration, {});
+					responsePromise.success(function(data, status, headers, config) {
+						
+						$scope.resourceMessageStatus = "Resouces Backed successfully";
+						//2.resources call finish
+						
+						//3. call for apps
+						var responsePromise = $http.post($rootScope.baseUrl
+								+ "apigee/backupsubsystems?sys="+"apps"+"&saveandzip=false&filedir="+$scope.filedir, commonConfiguration, {});
+						responsePromise.success(function(data, status, headers, config) {
+							
+							$scope.appsMessageStatus = "APPS Backed successfully";
+							
+							//4. call for API Products
+							var responsePromise = $http.post($rootScope.baseUrl
+									+ "apigee/backupsubsystems?sys="+"apiproducts"+"&saveandzip=false&filedir="+$scope.filedir, commonConfiguration, {});
+							responsePromise.success(function(data, status, headers, config) {
+								
+								$scope.productsMessageStatus = "Products Backed successfully";
+								
+								//4. call for API Products finish
+								
+								//5. call for API Developers
+								
+								
+								var responsePromise = $http.post($rootScope.baseUrl
+										+ "apigee/backupsubsystems?sys="+"appdevelopers"+"&saveandzip=true&filedir="+$scope.filedir+"&collname=OrgBundle", commonConfiguration, {});
+								responsePromise.success(function(data, status, headers, config) {
+									
+									$scope.developersMessageStatus = "APP Developers Backed successfully";
+									
+								});
+								responsePromise.error(function(data, status, headers, config) {
+									alert("Submitting form failed!");
+								});
+								
+								
+								//5. call for API Developers finished
+							});
+							responsePromise.error(function(data, status, headers, config) {
+								alert("Submitting form failed!");
+							});
+								
+							
+							
+							
+							
+						});
+						responsePromise.error(function(data, status, headers, config) {
+							alert("Submitting form failed!");
+						});
+						
+						//3. call for apps done
+						
+						
+						
+					});
+					responsePromise.error(function(data, status, headers, config) {
+						alert("Submitting form failed!");
+					});
+					
+					
+					
 				});		
 		responsePromise.error(function(data, status, headers, config) {
 			$scope.showLoader = false;
 			alert("Submitting form failed!");
 		});
+		
 	}
 });
 
