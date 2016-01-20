@@ -21,7 +21,6 @@
   				</div>
   				<div class="form-group">
 					<button class="btn btn-default" ng-click="backUpOrg()" >Backup</button>
-					<div class="throbber-loader" ng-show="showLoader">Loading...</div>
 				</div>
 		
 		</div>
@@ -34,22 +33,180 @@
 	<!--  ROW END -->
 		</form>
 		
-		<div class="alert alert-success" role="alert" ng-if="proxyMessageStatus">
+		<div class="backupOrgContainer">
+			<div class="row">
+				<!--  column1 -->
+				<div class="col-md-4">
+				</div>
+		
+				<div class="col-md-4" ng-if="orgHis">
+		
+		
+					<table class="table table-hover">
+						<tr>
+							<th>Uploaded On</th>
+							<th>Organization</th>
+							<th>Action</th>
+						</tr>
+						<tr ng-repeat="item in orgHis | pagination: curPage * pageSize | limitTo: pageSize">
+							<td>{{item.uploadDate.$date}}</td>
+							<td>{{item.filename}}</td>
+							<td>
+								<button class="btn btn-default" ng-click="restoreOrg(item._id.$oid,item.filename)">Restore</button>
+							</td>
+						</tr>    
+		
+					</table>
+		
+					<ul class="pagination-controle pagination">
+						<li>
+							<button type="button" class="btn btn-primary" ng-disabled="curPage == 0"
+		       ng-click="curPage=curPage-1"> &lt; PREV</button>
+						</li>
+						<li>
+							<span>Page {{curPage + 1}} of {{ numberOfPages() }}</span>
+						</li>
+						<li>
+							<button type="button" class="btn btn-primary"
+		       ng-disabled="curPage >= orgHis.length/pageSize - 1"
+		       ng-click="curPage = curPage+1">NEXT &gt;</button>
+						</li>
+					</ul>
+		
+				</div>
+		
+				<div class="col-md-4">
+				</div>
+		
+			</div>
+		</div>
+		
+		
+		<div class="progressContainer">
+			<div class="alert alert-success" role="alert" ng-if="proxyMessageStatus">
 			{{proxyMessageStatus}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="resourceMessageStatus">
-			{{resourceMessageStatus}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="appsMessageStatus">
-			{{appsMessageStatus}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="productsMessageStatus">
-			{{productsMessageStatus}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="developersMessageStatus">
-			{{developersMessageStatus}}
+			</div>
+			<div class="alert alert-success" role="alert" ng-if="resourceMessageStatus">
+				{{resourceMessageStatus}}
+			</div>
+			<div class="alert alert-success" role="alert" ng-if="appsMessageStatus">
+				{{appsMessageStatus}}
+			</div>
+			<div class="alert alert-success" role="alert" ng-if="productsMessageStatus">
+				{{productsMessageStatus}}
+			</div>
+			<div class="alert alert-success" role="alert" ng-if="developersMessageStatus">
+				{{developersMessageStatus}}
+			</div>
 		</div>
 		
 		
+		<div class="statusContainer" ng-show="showStatus">
+			<div class="row">
+				<div class="col-sm-4 col-md-4" ng-show="showProxiesStatus">
+			    	<h4 class="info">Proxies</h4>
+			    	<div class="table-responsive">
+					  <table class="table table-bordered">
+					    	<thead>
+					    		<tr>
+					    			<td class="danger">Proxy</td>
+					    			<td class="danger">(Env, Rev)</td>
+					    		</tr>
+					    	</thead>
+					    	<tbody>
+					    		<tr ng-repeat="proxy in proxyInfo">
+					    			<td>{{proxy.proxyName}}</td>
+					    			<td><span ng-repeat="env in proxy.environments">({{env.environment}}, {{env.revision}}) {{$last ? '' : ', '}}</span></td>
+					    		</tr>
+					    	</tbody>
+					  </table>
+					</div>
+			    </div>
+			
+				<div class="col-sm-8 col-md-8" ng-show="showResourcesStatus">
+			    	<h4 class="info">Resources</h4>
+			    	<div class="table-responsive">
+					  <table class="table table-bordered">
+					    	<thead>
+					    		<tr>
+					    			<td class="info">Env</td>
+					    			<td class="info">Caches</td>
+					    			<td class="info">KV</td>
+					    			<td class="info">Target Servers</td>
+					    			<td class="info">Virtual Hosts</td>
+					    		</tr>
+					    	</thead>
+					    	<tbody>
+					    		<tr ng-repeat="resource in resourceInfo">
+					    			<td>{{resource.envName}}</td>
+					    			<td><span ng-repeat="cache in resource.CACHES"> {{cache}} {{$last ? '' : ', '}}</span></td>
+					    			<td><span ng-repeat="kv in resource.KV">{{kv}} {{$last ? '' : ', '}}</span> </td>
+					    			<td><span ng-repeat="ts in resource.TARGETSERVERS">{{ts}} {{$last ? '' : ', '}}</span></td>
+					    			<td><span ng-repeat="vh in resource.VIRTUALHOSTS">{{vh}} {{$last ? '' : ', '}}</span></td>
+					    		</tr>
+					    	</tbody>
+					  </table>
+					</div>
+			    </div>
+			    
+			</div>
+			<div class="row">
+			
+				<div class="col-sm-4 col-md-4" ng-show="showAppsStatus">
+			    	<h4 class="info">Apps</h4>
+			    	<div class="table-responsive">
+					  <table class="table table-bordered">
+					    	<thead>
+					    		<tr>
+					    			<td class="success">Apps</td>
+					    		</tr>
+					    	</thead>
+					    	<tbody>
+					    		<tr ng-repeat="app in appsInfo">
+					    			<td>{{app}}</td>
+					    		</tr>
+					    	</tbody>
+					  </table>
+					</div>
+				</div>
+			
+			    <div class="col-sm-4 col-md-4" ng-show="showProductsStatus">
+			    	<h4 class="info">Products</h4>
+			    	<div class="table-responsive">
+					  <table class="table table-bordered">
+					    	<thead>
+					    		<tr>
+					    			<td class="warning">Products</td>
+					    		</tr>
+					    	</thead>
+					    	<tbody>
+					    		<tr ng-repeat="product in productsInfo">
+					    			<td>{{product}}</td>
+					    		</tr>
+					    	</tbody>
+					  </table>
+					</div>
+				</div>
+			    
+			    <div class="col-sm-4 col-md-4" ng-show="showDevelopersStatus">
+			    	<h4 class="info">Developers</h4>
+			    	<div class="table-responsive">
+					  <table class="table table-bordered">
+					    	<thead>
+					    		<tr>
+					    			<td class="danger">Developers</td>
+					    		</tr>
+					    	</thead>
+					    	<tbody>
+					    		<tr ng-repeat="developer in developersInfo">
+					    			<td>{{developer}}</td>
+					    		</tr>
+					    	</tbody>
+					  </table>
+					</div>
+			    </div>
+			    
+			</div>
+		</div>
 </div>
 <div data-ng-include="'views/footer.html'"></div>
