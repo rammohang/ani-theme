@@ -33,24 +33,23 @@
 	</div>
 	<!--  ROW END -->
 		</form>
-		<div class="alert alert-success" role="alert" ng-if="backUpSuccess">
-			{{backUpSuccess}}
+		
+		<div class="alert alert-success" role="alert" ng-if="proxyMessageStatus">
+			{{proxyMessageStatus}}
 		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpApps">
-			{{backUpApps}}
+		<div class="alert alert-success" role="alert" ng-if="resourceMessageStatus">
+			{{resourceMessageStatus}}
 		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpDev">
-			{{backUpDev}}
+		<div class="alert alert-success" role="alert" ng-if="appsMessageStatus">
+			{{appsMessageStatus}}
 		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpProd">
-			{{backUpProd}}
+		<div class="alert alert-success" role="alert" ng-if="productsMessageStatus">
+			{{productsMessageStatus}}
 		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpRes">
-			{{backUpRes}}
+		<div class="alert alert-success" role="alert" ng-if="developersMessageStatus">
+			{{developersMessageStatus}}
 		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpzip">
-			{{backUpzip}}
-		</div>
+		
 		
 </div>
 <div data-ng-include="'views/footer.html'"></div>
