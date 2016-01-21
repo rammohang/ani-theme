@@ -83,7 +83,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 				//$scope.backUpzip+= "Restored API Proxies successfully\n";
 				$scope.organization = "";
 				$scope.orgHis = data;
-				$scope.orgHis.reverse();
 				console.log($scope.orgHis);
 			});		
 	responsePromise.error(function(data, status, headers, config) {
@@ -143,8 +142,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 					"$oid":"-1"
 				}
 		}
-		$scope.orgHis.push(dbmodel);
-		$scope.orgHis.reverse();
+		$scope.orgHis.unshift(dbmodel);
 		
 		$scope.showLoader = true;
 		console.log(commonConfiguration);
@@ -294,7 +292,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 																				//$scope.backUpzip+= "Restored API Proxies successfully\n";
 																				$scope.organization = "";
 																				$scope.orgHis = data;
-																				$scope.orgHis.reverse();
 																				console.log($scope.orgHis);
 																			});		
 																	responsePromise.error(function(data, status, headers, config) {
