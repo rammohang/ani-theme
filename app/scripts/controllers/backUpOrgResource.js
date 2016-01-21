@@ -1,5 +1,5 @@
-app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
-		$localStorage) {
+app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,
+		$rootScope, $localStorage) {
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
@@ -26,29 +26,34 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
 		$localStorage.userDetails = undefined;
 	};
 
+	$scope.backUpzip = "";
 	$scope.proxyData = "";
-	$scope.getAPIProxy = function() {
+	$scope.showLoader = "N";
+
+	$scope.backUpOrgResource = function() {
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
 		}
-
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : org,
-			"apiProxyName" : $scope.apiProxyName
+			"organization" : org
 		};
+		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/getapiproxy", commonConfiguration, {});
+				+ "apigee/backupsubsystems?sys=" + "resources",
+				commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
+			$scope.backUpzip += "Resources backuped Successfully\n";
 			$scope.organization = "";
-			$scope.apiProxyName = "";
 			$scope.proxyData = data;
 			console.log($scope.proxyData);
+			$scope.showLoader = "N";
 		});
 		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
 			alert("Submitting form failed!");
 		});
 	}

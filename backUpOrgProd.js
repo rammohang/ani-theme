@@ -1,5 +1,15 @@
-app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
-		$localStorage) {
+app.controller('BackUpOrgProdCtrl', function($scope, $http, $location,
+		$rootScope, $localStorage) {
+
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	if (!userDetails || !userDetails.userLoggedIn) {
+		$location.path('/login');
+	}
+	$scope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
@@ -17,38 +27,34 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
 		}
 	}
 
-	var userDetails = $localStorage.userDetails;
-	$rootScope.userDetails = userDetails;
-	if (!userDetails || !userDetails.userLoggedIn) {
-		$location.path('/login');
-	}
-	$scope.logout = function() {
-		$localStorage.userDetails = undefined;
-	};
-
+	$scope.backUpzip = "";
 	$scope.proxyData = "";
-	$scope.getAPIProxy = function() {
+	$scope.showLoader = "N";
+
+	$scope.backUpOrgProd = function() {
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
 		}
-
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : org,
-			"apiProxyName" : $scope.apiProxyName
+			"organization" : org
 		};
+		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/getapiproxy", commonConfiguration, {});
+				+ "apigee/backupsubsystems?sys=" + "apiproducts",
+				commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
+			$scope.backUpzip += "Products backuped Successfully\n";
 			$scope.organization = "";
-			$scope.apiProxyName = "";
 			$scope.proxyData = data;
 			console.log($scope.proxyData);
+			$scope.showLoader = "N";
 		});
 		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
 			alert("Submitting form failed!");
 		});
 	}

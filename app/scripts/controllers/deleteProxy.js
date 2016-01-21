@@ -1,5 +1,5 @@
-app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
-		$localStorage) {
+app.controller('DeleteProxyCtrl', function($scope, $http, $location,
+		$rootScope, $localStorage) {
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
@@ -26,8 +26,33 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
 		$localStorage.userDetails = undefined;
 	};
 
-	$scope.proxyData = "";
-	$scope.getAPIProxy = function() {
+	$scope.proxiesList = "";
+	$scope.disable = false;
+
+	$scope.getAPIProxies = function() {
+		var org = $scope.organization;
+		if ($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		var commonConfiguration = {
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
+			"organization" : org
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/listapiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.disable = true;
+			$scope.apiProxyName = "";
+			$scope.proxiesList = data;
+			console.log($scope.proxiesList);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+
+	$scope.deleteApiProxy = function() {
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
@@ -39,14 +64,13 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
 			"organization" : org,
 			"apiProxyName" : $scope.apiProxyName
 		};
-		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/getapiproxy", commonConfiguration, {});
+				+ "apigee/deleteapi", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			$scope.organization = "";
 			$scope.apiProxyName = "";
-			$scope.proxyData = data;
-			console.log($scope.proxyData);
+			$scope.disable = false;
+			alert("success" + data)
 		});
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");

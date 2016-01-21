@@ -1,5 +1,5 @@
-app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
-		$localStorage) {
+app.controller('DeployProxyCtrl', function($scope, $http, $location,
+		$rootScope, $localStorage) {
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
@@ -26,8 +26,7 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
 		$localStorage.userDetails = undefined;
 	};
 
-	$scope.proxyData = "";
-	$scope.getAPIProxy = function() {
+	$scope.deployProxy = function() {
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
@@ -37,16 +36,18 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
 			"organization" : org,
-			"apiProxyName" : $scope.apiProxyName
+			"apiProxyName" : $scope.apiProxyName,
+			"environment" : $scope.environment,
+			"revision" : $scope.revision
 		};
-		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/getapiproxy", commonConfiguration, {});
+				+ "apigee/deployapiproxy", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			$scope.organization = "";
 			$scope.apiProxyName = "";
-			$scope.proxyData = data;
-			console.log($scope.proxyData);
+			$scope.environment = "";
+			$scope.revision = "";
+			alert("success" + data)
 		});
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");

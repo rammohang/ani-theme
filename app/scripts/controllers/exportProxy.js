@@ -1,5 +1,5 @@
-app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
-		$localStorage) {
+app.controller('ExportProxyCtrl', function($scope, $http, $location,
+		$rootScope, $localStorage) {
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
@@ -26,8 +26,8 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
 		$localStorage.userDetails = undefined;
 	};
 
-	$scope.proxyData = "";
-	$scope.getAPIProxy = function() {
+	$scope.proxyData = {};
+	$scope.exportAPIProxy = function() {
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
@@ -37,11 +37,12 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
 			"organization" : org,
-			"apiProxyName" : $scope.apiProxyName
+			"apiProxyName" : $scope.apiProxyName,
+			"revision" : $scope.revision
 		};
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/getapiproxy", commonConfiguration, {});
+				+ "apigee/exportapiproxy", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			$scope.organization = "";
 			$scope.apiProxyName = "";
