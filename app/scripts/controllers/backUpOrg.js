@@ -11,6 +11,13 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.showAppsStatus = false;
 	$scope.showProductsStatus = false;
 	$scope.showDevelopersStatus = false;
+	
+	
+	$scope.proxiesLoader = false;
+	$scope.resourcesLoader = false;
+	$scope.appsLoader = false;
+	$scope.productsLoader = false;
+	$scope.developersLoader = false;
 
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -121,6 +128,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	}
 
 	$scope.backUpOrg = function() {
+		$scope.showStatus = true;
 		var org = $scope.organization;
 		
 		if ($scope.organization == 'Other') {
@@ -145,6 +153,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		$scope.orgHis.unshift(dbmodel);
 		
 		$scope.showLoader = true;
+		$scope.proxiesLoader = true;
 		console.log(commonConfiguration);
 		//1.call for backup proxies
 		$scope.currentProgress="Proxies being backedup";
@@ -154,13 +163,13 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		responsePromise
 				.success(function(data, status, headers, config) {
 					$scope.proxyMessageStatus += "Proxies Backed Successfully";
+					$scope.proxiesLoader = false;
 					$scope.organization = "";
 					$scope.proxyData = data;
 					console.log($scope.proxyData);
 					$scope.filedir = $scope.proxyData.dir;
 					$scope.showLoader = false;
 					
-					$scope.showStatus = true;
 					$scope.showProxiesStatus = true;
 
 					var proxyInfo = JSON.parse($scope.proxyData.proxyInfo);
@@ -180,6 +189,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 					//1.backup proxies done
 
 					//2.call for resources
+					$scope.resourcesLoader = true;
 					$scope.currentProgress="Resources being backedup";
 					var responsePromise = $http
 							.post(
@@ -192,7 +202,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 					responsePromise
 							.success(function(data, status,
 									headers, config) {
-								
+								$scope.resourcesLoader = false;
 								$scope.showResourcesStatus = true;
 								// write logic to show resources in table
 								var resourceInfo = JSON.parse(data.resourceInfo);
@@ -214,6 +224,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 								//2.resources call finish
 								$scope.currentProgress="APPS being backedup";
 								//3. call for apps
+								$scope.appsLoader = true;
 								var responsePromise = $http
 										.post(
 												$rootScope.baseUrl
@@ -230,10 +241,11 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 											$scope.appsInfo = JSON.parse(data.appsInfo);
 											$scope.showAppsStatus = true;
 											// write logic to show apps
-
+											$scope.appsLoader = false;
 											$scope.appsMessageStatus = "APPS Backed successfully";
 											$scope.currentProgress="API Products being backedup";
 											//4. call for API Products
+											$scope.productsLoader = true;
 											var responsePromise = $http
 													.post(
 															$rootScope.baseUrl
@@ -250,6 +262,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 															headers,
 															config) {
 														$scope.showProductsStatus = true;
+														$scope.productsLoader = false;
 														$scope.productsInfo = JSON.parse(data.productsInfo);
 
 														$scope.productsMessageStatus = "Products Backed successfully";
@@ -257,7 +270,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 														//4. call for API Products finish
 														$scope.currentProgress="Dev's being backedup";
 														//5. call for API Developers
-
+														$scope.developersLoader = true;
 														var responsePromise = $http
 																.post(
 																		$rootScope.baseUrl
@@ -275,6 +288,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 																		headers,
 																		config) {
 																	$scope.showDevelopersStatus = true;
+																	$scope.developersLoader = false;
 																	//write logic to show developers here
 																	$scope.developersInfo = JSON.parse(data.developersInfo);
 

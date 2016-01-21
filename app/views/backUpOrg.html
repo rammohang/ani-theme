@@ -106,6 +106,9 @@
 		
 		<div class="statusContainer" ng-show="showStatus">
 			<div class="row">
+				<div class="col-sm-4 col-md-4" ng-show="proxiesLoader">
+				Proxies are being backed up<img ng-src="../images/loader01.gif"/>
+				</div>
 				<div class="col-sm-4 col-md-4" ng-show="showProxiesStatus">
 			    	<h4 class="info">Proxies</h4>
 			    	<div class="table-responsive">
@@ -126,6 +129,9 @@
 					</div>
 			    </div>
 			
+			<div class="col-sm-4 col-md-4" ng-show="resourcesLoader">
+			Resources are being backedup<img ng-src="../images/loader01.gif"/>
+			</div>
 				<div class="col-sm-8 col-md-8" ng-show="showResourcesStatus">
 			    	<h4 class="info">Resources</h4>
 			    	<div class="table-responsive">
@@ -154,7 +160,9 @@
 			    
 			</div>
 			<div class="row">
-			
+			<div class="col-sm-4 col-md-4" ng-show="appsLoader">
+			Apps are being backedup<img ng-src="../images/loader01.gif"/>
+			</div>
 				<div class="col-sm-4 col-md-4" ng-show="showAppsStatus">
 			    	<h4 class="info">Apps</h4>
 			    	<div class="table-responsive">
@@ -173,6 +181,9 @@
 					</div>
 				</div>
 			
+			<div class="col-sm-4 col-md-4" ng-show="productsLoader">
+			Products are being backedup<img ng-src="../images/loader01.gif"/>
+			</div>
 			    <div class="col-sm-4 col-md-4" ng-show="showProductsStatus">
 			    	<h4 class="info">Products</h4>
 			    	<div class="table-responsive">
@@ -191,6 +202,9 @@
 					</div>
 				</div>
 			    
+			    <div class="col-sm-4 col-md-4" ng-show="developersLoader">
+			Developers are being backedup<img ng-src="../images/loader01.gif"/>
+			</div>
 			    <div class="col-sm-4 col-md-4" ng-show="showDevelopersStatus">
 			    	<h4 class="info">Developers</h4>
 			    	<div class="table-responsive">
