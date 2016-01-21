@@ -118,7 +118,7 @@ app.directive('fileModel', [ '$parse', function($parse) {
 } ]);
 
 app.run(function($rootScope, $localStorage) {
-	$rootScope.baseUrl = "http://localhost:8080/apigee_rest/services/";
+	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 });

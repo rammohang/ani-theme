@@ -51,8 +51,11 @@
 						<tr ng-repeat="item in orgHis | pagination: curPage * pageSize | limitTo: pageSize">
 							<td>{{item.uploadDate.$date}}</td>
 							<td>{{item.filename}}</td>
-							<td>
+							<td ng-if="item._id.$oid !== '-1' ">
 								<button class="btn btn-default" ng-click="restoreOrg(item._id.$oid,item.filename)">Restore</button>
+							</td>
+							<td ng-if="item._id.$oid == '-1' ">
+								{{currentProgress}}<img ng-src="../images/loader01.gif"/>
 							</td>
 						</tr>    
 		
@@ -82,7 +85,7 @@
 		</div>
 		
 		
-		<div class="progressContainer">
+		<!-- div class="progressContainer">
 			<div class="alert alert-success" role="alert" ng-if="proxyMessageStatus">
 			{{proxyMessageStatus}}
 			</div>
@@ -98,7 +101,7 @@
 			<div class="alert alert-success" role="alert" ng-if="developersMessageStatus">
 				{{developersMessageStatus}}
 			</div>
-		</div>
+		</div-->
 		
 		
 		<div class="statusContainer" ng-show="showStatus">

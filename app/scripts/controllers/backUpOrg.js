@@ -38,6 +38,9 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
+	
+	$scope.currentProgress="";
+	
 	var orgs = $rootScope.userDetails.organizations || [];
 
 	for (var i = 0; i < orgs.length; i++) {
@@ -80,6 +83,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 				//$scope.backUpzip+= "Restored API Proxies successfully\n";
 				$scope.organization = "";
 				$scope.orgHis = data;
+				$scope.orgHis.reverse();
 				console.log($scope.orgHis);
 			});		
 	responsePromise.error(function(data, status, headers, config) {
@@ -119,6 +123,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 
 	$scope.backUpOrg = function() {
 		var org = $scope.organization;
+		
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
 		}
@@ -128,9 +133,23 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			"password" : $rootScope.userDetails.password,
 			"organization" : org
 		};
+		
+		var dbmodel = {
+				"uploadDate":{
+					"$date":"--"
+				},
+				"filename":org,
+				"_id":{
+					"$oid":"-1"
+				}
+		}
+		$scope.orgHis.push(dbmodel);
+		$scope.orgHis.reverse();
+		
 		$scope.showLoader = true;
 		console.log(commonConfiguration);
 		//1.call for backup proxies
+		$scope.currentProgress="Proxies being backedup";
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/backupsubsystems?sys=" + "apiproxies"
 				+ "&saveandzip=false", commonConfiguration, {});
@@ -163,7 +182,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 					//1.backup proxies done
 
 					//2.call for resources
-
+					$scope.currentProgress="Resources being backedup";
 					var responsePromise = $http
 							.post(
 									$rootScope.baseUrl
@@ -195,7 +214,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 
 								$scope.resourceMessageStatus = "Resouces Backed successfully";
 								//2.resources call finish
-
+								$scope.currentProgress="APPS being backedup";
 								//3. call for apps
 								var responsePromise = $http
 										.post(
@@ -215,7 +234,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 											// write logic to show apps
 
 											$scope.appsMessageStatus = "APPS Backed successfully";
-
+											$scope.currentProgress="API Products being backedup";
 											//4. call for API Products
 											var responsePromise = $http
 													.post(
@@ -238,7 +257,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 														$scope.productsMessageStatus = "Products Backed successfully";
 
 														//4. call for API Products finish
-
+														$scope.currentProgress="Dev's being backedup";
 														//5. call for API Developers
 
 														var responsePromise = $http
@@ -262,7 +281,27 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 																	$scope.developersInfo = JSON.parse(data.developersInfo);
 
 																	$scope.developersMessageStatus = "APP Developers Backed successfully";
-
+//call to display table in ui
+																	var commonConfiguration = {
+																			"userName" : $rootScope.userDetails.userName,
+																			"password" : $rootScope.userDetails.password
+																			
+																		};
+																	var responsePromise = $http.post($rootScope.baseUrl
+																			+ "apigee/getorgbackuphistory?sys="+"org", commonConfiguration, {});
+																	responsePromise.success(function(data, status, headers, config) {
+																				$scope.showLoader = "N";
+																				//$scope.backUpzip+= "Restored API Proxies successfully\n";
+																				$scope.organization = "";
+																				$scope.orgHis = data;
+																				$scope.orgHis.reverse();
+																				console.log($scope.orgHis);
+																			});		
+																	responsePromise.error(function(data, status, headers, config) {
+																		$scope.showLoader = "N";
+																		alert("Submitting form failed!");
+																	});														
+//call finish
 																});
 														responsePromise
 																.error(function(
