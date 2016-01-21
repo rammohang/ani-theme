@@ -41,10 +41,9 @@
 		
 				<div class="col-md-4" ng-if="orgHis">
 		
-		
 					<table class="table table-hover">
 						<tr>
-							<th>Uploaded On</th>
+							<th>Backedup On</th>
 							<th>Organization</th>
 							<th>Action</th>
 						</tr>
@@ -52,7 +51,8 @@
 							<td>{{item.uploadDate.$date}}</td>
 							<td>{{item.filename}}</td>
 							<td ng-if="item._id.$oid !== '-1' ">
-								<button class="btn btn-default" ng-click="restoreOrg(item._id.$oid,item.filename)">Restore</button>
+								<button class="btn btn-success btn-xs" ng-click="restoreOrg(item._id.$oid,item.filename)">Restore</button>
+								<button class="btn btn-danger btn-xs" ng-click="deleteOrg(item._id.$oid,item.filename)">Delete</button>
 							</td>
 							<td ng-if="item._id.$oid == '-1' ">
 								{{currentProgress}}<img ng-src="../images/loader01.gif"/>
