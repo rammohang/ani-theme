@@ -90,6 +90,10 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		alert("Submitting form failed!");
 	});
 	
+	$scope.deleteOrg = function(oid,filename) {
+		alert('TODO:'+oid);
+	}
+	
 	$scope.restoreOrg = function(oid,filename) {
 		var org = $scope.organization;
 		if($scope.organization == 'Other') {
@@ -121,6 +125,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	}
 
 	$scope.backUpOrg = function() {
+		var t1 = new Date();
 		var org = $scope.organization;
 		
 		if ($scope.organization == 'Other') {
@@ -292,7 +297,9 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 																				//$scope.backUpzip+= "Restored API Proxies successfully\n";
 																				$scope.organization = "";
 																				$scope.orgHis = data;
-																				console.log($scope.orgHis);
+																				
+																				var Seconds_Between_Dates = Math.abs((t1.getTime() - new Date().getTime())/1000);
+																				alert("Completed in " + Seconds_Between_Dates + ' Seconds');
 																			});		
 																	responsePromise.error(function(data, status, headers, config) {
 																		$scope.showLoader = "N";
