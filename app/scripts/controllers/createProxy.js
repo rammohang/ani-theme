@@ -17,15 +17,6 @@ app.controller('CreateProxyCtrl', function($scope, $http, $location,
 		}
 	}
 
-	var userDetails = $localStorage.userDetails;
-	$rootScope.userDetails = userDetails;
-	if (!userDetails || !userDetails.userLoggedIn) {
-		$location.path('/login');
-	}
-	$scope.logout = function() {
-		$localStorage.userDetails = undefined;
-	};
-
 	$scope.createAPIProxy = function() {
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {

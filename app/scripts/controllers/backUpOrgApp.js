@@ -17,14 +17,7 @@ app.controller('BackUpOrgAppCtrl', function($scope, $http, $location,
 		}
 	}
 
-	var userDetails = $localStorage.userDetails;
-	$rootScope.userDetails = userDetails;
-	if (!userDetails || !userDetails.userLoggedIn) {
-		$location.path('/login');
-	}
-	$scope.logout = function() {
-		$localStorage.userDetails = undefined;
-	};
+	
 
 	$scope.backUpzip = "";
 	$scope.proxyData = "";

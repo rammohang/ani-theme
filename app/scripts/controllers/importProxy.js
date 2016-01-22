@@ -17,14 +17,6 @@ app.controller('ImportProxyCtrl', [ '$scope', '$http', '$location','$rootScope',
 		}
 	}
 
-	var userDetails = $localStorage.userDetails;
-	$rootScope.userDetails = userDetails;
-	if (!userDetails || !userDetails.userLoggedIn) {
-		$location.path('/login');
-	}
-	$scope.logout = function() {
-		$localStorage.userDetails = undefined;
-	};
 
 	$scope.uploadFile = function() {
 		var org = $scope.organization;

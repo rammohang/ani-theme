@@ -1,14 +1,6 @@
 app.controller('RestoreOrgCtrl', function($scope, $location, $rootScope, $http,
 		$localStorage) {
 
-	var userDetails = $localStorage.userDetails;
-	$rootScope.userDetails = userDetails;
-	if (!userDetails || !userDetails.userLoggedIn) {
-		$location.path('/login');
-	}
-	$scope.logout = function() {
-		$localStorage.userDetails = undefined;
-	};
 
 	$scope.backUpzip = "";
 	$scope.proxyData = "";

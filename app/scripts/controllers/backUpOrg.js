@@ -21,14 +21,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.productsLoader = false;
 	$scope.developersLoader = false;
 
-	/*var userDetails = $localStorage.userDetails;
-	$rootScope.userDetails = userDetails;
-	if (!userDetails || !userDetails.userLoggedIn) {
-		$location.path('/login');
-	}
-	$scope.logout = function() {
-		$localStorage.userDetails = undefined;
-	};*/
+	
 
 	$scope.proxyMessageStatus = "";
 	$scope.resourceMessageStatus = "";
