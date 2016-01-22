@@ -1,5 +1,9 @@
 app.controller('CleanUpOrgCtrl', function($scope, $http, $location, $rootScope,
 		$localStorage) {
+	
+	
+	
+	
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";

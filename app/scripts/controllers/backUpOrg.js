@@ -1,4 +1,6 @@
-app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage) {
+app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage,AppService,$q) {
+	
+	
 	
 	$scope.proxyInfo = [];
 	$scope.resourceInfo = [];
@@ -19,14 +21,14 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.productsLoader = false;
 	$scope.developersLoader = false;
 
-	var userDetails = $localStorage.userDetails;
+	/*var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 	if (!userDetails || !userDetails.userLoggedIn) {
 		$location.path('/login');
 	}
 	$scope.logout = function() {
 		$localStorage.userDetails = undefined;
-	};
+	};*/
 
 	$scope.proxyMessageStatus = "";
 	$scope.resourceMessageStatus = "";
@@ -83,7 +85,16 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		"password" : $rootScope.userDetails.password
 	};
 	console.log(commonConfiguration);
-	var responsePromise = $http.post($rootScope.baseUrl
+	
+	
+	AppService.getOrgBackUpHistory(commonConfiguration).then(function(result) {
+    	  $scope.orgHis = result;
+      },function(error) {
+        // handle errors here
+        console.log(error.statusText);
+      }
+    );
+	/*var responsePromise = $http.post($rootScope.baseUrl
 			+ "apigee/getorgbackuphistory?sys="+"org", commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
 				$scope.showLoader = "N";
@@ -96,6 +107,9 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		$scope.showLoader = "N";
 		alert("Submitting form failed!");
 	});
+	*/
+	
+	
 	
 	$scope.deleteOrg = function(oid,filename) {
 		alert('TODO:'+oid);
@@ -365,5 +379,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 
 	}
+	console.log($scope.account);
 });
 

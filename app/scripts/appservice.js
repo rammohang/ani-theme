@@ -1,19 +1,19 @@
-app.service('AppService',function($http){
+app.service('AppService',['$http','$q',function($http,$q){
+
+	var deferred = $q.defer();
+
+	  this.getOrgBackUpHistory = function(commonConfiguration) {
+	    return $http.post("http://localhost:8084/apigee_rest/services/apigee/getorgbackuphistory?sys="+"org", commonConfiguration, {})
+	      .then(function(response) {
+	        // promise is fulfilled
+	        deferred.resolve(response.data);
+	        return deferred.promise;
+	      }, function(response) {
+	        // the following line rejects the promise 
+	        deferred.reject(response);
+	        return deferred.promise;
+	      });
+	  };
 	
-	getAPIProxies = function(commonConfiguration) {
-		
-		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/listapiproxies", commonConfiguration, {});
-		responsePromise.success(function(data, status, headers, config) {
-			$scope.disable = true;
-			$scope.apiProxyName = "";
-			$scope.proxiesList = data;
-			console.log($scope.proxiesList);
-		});
-		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
-		});
-	}
 	
-	
-});
+}]);

@@ -10,7 +10,24 @@
 var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage' ]);
 
 app.config(function($httpProvider) {
-	$httpProvider.defaults.timeout = 50000;
+	 $httpProvider.interceptors.push('httpInterceptor');
+});
+
+app.factory('httpInterceptor', function ($q,$location,$rootScope, $localStorage) {
+    return {
+        request: function (config) {
+        	var userDetails = $localStorage.userDetails;
+        	console.log("%%%%%%");
+        	$rootScope.userDetails = userDetails;
+        	if (!userDetails || !userDetails.userLoggedIn) {
+        		$location.path('/login');
+        	}
+        	$rootScope.logout = function() {
+        		$localStorage.userDetails = undefined;
+        	};
+            return config || $q.when(config);
+        }
+    };
 });
 
 app.config(function($routeProvider) {
