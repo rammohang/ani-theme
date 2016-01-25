@@ -143,7 +143,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 				+ "apigee/deletebackup?oid="+oid, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			for(var i = 0; i < $scope.orgHis.length; i++) {
-				if($scope.orgHis[i]._id == oid) {
+				if($scope.orgHis[i].fileOid == oid) {
 					$scope.orgHis.splice(i, 1);
 					break;
 				}
@@ -232,7 +232,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 							"userName" : $rootScope.userDetails.userName,
 							"password" : $rootScope.userDetails.password
 						};
-			var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory?sys="+"org", commonConfiguration, {});
+			var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1", commonConfiguration, {});
 				responsePromise.success(function(data, status, headers, config) {
 								$scope.showLoader = "N";
 								$scope.organization = "";

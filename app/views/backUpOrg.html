@@ -51,20 +51,18 @@
 							<th>Action</th>
 						</tr>
 						<tr ng-repeat="item in orgHis | pagination: curPage * pageSize | limitTo: pageSize">
-							<td>{{item.uploadDate.$date}}</td>
-							<td>{{item.filename}}</td>
-							<td>{{item.consoleInfo.backUpTimeTaken}}</td>
+							<td>{{item.cts}}</td>
+							<td>{{item.organization}}</td>
+							<td>{{item.backUpTimeTaken}}</td>
 							<td>In Progress</td>
 							<td>
-								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item.consoleInfo)">Console</button>
+								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)">Console</button>
 							</td>
-							<td ng-if="item._id.$oid !== '-1' ">
-								<button class="btn btn-success btn-xs" ng-click="restoreOrg(item._id,item.filename)">Restore</button>
-								<button class="btn btn-danger btn-xs" ng-click="deleteOrg(item._id,item.filename)">Delete</button>
+							<td>
+								<button class="btn btn-success btn-xs" ng-click="restoreOrg(item.fileOid,item.organization)">Restore</button>
+								<button class="btn btn-danger btn-xs" ng-click="deleteOrg(item.fileOid,item.organization)">Delete</button>
 							</td>
-							<td ng-if="item._id == '-1' ">
-								{{currentProgress}}<img ng-src="../images/loader01.gif"/>
-							</td>
+							
 						</tr>    
 		
 					</table>
