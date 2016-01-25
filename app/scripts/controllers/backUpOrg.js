@@ -7,21 +7,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.developersInfo = [];
 	$scope.productsInfo = [];
 	$scope.appsInfo = [];
-	$scope.showStatus = false;
-	$scope.showProxiesStatus = false;
-	$scope.showResourcesStatus = false;
-	$scope.showAppsStatus = false;
-	$scope.showProductsStatus = false;
-	$scope.showDevelopersStatus = false;
-	
-	
-	$scope.proxiesLoader = false;
-	$scope.resourcesLoader = false;
-	$scope.appsLoader = false;
-	$scope.productsLoader = false;
-	$scope.developersLoader = false;
-
-	
+		
 
 	$scope.proxyMessageStatus = "";
 	$scope.resourceMessageStatus = "";
@@ -43,6 +29,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	
 	$scope.currentProgress="";
 	$scope.orgHis = [];
+	$scope.consoleInfo = {};
 	
 	var orgs = $rootScope.userDetails.organizations || [];
 
@@ -60,11 +47,50 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		}
 	}
 	
-	$scope.viewDetailedStatus = function(oid) {
-		alert('TODO : ' + oid);
+	$scope.viewDetailedStatus = function(consoleInfo) {
 		// use this oid as a key to get detailed console info
 		$scope.showModal = !$scope.showModal;
 		// populate detailed into bootstrap modal
+		//$scope.consoleInfo = consoleInfo;
+		
+		// 1. Proxies Info to be displayed
+		var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
+		var formattedArray = [];
+		for(var i=0;i<proxyInfo.length;i++) {
+		  var proxyObj = proxyInfo[i];
+		  var singleProxyInfo = {};
+		  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
+		  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
+		  for(var key in proxyContents) {
+		    singleProxyInfo[key] = proxyContents[key];
+		  }
+		  formattedArray.push(singleProxyInfo);
+		}
+		console.log(formattedArray);
+		$scope.proxyInfo = formattedArray;
+		
+		// 2.Resource Info to be displayed
+		var resourceInfo = JSON.parse(consoleInfo.resourceInfo);
+		var resourceArray = [];
+		for(var i=0;i<resourceInfo.length;i++) {
+		  var proxyObj = resourceInfo[i];
+		  var singleResourceInfo = {};
+		  singleResourceInfo["envName"]=Object.keys(proxyObj)[0];
+		  var proxyContents = proxyObj[singleResourceInfo["envName"]];
+		  for(var key in proxyContents) {
+		    singleResourceInfo[key] = proxyContents[key];
+		  }
+		  resourceArray.push(singleResourceInfo);
+		}
+		
+		$scope.resourceInfo = resourceArray;
+		
+		//3. APPS info to be displayed
+		$scope.appsInfo = JSON.parse(consoleInfo.appsInfo);
+		//4. PRODUCTS info to be displayed
+		$scope.productsInfo = JSON.parse(consoleInfo.productsInfo);
+		//5. DEV info to be displayed
+		$scope.developersInfo = JSON.parse(consoleInfo.developersInfo);
 	}
 	
 
@@ -117,7 +143,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 				+ "apigee/deletebackup?oid="+oid, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			for(var i = 0; i < $scope.orgHis.length; i++) {
-				if($scope.orgHis[i]._id.$oid == oid) {
+				if($scope.orgHis[i]._id == oid) {
 					$scope.orgHis.splice(i, 1);
 					break;
 				}
@@ -179,9 +205,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 					"$date":"--"
 				},
 				"filename":org,
-				"_id":{
-					"$oid":"-1"
-				}
+				"_id": -1
 		}
 		$scope.orgHis.unshift(dbmodel);
 		
@@ -190,11 +214,8 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		console.log(commonConfiguration);
 		//1.call for backup proxies
 		$scope.currentProgress="Proxies being backedup";
-		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/backupsubsystems?sys=" + "apiproxies"
-				+ "&saveandzip=false", commonConfiguration, {});
-		responsePromise
-				.success(function(data, status, headers, config) {
+		var responsePromise = $http.post($rootScope.baseUrl+ "apigee/backupsubsystems?sys=" + "org"+ "&saveandzip=true", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
 					$scope.proxyMessageStatus += "Proxies Backed Successfully";
 					$scope.proxiesLoader = false;
 					$scope.organization = "";
@@ -204,188 +225,28 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 					$scope.showLoader = false;
 					
 					$scope.showProxiesStatus = true;
-
-					var proxyInfo = JSON.parse($scope.proxyData.proxyInfo);
-					var formattedArray = [];
-					for(var i=0;i<proxyInfo.length;i++) {
-					  var proxyObj = proxyInfo[i];
-					  var singleProxyInfo = {};
-					  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
-					  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
-					  for(var key in proxyContents) {
-					    singleProxyInfo[key] = proxyContents[key];
-					  }
-					  formattedArray.push(singleProxyInfo);
-					}
-					console.log(formattedArray);
-					$scope.proxyInfo = formattedArray;
-					//1.backup proxies done
-
-					//2.call for resources
-					$scope.resourcesLoader = true;
-					$scope.currentProgress="Resources being backedup";
-					var responsePromise = $http
-							.post(
-									$rootScope.baseUrl
-											+ "apigee/backupsubsystems?sys="
-											+ "resources"
-											+ "&saveandzip=false&filedir="
-											+ $scope.filedir,
-									commonConfiguration, {});
-					responsePromise
-							.success(function(data, status,
-									headers, config) {
-								$scope.resourcesLoader = false;
-								$scope.showResourcesStatus = true;
-								// write logic to show resources in table
-								var resourceInfo = JSON.parse(data.resourceInfo);
-								var resourceArray = [];
-								for(var i=0;i<resourceInfo.length;i++) {
-								  var proxyObj = resourceInfo[i];
-								  var singleResourceInfo = {};
-								  singleResourceInfo["envName"]=Object.keys(proxyObj)[0];
-								  var proxyContents = proxyObj[singleResourceInfo["envName"]];
-								  for(var key in proxyContents) {
-								    singleResourceInfo[key] = proxyContents[key];
-								  }
-								  resourceArray.push(singleResourceInfo);
-								}
 								
-								$scope.resourceInfo = resourceArray;
-
-								$scope.resourceMessageStatus = "Resouces Backed successfully";
-								//2.resources call finish
-								$scope.currentProgress="APPS being backedup";
-								//3. call for apps
-								$scope.appsLoader = true;
-								var responsePromise = $http
-										.post(
-												$rootScope.baseUrl
-														+ "apigee/backupsubsystems?sys="
-														+ "apps"
-														+ "&saveandzip=false&filedir="
-														+ $scope.filedir,
-												commonConfiguration,
-												{});
-								responsePromise
-										.success(function(data,
-												status,
-												headers, config) {
-											$scope.appsInfo = JSON.parse(data.appsInfo);
-											$scope.showAppsStatus = true;
-											// write logic to show apps
-											$scope.appsLoader = false;
-											$scope.appsMessageStatus = "APPS Backed successfully";
-											$scope.currentProgress="API Products being backedup";
-											//4. call for API Products
-											$scope.productsLoader = true;
-											var responsePromise = $http
-													.post(
-															$rootScope.baseUrl
-																	+ "apigee/backupsubsystems?sys="
-																	+ "apiproducts"
-																	+ "&saveandzip=false&filedir="
-																	+ $scope.filedir,
-															commonConfiguration,
-															{});
-											responsePromise
-													.success(function(
-															data,
-															status,
-															headers,
-															config) {
-														$scope.showProductsStatus = true;
-														$scope.productsLoader = false;
-														$scope.productsInfo = JSON.parse(data.productsInfo);
-
-														$scope.productsMessageStatus = "Products Backed successfully";
-
-														//4. call for API Products finish
-														$scope.currentProgress="Dev's being backedup";
-														//5. call for API Developers
-														$scope.developersLoader = true;
-														var responsePromise = $http
-																.post(
-																		$rootScope.baseUrl
-																				+ "apigee/backupsubsystems?sys="
-																				+ "appdevelopers"
-																				+ "&saveandzip=true&filedir="
-																				+ $scope.filedir
-																				+ "&collname=OrgBundle",
-																		commonConfiguration,
-																		{});
-														responsePromise
-																.success(function(
-																		data,
-																		status,
-																		headers,
-																		config) {
-																	$scope.showDevelopersStatus = true;
-																	$scope.developersLoader = false;
-																	//write logic to show developers here
-																	$scope.developersInfo = JSON.parse(data.developersInfo);
-
-																	$scope.developersMessageStatus = "APP Developers Backed successfully";
+					
 //call to display table in ui
-																	var commonConfiguration = {
-																			"userName" : $rootScope.userDetails.userName,
-																			"password" : $rootScope.userDetails.password
-																			
-																		};
-																	var responsePromise = $http.post($rootScope.baseUrl
-																			+ "apigee/getorgbackuphistory?sys="+"org", commonConfiguration, {});
-																	responsePromise.success(function(data, status, headers, config) {
-																				$scope.showLoader = "N";
-																				//$scope.backUpzip+= "Restored API Proxies successfully\n";
-																				$scope.organization = "";
-																				$scope.orgHis = data;
-																				
-																				var Seconds_Between_Dates = Math.abs((t1.getTime() - new Date().getTime())/1000);
-																				alert("Completed in " + Seconds_Between_Dates + ' Seconds');
-																			});		
-																	responsePromise.error(function(data, status, headers, config) {
-																		$scope.showLoader = "N";
-																		alert("Submitting form failed!");
-																	});														
-//call finish
-																});
-														responsePromise
-																.error(function(
-																		data,
-																		status,
-																		headers,
-																		config) {
-																	alert("Submitting form failed!");
-																});
-
-														//5. call for API Developers finished
-													});
-											responsePromise
-													.error(function(
-															data,
-															status,
-															headers,
-															config) {
-														alert("Submitting form failed!");
-													});
-
-										});
-								responsePromise
-										.error(function(data,
-												status,
-												headers, config) {
-											alert("Submitting form failed!");
-										});
-
-								//3. call for apps done
-
-							});
-					responsePromise.error(function(data,
-							status, headers, config) {
+				var commonConfiguration = {
+							"userName" : $rootScope.userDetails.userName,
+							"password" : $rootScope.userDetails.password
+						};
+			var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory?sys="+"org", commonConfiguration, {});
+				responsePromise.success(function(data, status, headers, config) {
+								$scope.showLoader = "N";
+								$scope.organization = "";
+								$scope.orgHis = data;
+					var Seconds_Between_Dates = Math.abs((t1.getTime() - new Date().getTime())/1000);
+						alert("Completed in " + Seconds_Between_Dates + ' Seconds');
+					});		
+				responsePromise.error(function(data, status, headers, config) {
+								$scope.showLoader = "N";
 						alert("Submitting form failed!");
-					});
+				});														
+//call finish
+			});
 
-				});
 		responsePromise.error(function(data, status, headers,
 				config) {
 			$scope.showLoader = false;

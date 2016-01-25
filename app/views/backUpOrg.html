@@ -45,6 +45,7 @@
 						<tr>
 							<th>Backedup On</th>
 							<th>Organization</th>
+							<th>Time Taken(sec)</th>
 							<th>Status</th>
 							<th>Console</th>
 							<th>Action</th>
@@ -52,15 +53,16 @@
 						<tr ng-repeat="item in orgHis | pagination: curPage * pageSize | limitTo: pageSize">
 							<td>{{item.uploadDate.$date}}</td>
 							<td>{{item.filename}}</td>
+							<td>{{item.consoleInfo.backUpTimeTaken}}</td>
 							<td>In Progress</td>
 							<td>
-								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item._id.$oid)">Console</button>
+								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item.consoleInfo)">Console</button>
 							</td>
 							<td ng-if="item._id.$oid !== '-1' ">
-								<button class="btn btn-success btn-xs" ng-click="restoreOrg(item._id.$oid,item.filename)">Restore</button>
-								<button class="btn btn-danger btn-xs" ng-click="deleteOrg(item._id.$oid,item.filename)">Delete</button>
+								<button class="btn btn-success btn-xs" ng-click="restoreOrg(item._id,item.filename)">Restore</button>
+								<button class="btn btn-danger btn-xs" ng-click="deleteOrg(item._id,item.filename)">Delete</button>
 							</td>
-							<td ng-if="item._id.$oid == '-1' ">
+							<td ng-if="item._id == '-1' ">
 								{{currentProgress}}<img ng-src="../images/loader01.gif"/>
 							</td>
 						</tr>    
@@ -96,12 +98,10 @@
 		
 </div>
 <modal title="Backup Status" visible="showModal">
-    <div class="statusContainer" ng-show="showStatus">
+    <div class="statusContainer">
 			<div class="row">
-				<div class="col-sm-4 col-md-4" ng-show="proxiesLoader">
-				Proxies are being backed up<img ng-src="../images/loader01.gif"/>
-				</div>
-				<div class="col-sm-4 col-md-4" ng-show="showProxiesStatus">
+				
+				<div class="col-sm-4 col-md-4" >
 			    	<h4 class="info">Proxies</h4>
 			    	<div class="table-responsive">
 					  <table class="table table-bordered">
@@ -121,10 +121,8 @@
 					</div>
 			    </div>
 			
-			<div class="col-sm-4 col-md-4" ng-show="resourcesLoader">
-			Resources are being backedup<img ng-src="../images/loader01.gif"/>
-			</div>
-				<div class="col-sm-8 col-md-8" ng-show="showResourcesStatus">
+			
+				<div class="col-sm-8 col-md-8" >
 			    	<h4 class="info">Resources</h4>
 			    	<div class="table-responsive">
 					  <table class="table table-bordered">
@@ -152,10 +150,8 @@
 			    
 			</div>
 			<div class="row">
-			<div class="col-sm-4 col-md-4" ng-show="appsLoader">
-			Apps are being backedup<img ng-src="../images/loader01.gif"/>
-			</div>
-				<div class="col-sm-4 col-md-4" ng-show="showAppsStatus">
+			
+				<div class="col-sm-4 col-md-4" >
 			    	<h4 class="info">Apps</h4>
 			    	<div class="table-responsive">
 					  <table class="table table-bordered">
@@ -173,10 +169,8 @@
 					</div>
 				</div>
 			
-			<div class="col-sm-4 col-md-4" ng-show="productsLoader">
-			Products are being backedup<img ng-src="../images/loader01.gif"/>
-			</div>
-			    <div class="col-sm-4 col-md-4" ng-show="showProductsStatus">
+			
+			    <div class="col-sm-4 col-md-4" >
 			    	<h4 class="info">Products</h4>
 			    	<div class="table-responsive">
 					  <table class="table table-bordered">
@@ -194,10 +188,8 @@
 					</div>
 				</div>
 			    
-			    <div class="col-sm-4 col-md-4" ng-show="developersLoader">
-			Developers are being backedup<img ng-src="../images/loader01.gif"/>
-			</div>
-			    <div class="col-sm-4 col-md-4" ng-show="showDevelopersStatus">
+			   
+			    <div class="col-sm-4 col-md-4" >
 			    	<h4 class="info">Developers</h4>
 			    	<div class="table-responsive">
 					  <table class="table table-bordered">
@@ -217,4 +209,5 @@
 			    
 			</div>
 		</div>
+		
   </modal>
