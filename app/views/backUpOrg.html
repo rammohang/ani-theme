@@ -36,20 +36,26 @@
 		<div class="backupOrgContainer">
 			<div class="row">
 				<!--  column1 -->
-				<div class="col-md-4">
+				<div class="col-md-2">
 				</div>
 		
-				<div class="col-md-4" ng-if="orgHis">
+				<div class="col-md-8" ng-if="orgHis">
 		
 					<table class="table table-hover">
 						<tr>
 							<th>Backedup On</th>
 							<th>Organization</th>
+							<th>Status</th>
+							<th>Console</th>
 							<th>Action</th>
 						</tr>
 						<tr ng-repeat="item in orgHis | pagination: curPage * pageSize | limitTo: pageSize">
 							<td>{{item.uploadDate.$date}}</td>
 							<td>{{item.filename}}</td>
+							<td>In Progress</td>
+							<td>
+								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item._id.$oid)">Console</button>
+							</td>
 							<td ng-if="item._id.$oid !== '-1' ">
 								<button class="btn btn-success btn-xs" ng-click="restoreOrg(item._id.$oid,item.filename)">Restore</button>
 								<button class="btn btn-danger btn-xs" ng-click="deleteOrg(item._id.$oid,item.filename)">Delete</button>
@@ -84,27 +90,13 @@
 			</div>
 		</div>
 		
+		<div>
 		
-		<!-- div class="progressContainer">
-			<div class="alert alert-success" role="alert" ng-if="proxyMessageStatus">
-			{{proxyMessageStatus}}
-			</div>
-			<div class="alert alert-success" role="alert" ng-if="resourceMessageStatus">
-				{{resourceMessageStatus}}
-			</div>
-			<div class="alert alert-success" role="alert" ng-if="appsMessageStatus">
-				{{appsMessageStatus}}
-			</div>
-			<div class="alert alert-success" role="alert" ng-if="productsMessageStatus">
-				{{productsMessageStatus}}
-			</div>
-			<div class="alert alert-success" role="alert" ng-if="developersMessageStatus">
-				{{developersMessageStatus}}
-			</div>
-		</div-->
+		</div>
 		
-		
-		<div class="statusContainer" ng-show="showStatus">
+</div>
+<modal title="Backup Status" visible="showModal">
+    <div class="statusContainer" ng-show="showStatus">
 			<div class="row">
 				<div class="col-sm-4 col-md-4" ng-show="proxiesLoader">
 				Proxies are being backed up<img ng-src="../images/loader01.gif"/>
@@ -225,10 +217,4 @@
 			    
 			</div>
 		</div>
-		
-		<div>
-		
-		</div>
-		
-</div>
-<div data-ng-include="'views/footer.html'"></div>
+  </modal>

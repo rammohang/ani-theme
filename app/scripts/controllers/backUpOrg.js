@@ -1,6 +1,6 @@
 app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage,AppService,$q) {
 	
-	
+	$scope.showModal = false;
 	
 	$scope.proxyInfo = [];
 	$scope.resourceInfo = [];
@@ -58,6 +58,13 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		} else {
 			$scope.showOther = false;
 		}
+	}
+	
+	$scope.viewDetailedStatus = function(oid) {
+		alert('TODO : ' + oid);
+		// use this oid as a key to get detailed console info
+		$scope.showModal = !$scope.showModal;
+		// populate detailed into bootstrap modal
 	}
 	
 
