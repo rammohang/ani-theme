@@ -42,6 +42,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.orgText = "";
 	
 	$scope.currentProgress="";
+	$scope.orgHis = [];
 	
 	var orgs = $rootScope.userDetails.organizations || [];
 
@@ -105,7 +106,20 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	
 	
 	$scope.deleteOrg = function(oid,filename) {
-		alert('TODO:'+oid);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/deletebackup?oid="+oid, commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			for(var i = 0; i < $scope.orgHis.length; i++) {
+				if($scope.orgHis[i]._id.$oid == oid) {
+					$scope.orgHis.splice(i, 1);
+					break;
+				}
+			}
+		});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.showLoader = "N";
+			alert("Submitting form failed!");
+		});
 	}
 	
 	$scope.restoreOrg = function(oid,filename) {
