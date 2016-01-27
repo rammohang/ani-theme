@@ -115,7 +115,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	
 	
 	AppService.getOrgBackUpHistory(commonConfiguration).then(function(result) {
-    	  $scope.orgHis = result;
+    	  $scope.orgHis = result.orgBackUpInfoList;
       },function(error) {
         // handle errors here
         console.log(error.statusText);
@@ -140,7 +140,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	
 	$scope.deleteOrg = function(oid,filename) {
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/deletebackup?oid="+oid, commonConfiguration, {});
+				+ "apigee/deletebackup?oid="+oid+"&sys=org", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			for(var i = 0; i < $scope.orgHis.length; i++) {
 				if($scope.orgHis[i].fileOid == oid) {
@@ -232,11 +232,11 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 							"userName" : $rootScope.userDetails.userName,
 							"password" : $rootScope.userDetails.password
 						};
-			var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1", commonConfiguration, {});
+			var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1?sys=org", commonConfiguration, {});
 				responsePromise.success(function(data, status, headers, config) {
 								$scope.showLoader = "N";
 								$scope.organization = "";
-								$scope.orgHis = data;
+								$scope.orgHis = data.orgBackUpInfoList;
 					var Seconds_Between_Dates = Math.abs((t1.getTime() - new Date().getTime())/1000);
 						alert("Completed in " + Seconds_Between_Dates + ' Seconds');
 					});		
