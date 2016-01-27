@@ -1,9 +1,10 @@
-app.service('AppService',['$http','$q',function($http,$q){
+app.service('AppService',['$http','$rootScope','$q',function($http,$rootScope,$q){
 
 	var deferred = $q.defer();
 
 	  this.getOrgBackUpHistory = function(commonConfiguration) {
-	    return $http.post("http://localhost:8084/apigee_rest/services/apigee/getorgbackuphistory1?sys=org", commonConfiguration, {})
+	    return $http.post($rootScope.baseUrl
+				+ "apigee/getorgbackuphistory1?sys=org", commonConfiguration, {})
 	      .then(function(response) {
 	        // promise is fulfilled
 	        deferred.resolve(response.data);
@@ -17,7 +18,8 @@ app.service('AppService',['$http','$q',function($http,$q){
 	  
 	  
 	  this.getProxyBackUpHistory = function(commonConfiguration) {
-		    return $http.post("http://localhost:8084/apigee_rest/services/apigee/getorgbackuphistory1?sys=apiproxies", commonConfiguration, {})
+		    return $http.post($rootScope.baseUrl
+					+ "apigee/getorgbackuphistory1?sys=apiproxies", commonConfiguration, {})
 		      .then(function(response) {
 		        // promise is fulfilled
 		        deferred.resolve(response.data);

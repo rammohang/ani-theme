@@ -113,7 +113,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	
 	
 	AppService.getOrgBackUpHistory(commonConfiguration).then(function(data) {
-    	  $scope.orgHis = getProcessedHistory(data);
+    	  $scope.orgHis = getProcessedHistory(data.orgBackUpInfoList);
       },function(error) {
         // handle errors here
         console.log(error.statusText);
@@ -247,7 +247,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		//1.call for backup proxies
 		var responsePromise = $http.post($rootScope.baseUrl+ "apigee/backupsubsystems?sys=" + "org"+ "&saveandzip=true", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-			var consoleInfo = data.consoleInfo;
+			var consoleInfo = data.orgBackUpInfo;
 			for(var i=0;i<$scope.orgHis.length;i++) {
 				if($scope.orgHis[i].tempToken==data.tempToken) {
 					var dataItem = getProcessedHistoryItem(consoleInfo);
