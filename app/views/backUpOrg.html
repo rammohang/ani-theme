@@ -54,13 +54,13 @@
 							<td>{{item.cts | date:'medium'}}</td>
 							<td>{{item.organization}}</td>
 							<td>{{item.backUpTimeTaken}}</td>
-							<td>Completed</td>
+							<td>{{item.status}}</td>
 							<td>
-								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)">Console</button>
+								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
 							</td>
 							<td>
-								<button class="btn btn-success btn-xs" ng-click="restoreOrg(item.fileOid,item.organization)">Restore</button>
-								<button class="btn btn-danger btn-xs" ng-click="deleteOrg(item.fileOid,item.organization)">Delete</button>
+								<button class="btn btn-success btn-xs" ng-click="restoreOrg(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Restore</button>
+								<button class="btn btn-danger btn-xs" ng-click="deleteOrg(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Delete</button>
 							</td>
 							
 						</tr>    
@@ -96,116 +96,116 @@
 		
 </div>
 <modal class="statusModal" title="Backup Status" visible="showModal">
-    <div class="statusContainer">
-			<div class="row">
-				
-				<div class="col-sm-4 col-md-4" >
-			    	<h4 class="info">Proxies</h4>
-			    	<div class="table-responsive">
-					  <table class="table table-bordered">
-					    	<thead>
-					    		<tr>
-					    			<td class="danger">Proxy</td>
-					    			<td class="danger">(Env, Rev)</td>
-					    		</tr>
-					    	</thead>
-					    	<tbody>
-					    		<tr ng-repeat="proxy in proxyInfo">
-					    			<td>{{proxy.proxyName}}</td>
-					    			<td><span ng-repeat="env in proxy.environments">({{env.environment}}, {{env.revision}}) {{$last ? '' : ', '}}</span></td>
-					    		</tr>
-					    	</tbody>
-					  </table>
-					</div>
-			    </div>
+   <div class="statusContainer">
+		<div class="row">
 			
-			
-				<div class="col-sm-8 col-md-8" >
-			    	<h4 class="info">Resources</h4>
-			    	<div class="table-responsive">
-					  <table class="table table-bordered">
-					    	<thead>
-					    		<tr>
-					    			<td class="info">Env</td>
-					    			<td class="info">Caches</td>
-					    			<td class="info">KV</td>
-					    			<td class="info">Target Servers</td>
-					    			<td class="info">Virtual Hosts</td>
-					    		</tr>
-					    	</thead>
-					    	<tbody>
-					    		<tr ng-repeat="resource in resourceInfo">
-					    			<td>{{resource.envName}}</td>
-					    			<td><span ng-repeat="cache in resource.CACHES"> {{cache}} {{$last ? '' : ', '}}</span></td>
-					    			<td><span ng-repeat="kv in resource.KV">{{kv}} {{$last ? '' : ', '}}</span> </td>
-					    			<td><span ng-repeat="ts in resource.TARGETSERVERS">{{ts}} {{$last ? '' : ', '}}</span></td>
-					    			<td><span ng-repeat="vh in resource.VIRTUALHOSTS">{{vh}} {{$last ? '' : ', '}}</span></td>
-					    		</tr>
-					    	</tbody>
-					  </table>
-					</div>
-			    </div>
-			    
-			</div>
-			<div class="row">
-			
-				<div class="col-sm-4 col-md-4" >
-			    	<h4 class="info">Apps</h4>
-			    	<div class="table-responsive">
-					  <table class="table table-bordered">
-					    	<thead>
-					    		<tr>
-					    			<td class="success">Apps</td>
-					    		</tr>
-					    	</thead>
-					    	<tbody>
-					    		<tr ng-repeat="app in appsInfo">
-					    			<td>{{app}}</td>
-					    		</tr>
-					    	</tbody>
-					  </table>
-					</div>
+			<div class="col-sm-4 col-md-4" >
+		    	<h4 class="info">Proxies</h4>
+		    	<div class="table-responsive">
+				  <table class="table table-bordered">
+				    	<thead>
+				    		<tr>
+				    			<td class="danger">Proxy</td>
+				    			<td class="danger">(Env, Rev)</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="proxy in proxyInfo">
+				    			<td>{{proxy.proxyName}}</td>
+				    			<td><span ng-repeat="env in proxy.environments">({{env.environment}}, {{env.revision}}) {{$last ? '' : ', '}}</span></td>
+				    		</tr>
+				    	</tbody>
+				  </table>
 				</div>
-			
-			
-			    <div class="col-sm-4 col-md-4" >
-			    	<h4 class="info">Products</h4>
-			    	<div class="table-responsive">
-					  <table class="table table-bordered">
-					    	<thead>
-					    		<tr>
-					    			<td class="warning">Products</td>
-					    		</tr>
-					    	</thead>
-					    	<tbody>
-					    		<tr ng-repeat="product in productsInfo">
-					    			<td>{{product}}</td>
-					    		</tr>
-					    	</tbody>
-					  </table>
-					</div>
-				</div>
-			    
-			   
-			    <div class="col-sm-4 col-md-4" >
-			    	<h4 class="info">Developers</h4>
-			    	<div class="table-responsive">
-					  <table class="table table-bordered">
-					    	<thead>
-					    		<tr>
-					    			<td class="danger">Developers</td>
-					    		</tr>
-					    	</thead>
-					    	<tbody>
-					    		<tr ng-repeat="developer in developersInfo">
-					    			<td>{{developer}}</td>
-					    		</tr>
-					    	</tbody>
-					  </table>
-					</div>
-			    </div>
-			    
-			</div>
-		</div>
+		    </div>
 		
-  </modal>
+		
+			<div class="col-sm-8 col-md-8" >
+		    	<h4 class="info">Resources</h4>
+		    	<div class="table-responsive">
+				  <table class="table table-bordered">
+				    	<thead>
+				    		<tr>
+				    			<td class="info">Env</td>
+				    			<td class="info">Caches</td>
+				    			<td class="info">KV</td>
+				    			<td class="info">Target Servers</td>
+				    			<td class="info">Virtual Hosts</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="resource in resourceInfo">
+				    			<td>{{resource.envName}}</td>
+				    			<td><span ng-repeat="cache in resource.CACHES"> {{cache}} {{$last ? '' : ', '}}</span></td>
+				    			<td><span ng-repeat="kv in resource.KV">{{kv}} {{$last ? '' : ', '}}</span> </td>
+				    			<td><span ng-repeat="ts in resource.TARGETSERVERS">{{ts}} {{$last ? '' : ', '}}</span></td>
+				    			<td><span ng-repeat="vh in resource.VIRTUALHOSTS">{{vh}} {{$last ? '' : ', '}}</span></td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				</div>
+		    </div>
+		    
+		</div>
+		<div class="row">
+		
+			<div class="col-sm-4 col-md-4" >
+		    	<h4 class="info">Apps</h4>
+		    	<div class="table-responsive">
+				  <table class="table table-bordered">
+				    	<thead>
+				    		<tr>
+				    			<td class="success">Apps</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="app in appsInfo">
+				    			<td>{{app}}</td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				</div>
+			</div>
+		
+		
+		    <div class="col-sm-4 col-md-4" >
+		    	<h4 class="info">Products</h4>
+		    	<div class="table-responsive">
+				  <table class="table table-bordered">
+				    	<thead>
+				    		<tr>
+				    			<td class="warning">Products</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="product in productsInfo">
+				    			<td>{{product}}</td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				</div>
+			</div>
+		    
+		   
+		    <div class="col-sm-4 col-md-4" >
+		    	<h4 class="info">Developers</h4>
+		    	<div class="table-responsive">
+				  <table class="table table-bordered">
+				    	<thead>
+				    		<tr>
+				    			<td class="danger">Developers</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="developer in developersInfo">
+				    			<td>{{developer}}</td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				</div>
+		    </div>
+		    
+		</div>
+	</div>
+	
+ </modal>

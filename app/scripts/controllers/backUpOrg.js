@@ -9,7 +9,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.appsInfo = [];
 		
 
-	$scope.proxyMessageStatus = "";
 	$scope.resourceMessageStatus = "";
 	$scope.appsMessageStatus = "";
 	$scope.productsMessageStatus = "";
@@ -27,7 +26,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.showOther = false;
 	$scope.orgText = "";
 	
-	$scope.currentProgress="";
 	$scope.orgHis = [];
 	$scope.consoleInfo = {};
 	
@@ -102,7 +100,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.showLoader = "Y";
 	
 	 $scope.curPage = 0;
-	 $scope.pageSize = 3;
+	 $scope.pageSize = 5;
 	 $scope.numberOfPages = function() {
 			return Math.ceil($scope.orgHis.length / $scope.pageSize);
 		};
@@ -114,8 +112,8 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	console.log(commonConfiguration);
 	
 	
-	AppService.getOrgBackUpHistory(commonConfiguration).then(function(result) {
-    	  $scope.orgHis = result;
+	AppService.getOrgBackUpHistory(commonConfiguration).then(function(data) {
+    	  $scope.orgHis = getProcessedHistory(data);
       },function(error) {
         // handle errors here
         console.log(error.statusText);
@@ -136,7 +134,9 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	});
 	*/
 	
-	
+	$scope.disableButton = function(disable) {
+		return disable;
+	}
 	
 	$scope.deleteOrg = function(oid,filename) {
 		var responsePromise = $http.post($rootScope.baseUrl
@@ -185,67 +185,77 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 	}
 
+	function generateRandomString() {
+	    var text = "";
+	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    for( var i=0; i < 16; i++ )
+	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	    return text;
+	}
+	
+	function getProcessedHistoryItem(dataItem) {
+		var item = {};
+		for(var key in dataItem) {
+			item[key]=dataItem[key];
+		}
+		item.disableButtons = false;
+		item.status = "Completed";
+		item.tempToken = "";
+		return item;
+	}
+	
+	function getProcessedHistory(data) {
+		var items = [];
+		for(var i=0;i<data.length;i++) {
+			var dataItem = data[i];
+			var item = getProcessedHistoryItem(dataItem);
+			items.push(item);
+		}
+		return items;
+	}
+	
 	$scope.backUpOrg = function() {
 		$scope.showStatus = true;
-		var t1 = new Date();
 		var org = $scope.organization;
 		
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
 		}
+		if(!org) {
+			alert("No Organization Selected!!");
+			return false;
+		}
 
+		var tempToken = generateRandomString();
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : org
+			"organization" : org,
+			"tempToken" : tempToken
 		};
-		
+		console.dir(commonConfiguration);
 		var dbmodel = {
-				"uploadDate":{
-					"$date":"--"
-				},
-				"filename":org,
-				"_id": -1
+				"organization" : org,
+				"tempToken":tempToken,
+				"disableButtons": true,
+				"status":"In Progress"
 		}
 		$scope.orgHis.unshift(dbmodel);
-		
 		$scope.showLoader = true;
 		$scope.proxiesLoader = true;
-		console.log(commonConfiguration);
+		
 		//1.call for backup proxies
-		$scope.currentProgress="Proxies being backedup";
 		var responsePromise = $http.post($rootScope.baseUrl+ "apigee/backupsubsystems?sys=" + "org"+ "&saveandzip=true", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-					$scope.proxyMessageStatus += "Proxies Backed Successfully";
-					$scope.proxiesLoader = false;
-					$scope.organization = "";
-					$scope.proxyData = data;
-					console.log($scope.proxyData);
-					$scope.filedir = $scope.proxyData.dir;
-					$scope.showLoader = false;
-					
-					$scope.showProxiesStatus = true;
-								
-					
-//call to display table in ui
-				var commonConfiguration = {
-							"userName" : $rootScope.userDetails.userName,
-							"password" : $rootScope.userDetails.password
-						};
-			var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1", commonConfiguration, {});
-				responsePromise.success(function(data, status, headers, config) {
-								$scope.showLoader = "N";
-								$scope.organization = "";
-								$scope.orgHis = data;
-					var Seconds_Between_Dates = Math.abs((t1.getTime() - new Date().getTime())/1000);
-						alert("Completed in " + Seconds_Between_Dates + ' Seconds');
-					});		
-				responsePromise.error(function(data, status, headers, config) {
-								$scope.showLoader = "N";
-						alert("Submitting form failed!");
-				});														
-//call finish
-			});
+			var consoleInfo = data.consoleInfo;
+			for(var i=0;i<$scope.orgHis.length;i++) {
+				if($scope.orgHis[i].tempToken==data.tempToken) {
+					var dataItem = getProcessedHistoryItem(consoleInfo);
+					$scope.orgHis[i]=dataItem;
+					break;
+				}
+			}
+		});
 
 		responsePromise.error(function(data, status, headers,
 				config) {
@@ -255,5 +265,9 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 
 	}
 	console.log($scope.account);
+	
+	
+	
+	
 });
 

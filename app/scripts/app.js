@@ -17,7 +17,7 @@ app.factory('httpInterceptor', function ($q,$location,$rootScope, $localStorage)
     return {
         request: function (config) {
         	var userDetails = $localStorage.userDetails;
-        	console.log("%%%%%%");
+        	console.log("==================== httpInterceptor ====================");
         	$rootScope.userDetails = userDetails;
         	if (!userDetails || !userDetails.userLoggedIn) {
         		$location.path('/login');
@@ -112,6 +112,9 @@ app.config(function($routeProvider) {
 	}).when('/importProxy', {
 		templateUrl : 'views/importAPIProxy.html',
 		controller : 'ImportProxyCtrl'
+	}).when('/scheduleBackup', {
+		templateUrl : 'views/backUpScheduler.html',
+		controller : 'BackupSchedulerCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
@@ -134,6 +137,7 @@ app.directive('fileModel', [ '$parse', function($parse) {
 	};
 } ]);
 
+// http://jsfiddle.net/alexsuch/RLQhh/
 app.directive('modal', function () {
     return {
       template: '<div class="modal fade">' + 
@@ -143,7 +147,10 @@ app.directive('modal', function () {
                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
                 '<h4 class="modal-title">{{ title }}</h4>' + 
               '</div>' + 
-              '<div class="modal-body" ng-transclude></div>' + 
+              '<div class="modal-body" ng-transclude></div>' +
+              '<div class="modal-footer">'+
+              '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>'+
+            '</div>'+
             '</div>' + 
           '</div>' + 
         '</div>',
