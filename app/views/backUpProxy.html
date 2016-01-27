@@ -37,22 +37,71 @@
 		<!--  column3 END-->
 	</div>
 	<!--  ROW END -->
-		</form>
-		<div class="alert alert-success" role="alert" ng-if="backUpSuccess">
-			{{backUpSuccess}}
+</form>
+		
+		
+		<!-- Display backedup results -->
+		<div class="backupOrgContainer">
+			<div class="row">
+				<!--  column1 -->
+				<div class="col-md-2">
+				</div>
+		
+				<div class="col-md-8" ng-if="proxyHis">
+		
+					<table class="table table-hover">
+						<tr>
+							<th>Backedup On</th>
+							<th>Organization</th>
+							<th>Time Taken(sec)</th>
+							<th>Status</th>
+							<th>Console</th>
+							<th>Action</th>
+						</tr>
+						<tr ng-repeat="item in proxyHis | pagination: curPage * pageSize | limitTo: pageSize">
+							<td>{{item.cts | date:'medium'}}</td>
+							<td>{{item.organization}}</td>
+							<td>{{item.backUpTimeTaken}}</td>
+							<td>Completed</td>
+							<td>
+								<button class="btn btn-warning btn-xs" ng-click="">Console</button>
+							</td>
+							<td>
+								<button class="btn btn-success btn-xs" ng-click="">Restore</button>
+								<button class="btn btn-danger btn-xs" ng-click="deleteProxyBackUp(item.fileOid,item.organization)">Delete</button>
+							</td>
+							
+						</tr>    
+		
+					</table>
+		
+					<ul class="pagination-controle pagination">
+						<li>
+							<button type="button" class="btn btn-primary" ng-disabled="curPage == 0"
+		       ng-click="curPage=curPage-1"> &lt; PREV</button>
+						</li>
+						<li>
+							<span>Page {{curPage + 1}} of {{ numberOfPages() }}</span>
+						</li>
+						<li>
+							<button type="button" class="btn btn-primary"
+		       ng-disabled="curPage >= proxyHis.length/pageSize - 1"
+		       ng-click="curPage = curPage+1">NEXT &gt;</button>
+						</li>
+					</ul>
+		
+				</div>
+		
+				<div class="col-md-4">
+				</div>
+		
+			</div>
 		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpApps">
-			{{backUpApps}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpDev">
-			{{backUpDev}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpProd">
-			{{backUpProd}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpRes">
-			{{backUpRes}}
-		</div>
+		
+		<!-- Displayed all resut -->
+		
+		
+		{{proxyHis.length}}
 		<div class="alert alert-success" role="alert" ng-if="backUpzip">
 			{{backUpzip}}
 		</div>
