@@ -51,10 +51,10 @@
 							<th>Action</th>
 						</tr>
 						<tr ng-repeat="item in orgHis | pagination: curPage * pageSize | limitTo: pageSize">
-							<td>{{item.cts}}</td>
+							<td>{{item.cts | date:'medium'}}</td>
 							<td>{{item.organization}}</td>
 							<td>{{item.backUpTimeTaken}}</td>
-							<td>In Progress</td>
+							<td>Completed</td>
 							<td>
 								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)">Console</button>
 							</td>
