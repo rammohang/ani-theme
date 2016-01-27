@@ -136,8 +136,8 @@ app.directive('fileModel', [ '$parse', function($parse) {
 
 app.directive('modal', function () {
     return {
-      template: '<div class="modal fade bs-example-modal-lg">' + 
-          '<div class="modal-dialog modal-lg">' + 
+      template: '<div class="modal fade">' + 
+          '<div class="modal-dialog modal-acm">' + 
             '<div class="modal-content">' + 
               '<div class="modal-header">' + 
                 '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>' + 
