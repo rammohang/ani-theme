@@ -138,7 +138,7 @@ app.directive('fileModel', [ '$parse', function($parse) {
 } ]);
 
 // http://jsfiddle.net/alexsuch/RLQhh/
-app.directive('modal', function () {
+app.directive('udmodal', function () {
     return {
       template: '<div class="modal fade">' + 
           '<div class="modal-dialog modal-acm">' + 
@@ -194,5 +194,15 @@ app.filter('pagination', function() {
 	return function(input, start) {
 		start = +start;
 		return input.slice(start);
+	};
+});
+
+//https://angular-ui.github.io/bootstrap/#/modal
+app.controller('ConfirmPopupCtrl', function($scope, $uibModalInstance) {
+	$scope.ok = function() {
+		$uibModalInstance.close();
+	};
+	$scope.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
 	};
 });

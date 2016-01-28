@@ -60,7 +60,7 @@
 							</td>
 							<td>
 								<button class="btn btn-success btn-xs" ng-click="restoreOrg(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Restore</button>
-								<button class="btn btn-danger btn-xs" ng-click="deleteOrg(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Delete</button>
+								<button class="btn btn-danger btn-xs" ng-click="confirmAction(item)" ng-disabled="disableButton(item.disableButtons)">Delete</button>
 							</td>
 							
 						</tr>    
@@ -95,7 +95,7 @@
 		</div>
 		
 </div>
-<modal class="statusModal" title="Backup Status" visible="showModal">
+<udmodal class="statusModal" title="Backup Status" visible="showModal">
    <div class="statusContainer">
 		<div class="row">
 			
@@ -208,4 +208,4 @@
 		</div>
 	</div>
 	
- </modal>
+ </udmodal>

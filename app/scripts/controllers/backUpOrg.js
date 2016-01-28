@@ -1,4 +1,4 @@
-app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage,AppService,$q) {
+app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage,AppService,$q,$uibModal, $log) {
 	
 	$scope.showModal = false;
 	$scope.proxyInfo = [];
@@ -71,6 +71,34 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	responsePromise.error(function(data, status, headers, config) {
 		alert("oops !!! we are facing issues.");
 	});
+	
+	//https://angular-ui.github.io/bootstrap/#/modal
+	$scope.confirmAction = function(item) {
+		var modalInstance = $uibModal
+				.open({
+					animation : true,
+					template : '<div >'
+							+ '<div class="modal-header">'
+							+ '<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>'
+							+ '<h3 class="modal-title">Delete Organization</h3>'
+							+ '</div>'
+							+ '<div class="modal-body">'
+							+ 'Are you Sure want to delete?<br/><br/>This will delete the backedup Organization.'
+							+ '</div>'
+							+ '<div class="modal-footer">'
+							+ '<button class="btn btn-primary" type="button" ng-click="ok()">Delete</button>'
+							+ '<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>'
+							+ '</div>' + '</div>',
+					controller : 'ConfirmPopupCtrl',
+					size : undefined,
+					resolve : {}
+				});
+		modalInstance.result.then(function() {
+			$scope.deleteOrg(item.fileOid, item.organization);
+		}, function() {
+			$log.info('Modal dismissed at: ' + new Date());
+		});
+	};
   
 	$scope.changeOrg = function(event) {
 		if ($scope.organization == 'Other') {
