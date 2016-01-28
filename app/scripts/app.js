@@ -115,6 +115,9 @@ app.config(function($routeProvider) {
 	}).when('/scheduleBackup', {
 		templateUrl : 'views/backUpScheduler.html',
 		controller : 'BackupSchedulerCtrl'
+	}).when('/cleanRevisions', {
+		templateUrl : 'views/cleanRevisions.html',
+		controller : 'cleanRevisionsCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
