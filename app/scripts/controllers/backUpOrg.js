@@ -1,88 +1,62 @@
 app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage,AppService,$q) {
 	
 	$scope.showModal = false;
-	
 	$scope.proxyInfo = [];
 	$scope.resourceInfo = [];
 	$scope.developersInfo = [];
 	$scope.productsInfo = [];
 	$scope.appsInfo = [];
-		
-
-	$scope.resourceMessageStatus = "";
-	$scope.appsMessageStatus = "";
-	$scope.productsMessageStatus = "";
-	$scope.developersMessageStatus = "";
-
-	$scope.filedir = "";
-
-	$scope.proxyData = "";
-	$scope.resourceData = "";
-
-	$scope.enable = true;
-
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
-	
 	$scope.orgHis = [];
-	$scope.consoleInfo = {};
+	
+	$scope.curPage = 0;
+	$scope.pageSize = 5;
+	$scope.numberOfPages = function() {
+		return Math.ceil($scope.orgHis.length / $scope.pageSize);
+	};
 	
 	var orgs = $rootScope.userDetails.organizations || [];
-
 	for (var i = 0; i < orgs.length; i++) {
 		$scope.orgs.push(orgs[i]);
 	}
 	$scope.orgs.push('Other');
 	
-	
-	
-	var org = $scope.organization;
-	if($scope.organization == 'Other') {
-		org = $scope.orgText;
+	function generateRandomString() {
+		var text = "";
+		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		for( var i=0; i < 16; i++ )
+		    text += possible.charAt(Math.floor(Math.random() * possible.length));
+		return text;
 	}
 	
+	function getProcessedHistoryItem(dataItem) {
+		var item = null;
+		if(dataItem) {
+			var item = {};
+			for(var key in dataItem) {
+				item[key]=dataItem[key];
+			}
+			item.disableButtons = false;
+			item.status = "Completed";
+			item.tempToken = "";
+		}
+		return item;
+	}
 	
-	 $scope.curPage = 0;
-	 $scope.pageSize = 5;
-	 $scope.numberOfPages = function() {
-		return Math.ceil($scope.orgHis.length / $scope.pageSize);
-	 };
-	 
-	 function generateRandomString() {
-		    var text = "";
-		    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		    for( var i=0; i < 16; i++ )
-		        text += possible.charAt(Math.floor(Math.random() * possible.length));
-		    return text;
-		}
-		
-		function getProcessedHistoryItem(dataItem) {
-			var item = null;
-			if(dataItem) {
-				var item = {};
-				for(var key in dataItem) {
-					item[key]=dataItem[key];
-				}
-				item.disableButtons = false;
-				item.status = "Completed";
-				item.tempToken = "";
-			}
-			return item;
-		}
-		
-		function getProcessedHistory(data) {
+	function getProcessedHistory(data) {
+		var items = [];
+		if(data) {
 			var items = [];
-			if(data) {
-				var items = [];
-				for(var i=0;i<data.length;i++) {
-					var dataItem = data[i];
-					var item = getProcessedHistoryItem(dataItem);
-					items.push(item);
-				}
+			for(var i=0;i<data.length;i++) {
+				var dataItem = data[i];
+				var item = getProcessedHistoryItem(dataItem);
+				items.push(item);
 			}
-			return items;
 		}
+		return items;
+	}
 	
 	var commonConfiguration = {
 		"userName" : $rootScope.userDetails.userName,
@@ -111,7 +85,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		// use this oid as a key to get detailed console info
 		$scope.showModal = !$scope.showModal;
 		// populate detailed into bootstrap modal
-		//$scope.consoleInfo = consoleInfo;
 		
 		// 1. Proxies Info to be displayed
 		var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
@@ -244,7 +217,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			alert("Submitting form failed!");
 		});
 	}
-	console.log($scope.account);
 	
 });
 
