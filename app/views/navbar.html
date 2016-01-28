@@ -13,63 +13,64 @@
           <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
            	  <li class="active1 dropdown">
-				<a href="#/dashboard" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dashboard  <span class="caret"></span></a>
+				<a href="#/dashboard" uib-tooltip="Dashboard For APIGEE Deployments" tooltip-placement="bottom" tooltip-trigger="mouseenter" 
+				class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dashboard  <span class="caret"></span></a>
 			  </li>
               <li class="dropdown">
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Organization  <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                  <li><a href="#/backUpOrg">BackUp Organization</a></li>
-                  <li><a href="#/cleanOrg">CleanUp Organization</a></li>
-                  <li><a href="#/scheduleBackup">Backup Scheduler</a></li>
+                  <li><a href="#/backUpOrg" uib-tooltip="Take backups of selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >BackUp Organization</a></li>
+                  <li><a href="#/cleanOrg" uib-tooltip="Cleanup selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >CleanUp Organization</a></li>
+                  <li><a href="#/scheduleBackup" uib-tooltip="Schedule backups for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Backup Scheduler</a></li>
                 </ul>
 			  </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">API Proxies <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backupProxy">BackUp Proxy</a></li>
-                  <li><a href="#/cleanUpProxy">Clean Proxy</a></li>
-                  <li><a href="#/restoreProxy">Restore Proxy</a></li>
-                   <li><a href="#/deleteProxy">Delete Proxy</a></li>
-                  <li><a href="#/undeployProxy">Undeploy Proxy</a></li>
-                  <li><a href="#/deployProxy">Deploy Proxy</a></li>
-                  <li><a href="#/getProxy">Get Proxy</a></li>
-                 <li><a href="#/exportProxy">Export Proxy</a></li>
-                 <li><a href="#/importProxy">Import New Proxy</a></li>
+                   <li><a href="#/backupProxy" uib-tooltip="Take backups of Proxies for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >BackUp Proxy</a></li>
+                  <li><a href="#/cleanUpProxy" uib-tooltip="Cleanup Proxies for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Clean Proxy</a></li>
+                  <li><a href="#/restoreProxy" uib-tooltip="Restore Proxies for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Restore Proxy</a></li>
+                   <li><a href="#/deleteProxy" uib-tooltip="Delete Proxies for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Delete Proxy</a></li>
+                  <li><a href="#/undeployProxy" uib-tooltip="Undeploy Proxies for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Undeploy Proxy</a></li>
+                  <li><a href="#/deployProxy" uib-tooltip="Deploy Proxies for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Deploy Proxy</a></li>
+                  <li><a href="#/getProxy" uib-tooltip="Get Proxy Details" tooltip-placement="right" tooltip-trigger="mouseenter" >Get Proxy</a></li>
+                 <li><a href="#/exportProxy" uib-tooltip="Export Proxy" tooltip-placement="right" tooltip-trigger="mouseenter" >Export Proxy</a></li>
+                 <li><a href="#/importProxy" uib-tooltip="Import New Proxy" tooltip-placement="right" tooltip-trigger="mouseenter" >Import New Proxy</a></li>
                 </ul>
               </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Products <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backUpProducts">BackUp Products</a></li>
-                  <li><a href="#/cleanUpProducts">Clean Products</a></li>
-                  <li><a href="#/restoreProducts">Restore Products</a></li>
+                   <li><a href="#/backUpProducts" uib-tooltip="Take backups of Products for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >BackUp Products</a></li>
+                  <li><a href="#/cleanUpProducts" uib-tooltip="Cleanup Products for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Clean Products</a></li>
+                  <li><a href="#/restoreProducts" uib-tooltip="Restore Products for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Restore Products</a></li>
                  
                 </ul>
               </li>	
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Developers <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backUpDevelopers">BackUp Developers</a></li>
-                  <li><a href="#/cleanUpDevelopers">Clean Developers</a></li>
-                  <li><a href="#/restoreDevelopers">Restore Developers</a></li>
+                   <li><a href="#/backUpDevelopers" uib-tooltip="Take backups of Developers for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >BackUp Developers</a></li>
+                  <li><a href="#/cleanUpDevelopers" uib-tooltip="Cleanup Developers for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Clean Developers</a></li>
+                  <li><a href="#/restoreDevelopers" uib-tooltip="Restore Developers for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Restore Developers</a></li>
                  
                 </ul>
               </li>
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Apps <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backUpApp">BackUp Apps</a></li>
-                  <li><a href="#/cleanUpApp">Clean Apps</a></li>
-                  <li><a href="#/restoreApps">Restore Apps</a></li>
+                   <li><a href="#/backUpApp" uib-tooltip="Take backups of Apps for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >BackUp Apps</a></li>
+                  <li><a href="#/cleanUpApp" uib-tooltip="Cleanup Apps for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Clean Apps</a></li>
+                  <li><a href="#/restoreApps" uib-tooltip="Restore Apps for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Restore Apps</a></li>
                  
                 </ul>
               </li>	
               <li class="dropdown">
                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"> Resources <span class="caret"></span></a>
                 <ul class="dropdown-menu">
-                   <li><a href="#/backUpResource">BackUp Resources</a></li>
-                  <li><a href="#/cleanUpResource">Clean Resources</a></li>
-                  <li><a href="#/restoreResource">Restore Resources</a></li>
+                   <li><a href="#/backUpResource" uib-tooltip="Take backups of Resources for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >BackUp Resources</a></li>
+                  <li><a href="#/cleanUpResource" uib-tooltip="Cleanup Resources for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Clean Resources</a></li>
+                  <li><a href="#/restoreResource" uib-tooltip="Restore Resources for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" >Restore Resources</a></li>
                  
                 </ul>
               </li>

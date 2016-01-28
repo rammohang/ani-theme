@@ -7,7 +7,7 @@
  *
  * Main module of the application.
  */
-var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage' ]);
+var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage','ui.bootstrap' ]);
 
 app.config(function($httpProvider) {
 	 $httpProvider.interceptors.push('httpInterceptor');
