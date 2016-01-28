@@ -77,8 +77,6 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,
 						$scope.showLoader = "N";
 						$scope.organization = "";
 						$scope.proxyHis = data.proxyBackUpInfoList;
-			var Seconds_Between_Dates = Math.abs((t1.getTime() - new Date().getTime())/1000);
-				alert("Completed in " + Seconds_Between_Dates + ' Seconds');
 			});		
 		responsePromise.error(function(data, status, headers, config) {
 						$scope.showLoader = "N";

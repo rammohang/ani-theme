@@ -194,22 +194,28 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	}
 	
 	function getProcessedHistoryItem(dataItem) {
-		var item = {};
-		for(var key in dataItem) {
-			item[key]=dataItem[key];
+		var item = null;
+		if(dataItem) {
+			var item = {};
+			for(var key in dataItem) {
+				item[key]=dataItem[key];
+			}
+			item.disableButtons = false;
+			item.status = "Completed";
+			item.tempToken = "";
 		}
-		item.disableButtons = false;
-		item.status = "Completed";
-		item.tempToken = "";
 		return item;
 	}
 	
 	function getProcessedHistory(data) {
 		var items = [];
-		for(var i=0;i<data.length;i++) {
-			var dataItem = data[i];
-			var item = getProcessedHistoryItem(dataItem);
-			items.push(item);
+		if(data) {
+			var items = [];
+			for(var i=0;i<data.length;i++) {
+				var dataItem = data[i];
+				var item = getProcessedHistoryItem(dataItem);
+				items.push(item);
+			}
 		}
 		return items;
 	}
