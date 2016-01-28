@@ -130,7 +130,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	
 	$scope.deleteOrg = function(oid,filename) {
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/deletebackup?oid="+oid, commonConfiguration, {});
+				+ "apigee/deletebackup?sys=org&oid="+oid, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			for(var i = 0; i < $scope.orgHis.length; i++) {
 				if($scope.orgHis[i].fileOid == oid) {
