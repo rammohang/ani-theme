@@ -1,6 +1,10 @@
-\html, body {
-  height: 100%;
+//declare all the variables
+@green-tooltip	:	#d2e2e3;
+@military-green	:	#4b5320;
+
+html, body {
   min-height: 100%;
+  height: 100%;
   position: relative;
 }
 
@@ -102,4 +106,22 @@ h3.apigee {
 
 .statusModal .modal-acm {
 	width : 95%
+}
+
+// tooltip related styles
+.green-tooltip + .tooltip > .tooltip-inner {
+	background-color: @green-tooltip !important;
+	color: @military-green !important;
+ }
+.green-tooltip.top-tooltip + .tooltip > .tooltip-arrow {
+	border-top-color: @green-tooltip !important;
+}
+.green-tooltip.right-tooltip + .tooltip > .tooltip-arrow {
+	border-right-color: @green-tooltip !important;
+}
+.green-tooltip.bottom-tooltip + .tooltip > .tooltip-arrow {
+	border-bottom-color: @green-tooltip !important;
+}
+.green-tooltip.left-tooltip + .tooltip > .tooltip-arrow {
+	border-left-color: @green-tooltip !important;
 }

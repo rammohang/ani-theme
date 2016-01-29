@@ -12,7 +12,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.orgHis = [];
 	
 	$scope.curPage = 0;
-	$scope.pageSize = 5;
+	$scope.pageSize = 8;
 	$scope.numberOfPages = function() {
 		return Math.ceil($scope.orgHis.length / $scope.pageSize);
 	};
@@ -73,20 +73,32 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	});
 	
 	//https://angular-ui.github.io/bootstrap/#/modal
-	$scope.confirmAction = function(item) {
+	$scope.confirmAction = function(item, action) {
+		var popupTitle = '';
+		var bodyMsg = '' ;
+		switch(action) {
+		case 'delete':
+			popupTitle = 'Delete Organization';
+			bodyMsg = 'Are you Sure want to delete?<br/><br/>This will delete the backedup Organization.';
+			break;
+		case 'restore':
+			popupTitle = 'Restore Organization';
+			bodyMsg = 'Are you Sure want to restore?<br/><br/>This will replace the current revision of Organization.';
+			break;
+		}
 		var modalInstance = $uibModal
 				.open({
 					animation : true,
 					template : '<div >'
 							+ '<div class="modal-header">'
 							+ '<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>'
-							+ '<h3 class="modal-title">Delete Organization</h3>'
+							+ '<h3 class="modal-title">'+ popupTitle +'</h3>'
 							+ '</div>'
 							+ '<div class="modal-body">'
-							+ 'Are you Sure want to delete?<br/><br/>This will delete the backedup Organization.'
+							+ bodyMsg
 							+ '</div>'
 							+ '<div class="modal-footer">'
-							+ '<button class="btn btn-primary" type="button" ng-click="ok()">Delete</button>'
+							+ '<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>'
 							+ '<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>'
 							+ '</div>' + '</div>',
 					controller : 'ConfirmPopupCtrl',
@@ -94,7 +106,14 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 					resolve : {}
 				});
 		modalInstance.result.then(function() {
-			$scope.deleteOrg(item.fileOid, item.organization);
+			switch(action) {
+			case 'delete':
+				$scope.deleteOrg(item.fileOid, item.organization);
+				break;
+			case 'restore':
+				$scope.restoreOrg(item.fileOid, item.organization);
+				break;
+			}
 		}, function() {
 			$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -189,11 +208,11 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"org", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-					$scope.backUpzip+= "Organization Restored successfully\n";
-					$scope.organization = "";
-					$scope.orgHis = data;
-					console.log($scope.orgHis);
-				});		
+			$scope.backUpzip+= "Organization Restored successfully\n";
+			$scope.organization = "";
+			$scope.orgHis = data;
+			console.log($scope.orgHis);
+		});		
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");
 		});
@@ -239,7 +258,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 				}
 			}
 		});
-
 		responsePromise.error(function(data, status, headers,
 				config) {
 			alert("Submitting form failed!");

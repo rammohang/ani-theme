@@ -9,18 +9,27 @@
  */
 var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage','ui.bootstrap' ]);
 
-app.config(function($httpProvider) {
-	 $httpProvider.interceptors.push('httpInterceptor');
+app.run(function($rootScope, $localStorage) {
+	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
+	var userDetails = $localStorage.userDetails;
+	$rootScope.userDetails = userDetails;
+	$rootScope.noLoginRoutes = ['/login','/signUp'];
 });
 
-app.factory('httpInterceptor', function ($q,$location,$rootScope, $localStorage) {
+app.config(function($httpProvider) {
+	 $httpProvider.interceptors.push('myInterceptor');
+});
+
+app.factory('myInterceptor', function ($q,$location,$rootScope, $localStorage) {
     return {
         request: function (config) {
         	var userDetails = $localStorage.userDetails;
         	console.log("==================== httpInterceptor ====================");
         	$rootScope.userDetails = userDetails;
         	if (!userDetails || !userDetails.userLoggedIn) {
-        		$location.path('/login');
+        		if(!$.inArray($location.path(), $rootScope.noLoginRoutes)) {
+        			$location.path('/login');
+        		}
         	}
         	$rootScope.logout = function() {
         		$localStorage.userDetails = undefined;
@@ -112,9 +121,9 @@ app.config(function($routeProvider) {
 	}).when('/importProxy', {
 		templateUrl : 'views/importAPIProxy.html',
 		controller : 'ImportProxyCtrl'
-	}).when('/scheduleBackup', {
-		templateUrl : 'views/backUpScheduler.html',
-		controller : 'BackupSchedulerCtrl'
+	}).when('/signUp', {
+		templateUrl : 'views/signUp.html',
+		controller : 'SignUpCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
@@ -181,14 +190,8 @@ app.directive('udmodal', function () {
         });
       }
     };
-  });
+ });
 
-
-app.run(function($rootScope, $localStorage) {
-	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
-	var userDetails = $localStorage.userDetails;
-	$rootScope.userDetails = userDetails;
-});
 
 app.filter('pagination', function() {
 	return function(input, start) {
