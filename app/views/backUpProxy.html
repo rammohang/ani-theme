@@ -64,11 +64,13 @@
 							<td>{{item.backUpTimeTaken}}</td>
 							<td>Completed</td>
 							<td>
-								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)">Console</button>
+								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
 							</td>
 							<td>
-								<button class="btn btn-success btn-xs" ng-click="restoreProxyBackUp(item.fileOid,item.organization)">Restore</button>
-								<button class="btn btn-danger btn-xs" ng-click="deleteProxyBackUp(item.fileOid,item.organization)">Delete</button>
+								<div class="row">
+									<div class="col-sm-6 col-md-6"><button class="btn btn-success btn-xs" ng-click="restoreProxyBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Restore</button><img ng-if="item.restoreRevLoader" class="restoreSpinner" ng-src="../images/16x16-spinner.gif"/></div>
+									<div class="col-sm-6 col-md-6"><button class="btn btn-danger btn-xs" ng-click="deleteProxyBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Delete</button></div>
+								</div>
 							</td>
 							
 						</tr>    
@@ -103,11 +105,10 @@
 		
 		
 </div>
-<mymodal class="statusModal" title="Backup Status" visible="showModal">
+<mymodal class="proxyStatusModal" title="Backup Status" visible="showModal">
    <div class="statusContainer">
 		<div class="row">
-			
-			<div class="col-sm-4 col-md-4" >
+			<div class="col-sm-12 col-md-12" >
 		    	<h4 class="info">Proxies</h4>
 		    	<div class="table-responsive">
 				  <table class="table table-bordered">
@@ -126,8 +127,6 @@
 				  </table>
 				</div>
 		    </div>
-		
-		
 		
 		</div>
 	

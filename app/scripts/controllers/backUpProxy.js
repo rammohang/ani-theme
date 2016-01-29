@@ -4,6 +4,7 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
+	$scope.restoreRevLoader = false;
 	var orgs = $rootScope.userDetails.organizations || [];
 	for (var i = 0; i < orgs.length; i++) {
 		$scope.orgs.push(orgs[i]);
@@ -36,7 +37,7 @@ var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1
 	responsePromise.success(function(data, status, headers, config) {
 					$scope.showLoader = "N";
 					$scope.organization = "";
-					$scope.proxyHis = data.proxyBackUpInfoList;
+					$scope.proxyHis = getProcessedHistory(data.proxyBackUpInfoList);
 		});		
 	responsePromise.error(function(data, status, headers, config) {
 					$scope.showLoader = "N";
@@ -122,26 +123,40 @@ var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1
 	}
 	
 	$scope.restoreProxyBackUp = function(oid,filename) {
+		$scope.restoreRevLoader = true;
+		var tempToken = generateRandomString();
 		var org = $scope.organization;
 		if($scope.organization == 'Other') {
 			org = $scope.orgText;
 		}
-		alert(oid);
+		
 		$scope.oid = oid;
 		$scope.filename = filename;
+		
+		for(var i=0;i<$scope.proxyHis.length;i++){
+			if($scope.proxyHis[i].fileOid==oid){
+				$scope.proxyHis[i].restoreRevLoader = true;
+				break;
+			}
+		}
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : org
+			"organization" : org,
+			"tempToken" : tempToken
 		};
-		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"apiproxies", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-					$scope.backUpzip+= "Organization Restored successfully\n";
-					$scope.organization = "";
-					$scope.orgHis = data;
-					console.log($scope.orgHis);
+				var tempToken = data.tempToken;
+					
+				for(var i = 0; i < $scope.proxyHis.length; i++) {
+					if($scope.proxyHis[i].fileOid == oid) {
+						$scope.proxyHis[i].restoreRevLoader = false;
+						break;
+					}
+				}
+			
 				});		
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");
@@ -188,6 +203,7 @@ var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1
 			}
 			item.disableButtons = false;
 			item.status = "Completed";
+			item.restoreRevLoader = false;
 			item.tempToken = "";
 		}
 		return item;
@@ -204,6 +220,10 @@ var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1
 			}
 		}
 		return items;
+	}
+	
+	$scope.disableButton = function(disable) {
+		return disable;
 	}
 	
 });
