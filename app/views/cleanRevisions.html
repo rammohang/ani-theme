@@ -11,9 +11,9 @@
 		<!--  column1 END -->
 		<!--  column2 -->
 		<div class="col-md-4">
-		
+			
 				<div class="form-group">
-	    			<label for="proxyName">Backup APIProxy</label>
+	    			<label for="proxyName">CleanUp Revisions</label>
 	    			<p>
 			        <select ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs">
 			          <option value="">Select Organization</option>
@@ -22,12 +22,11 @@
 			      </p>
   				</div>
   				<div class="form-group">
-					<button class="btn btn-default" ng-click="backUpAPIProxy()" ng-disabled="enable">Backup API Proxy</button>
+					<button class="btn btn-default" ng-click="cleanRevisions()">CleanUp Revisions</button>
 					<div class="throbber-loader" ng-show="showLoader=='Y'">
   Loading…
 </div>
 				</div>
-				
 		
 		</div>
 		<!--  column2 END -->
@@ -37,17 +36,15 @@
 		<!--  column3 END-->
 	</div>
 	<!--  ROW END -->
-</form>
+		</form>
 		
-		
-		<!-- Display backedup results -->
 		<div class="backupOrgContainer">
 			<div class="row">
 				<!--  column1 -->
 				<div class="col-md-2">
 				</div>
 		
-				<div class="col-md-8" ng-if="proxyHis">
+				<div class="col-md-8" ng-if="proxyRevHis">
 		
 					<table class="table table-hover">
 						<tr>
@@ -58,17 +55,17 @@
 							<th>Console</th>
 							<th>Action</th>
 						</tr>
-						<tr ng-repeat="item in proxyHis | pagination: curPage * pageSize | limitTo: pageSize">
+						<tr ng-repeat="item in proxyRevHis | pagination: curPage * pageSize | limitTo: pageSize">
 							<td>{{item.cts | date:'medium'}}</td>
 							<td>{{item.organization}}</td>
 							<td>{{item.backUpTimeTaken}}</td>
-							<td>Completed</td>
+							<td>{{item.status}}</td>
 							<td>
-								<button class="btn btn-warning btn-xs" ng-click="">Console</button>
+								<button class="btn btn-warning btn-xs" ng-click="" ng-disabled="disableButton(item.disableButtons)">Console</button>
 							</td>
 							<td>
-								<button class="btn btn-success btn-xs" ng-click="restoreProxyBackUp(item.fileOid,item.organization)">Restore</button>
-								<button class="btn btn-danger btn-xs" ng-click="deleteProxyBackUp(item.fileOid,item.organization)">Delete</button>
+								<button class="btn btn-success btn-xs" ng-click="" ng-disabled="disableButton(item.disableButtons)">Restore</button>
+								<button class="btn btn-danger btn-xs" ng-click="deleteProxyRevision(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Delete</button>
 							</td>
 							
 						</tr>    
@@ -85,7 +82,7 @@
 						</li>
 						<li>
 							<button type="button" class="btn btn-primary"
-		       ng-disabled="curPage >= proxyHis.length/pageSize - 1"
+		       ng-disabled="curPage >= proxyRevHis.length/pageSize - 1"
 		       ng-click="curPage = curPage+1">NEXT &gt;</button>
 						</li>
 					</ul>
@@ -98,9 +95,10 @@
 			</div>
 		</div>
 		
-		<!-- Displayed all resut -->
 		
-		
+		<div class="alert alert-success" role="alert" ng-if="backUpzip">
+			{{backUpzip}}
+		</div>
 		
 </div>
 <div data-ng-include="'views/footer.html'"></div>

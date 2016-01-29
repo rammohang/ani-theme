@@ -28,20 +28,20 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,
 			return Math.ceil($scope.proxyHis.length / $scope.pageSize);
 		};
 	// call to display records in mongo
-	var commonConfiguration = {
-			"userName" : $rootScope.userDetails.userName,
-			"password" : $rootScope.userDetails.password
-		};
-		console.log(commonConfiguration);
-		
-		
-		AppService.getProxyBackUpHistory(commonConfiguration).then(function(result) {
-	    	  $scope.proxyHis = result.proxyBackUpInfoList;
-	      },function(error) {
-	        // handle errors here
-	        console.log(error.statusText);
-	      }
-	    );
+		var commonConfiguration = {
+				"userName" : $rootScope.userDetails.userName,
+				"password" : $rootScope.userDetails.password
+			};
+var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1?sys=apiproxies", commonConfiguration, {});
+	responsePromise.success(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+					$scope.organization = "";
+					$scope.proxyHis = data.proxyBackUpInfoList;
+		});		
+	responsePromise.error(function(data, status, headers, config) {
+					$scope.showLoader = "N";
+			alert("Submitting form failed!");
+	});	
 	// call finish
 	
 
@@ -56,33 +56,45 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,
 			"password" : $rootScope.userDetails.password,
 			"organization" : org
 		};
+		
+		//logic to push temp array
+		var tempToken = generateRandomString();
+		var commonConfiguration = {
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
+			"organization" : org,
+			"tempToken" : tempToken
+		};
+		console.dir(commonConfiguration);
+		var dbmodel = {
+				"organization" : org,
+				"tempToken":tempToken,
+				"disableButtons": true,
+				"status":"In Progress"
+		}
+		$scope.proxyHis.unshift(dbmodel);
+		$scope.showLoader = true;
+		//logic finsih
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/backupsubsystems?sys=" + "apiproxies&saveandzip=true",
 				commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-			$scope.backUpzip += "API Proxies backuped Successfully\n";
 			$scope.organization = "";
-			$scope.proxyData = data;
-			console.log($scope.proxyData);
 			$scope.showLoader = "N";
-			// call to load data
-			var commonConfiguration = {
-					"userName" : $rootScope.userDetails.userName,
-					"password" : $rootScope.userDetails.password
-				};
-	var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1?sys=apiproxies", commonConfiguration, {});
-		responsePromise.success(function(data, status, headers, config) {
-						$scope.showLoader = "N";
-						$scope.organization = "";
-						$scope.proxyHis = data.proxyBackUpInfoList;
-			});		
-		responsePromise.error(function(data, status, headers, config) {
-						$scope.showLoader = "N";
-				alert("Submitting form failed!");
-		});		
-			// call to load data finish
+			//load data
+			//load data finish
+			
+			var consoleInfo = data.proxyBackUpInfo;
+			for(var i=0;i<$scope.proxyHis.length;i++) {
+				if($scope.proxyHis[i].tempToken==data.tempToken) {
+					var dataItem = getProcessedHistoryItem(consoleInfo);
+					$scope.proxyHis[i]=dataItem;
+					break;
+				}
+			}
+			
 		});
 		responsePromise.error(function(data, status, headers, config) {
 			$scope.showLoader = "N";
@@ -109,6 +121,66 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,
 		});
 	}
 	
+	$scope.restoreProxyBackUp = function(oid,filename) {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
+		var commonConfiguration = {
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
+			"organization" : org
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"apiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.backUpzip+= "Organization Restored successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
 	
+	function generateRandomString() {
+	    var text = "";
+	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+	    for( var i=0; i < 16; i++ )
+	        text += possible.charAt(Math.floor(Math.random() * possible.length));
+	    return text;
+	}
+	
+	function getProcessedHistoryItem(dataItem) {
+		var item = null;
+		if(dataItem) {
+			var item = {};
+			for(var key in dataItem) {
+				item[key]=dataItem[key];
+			}
+			item.disableButtons = false;
+			item.status = "Completed";
+			item.tempToken = "";
+		}
+		return item;
+	}
+	
+	function getProcessedHistory(data) {
+		var items = [];
+		if(data) {
+			var items = [];
+			for(var i=0;i<data.length;i++) {
+				var dataItem = data[i];
+				var item = getProcessedHistoryItem(dataItem);
+				items.push(item);
+			}
+		}
+		return items;
+	}
 	
 });

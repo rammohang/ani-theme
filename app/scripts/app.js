@@ -124,6 +124,9 @@ app.config(function($routeProvider) {
 	}).when('/signUp', {
 		templateUrl : 'views/signUp.html',
 		controller : 'SignUpCtrl'
+	}).when('/cleanRevisions', {
+		templateUrl : 'views/cleanRevisions.html',
+		controller : 'cleanRevisionsCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
@@ -147,7 +150,7 @@ app.directive('fileModel', [ '$parse', function($parse) {
 } ]);
 
 // http://jsfiddle.net/alexsuch/RLQhh/
-app.directive('udmodal', function () {
+app.directive('mymodal', function () {
     return {
       template: '<div class="modal fade">' + 
           '<div class="modal-dialog modal-acm">' + 
