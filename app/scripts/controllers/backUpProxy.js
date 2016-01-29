@@ -148,6 +148,29 @@ var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1
 		});
 	}
 	
+	//Display row data
+	$scope.viewDetailedStatus = function(consoleInfo) {
+		// use this oid as a key to get detailed console info
+		$scope.showModal = !$scope.showModal;
+		// populate detailed into bootstrap modal
+		
+		// 1. Proxies Info to be displayed
+		var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
+		var formattedArray = [];
+		for(var i=0;i<proxyInfo.length;i++) {
+		  var proxyObj = proxyInfo[i];
+		  var singleProxyInfo = {};
+		  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
+		  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
+		  for(var key in proxyContents) {
+		    singleProxyInfo[key] = proxyContents[key];
+		  }
+		  formattedArray.push(singleProxyInfo);
+		}
+		$scope.proxyInfo = formattedArray;
+	
+	}
+	
 	function generateRandomString() {
 	    var text = "";
 	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

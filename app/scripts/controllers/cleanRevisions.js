@@ -99,6 +99,57 @@ app.controller('cleanRevisionsCtrl', function($scope, $http, $location,$rootScop
 			alert("Submitting form failed!");
 		});
 	}
+	//restore ProxyRevision
+	$scope.restoreProxyRevisionBackUp = function(oid,filename) {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
+		var commonConfiguration = {
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
+			"organization" : org
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"proxyrevision", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.organization = "";
+					$scope.proxyRevHis = data;
+					console.log($scope.proxyRevHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+	
+	//display row data
+	//Display row results
+	$scope.viewDetailedStatus = function(consoleInfo) {
+		// use this oid as a key to get detailed console info
+		$scope.showModal = !$scope.showModal;
+		// populate detailed into bootstrap modal
+		
+		// 1. Proxies Info to be displayed
+		var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
+		var formattedArray = [];
+		for(var i=0;i<proxyInfo.length;i++) {
+		  var proxyObj = proxyInfo[i];
+		  var singleProxyInfo = {};
+		  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
+		  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
+		  for(var key in proxyContents) {
+		    singleProxyInfo[key] = proxyContents[key];
+		  }
+		  formattedArray.push(singleProxyInfo);
+		}
+		$scope.proxyInfo = formattedArray;
+	
+	}
+	
 	
 	
 	 $scope.curPage = 0;

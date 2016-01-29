@@ -64,7 +64,7 @@
 							<td>{{item.backUpTimeTaken}}</td>
 							<td>Completed</td>
 							<td>
-								<button class="btn btn-warning btn-xs" ng-click="">Console</button>
+								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)">Console</button>
 							</td>
 							<td>
 								<button class="btn btn-success btn-xs" ng-click="restoreProxyBackUp(item.fileOid,item.organization)">Restore</button>
@@ -103,4 +103,34 @@
 		
 		
 </div>
-<div data-ng-include="'views/footer.html'"></div>
+<udmodal class="statusModal" title="Backup Status" visible="showModal">
+   <div class="statusContainer">
+		<div class="row">
+			
+			<div class="col-sm-4 col-md-4" >
+		    	<h4 class="info">Proxies</h4>
+		    	<div class="table-responsive">
+				  <table class="table table-bordered">
+				    	<thead>
+				    		<tr>
+				    			<td class="danger">Proxy</td>
+				    			<td class="danger">(Env, Rev)</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="proxy in proxyInfo">
+				    			<td>{{proxy.proxyName}}</td>
+				    			<td><span ng-repeat="env in proxy.environments">({{env.environment}}, {{env.revision}}) {{$last ? '' : ', '}}</span></td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				</div>
+		    </div>
+		
+		
+		
+		</div>
+	
+	</div>
+	
+ </udmodal>

@@ -61,10 +61,10 @@
 							<td>{{item.backUpTimeTaken}}</td>
 							<td>{{item.status}}</td>
 							<td>
-								<button class="btn btn-warning btn-xs" ng-click="" ng-disabled="disableButton(item.disableButtons)">Console</button>
+								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
 							</td>
 							<td>
-								<button class="btn btn-success btn-xs" ng-click="" ng-disabled="disableButton(item.disableButtons)">Restore</button>
+								<button class="btn btn-success btn-xs" ng-click="restoreProxyRevisionBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Restore</button>
 								<button class="btn btn-danger btn-xs" ng-click="deleteProxyRevision(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Delete</button>
 							</td>
 							
@@ -95,10 +95,37 @@
 			</div>
 		</div>
 		
-		
-		<div class="alert alert-success" role="alert" ng-if="backUpzip">
-			{{backUpzip}}
-		</div>
+	
 		
 </div>
-<div data-ng-include="'views/footer.html'"></div>
+<udmodal class="statusModal" title="Backup Status" visible="showModal">
+   <div class="statusContainer">
+		<div class="row">
+			
+			<div class="col-sm-4 col-md-4" >
+		    	<h4 class="info">Proxies</h4>
+		    	<div class="table-responsive">
+				  <table class="table table-bordered">
+				    	<thead>
+				    		<tr>
+				    			<td class="danger">Proxy</td>
+				    			<td class="danger">Deployment Status</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="proxy in proxyInfo">
+				    			<td>{{proxy.proxyName}}</td>
+				    			<td>NO</span></td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				</div>
+		    </div>
+		
+		
+		
+		</div>
+	
+	</div>
+	
+ </udmodal>
