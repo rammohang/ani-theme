@@ -121,6 +121,33 @@ var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1
 		});
 	}
 	
+	$scope.restoreProxyBackUp = function(oid,filename) {
+		var org = $scope.organization;
+		if($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		alert(oid);
+		$scope.oid = oid;
+		$scope.filename = filename;
+		var commonConfiguration = {
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
+			"organization" : org
+		};
+		console.log(commonConfiguration);
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"apiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+					$scope.backUpzip+= "Organization Restored successfully\n";
+					$scope.organization = "";
+					$scope.orgHis = data;
+					console.log($scope.orgHis);
+				});		
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+	
 	function generateRandomString() {
 	    var text = "";
 	    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

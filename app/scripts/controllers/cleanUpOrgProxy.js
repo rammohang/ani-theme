@@ -31,7 +31,8 @@ app.controller('CleanUpOrgProxyCtrl', function($scope, $http, $location,
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : org
+			"organization" : org,
+			"tempToken" : "temp"
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
