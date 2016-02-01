@@ -67,9 +67,9 @@
 								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
 							</td>
 							<td>
-								<div class="row">
-									<div class="col-sm-6 col-md-6"><button class="btn btn-success btn-xs" ng-click="restoreProxyBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Restore</button><img ng-if="item.restoreRevLoader" class="restoreSpinner" ng-src="../images/16x16-spinner.gif"/></div>
-									<div class="col-sm-6 col-md-6"><button class="btn btn-danger btn-xs" ng-click="deleteProxyBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Delete</button></div>
+								<div class="row acmAction">
+									<div class="col-sm-6 col-md-6 restoreBtn"><button class="btn btn-success btn-xs" ng-click="restoreProxyBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Restore</button><img ng-if="item.restoreRevLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+									<div class="col-sm-6 col-md-6 deleteBtn"><button class="btn btn-danger btn-xs" ng-click="deleteProxyBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Delete</button></div>
 								</div>
 							</td>
 							
