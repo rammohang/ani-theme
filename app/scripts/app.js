@@ -29,7 +29,6 @@ app.run(function($rootScope, $localStorage, $location,$timeout) {
     	$rootScope.userDetails = userDetails;
     	if (!userDetails || !userDetails.userLoggedIn) {
     		if($.inArray($location.path(), $rootScope.noLoginRoutes) == -1) {
-    			even.prevenDefault();
     			$location.path('/login');
     		}
     	}
