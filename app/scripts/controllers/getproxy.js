@@ -17,6 +17,33 @@ app.controller('GetProxyCtrl', function($scope, $http, $location, $rootScope,
 		}
 	}
 
+	
+	//get List of api proxies
+$scope.getAPIProxies = function() {
+		
+		var org = $scope.organization;
+		if ($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
+		
+		var commonConfiguration = {
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
+			"organization" : org
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/listapiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.disable = true;
+			$scope.apiProxyName = "";
+			$scope.proxiesList = data;
+			console.log($scope.proxiesList);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
 
 	$scope.proxyData = "";
 	$scope.getAPIProxy = function() {

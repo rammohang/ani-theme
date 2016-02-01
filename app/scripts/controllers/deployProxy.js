@@ -1,6 +1,10 @@
 app.controller('DeployProxyCtrl', function($scope, $http, $location,
 		$rootScope, $localStorage) {
+	
 	$scope.orgs = [];
+	$scope.dataMap = {};
+	$scope.revisionList = [];
+	
 	$scope.showOther = false;
 	$scope.orgText = "";
 	var orgs = $rootScope.userDetails.organizations || [];
@@ -16,7 +20,65 @@ app.controller('DeployProxyCtrl', function($scope, $http, $location,
 			$scope.showOther = false;
 		}
 	}
+	
+	
+	//getList of api proxies
+	$scope.getAPIProxies = function() {
+		
+		var org = $scope.organization;
+		if ($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
+		
+		var commonConfiguration = {
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
+			"organization" : org
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/listapiproxies", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.disable = true;
+			$scope.apiProxyName = "";
+			$scope.proxiesList = data;
+			console.log($scope.proxiesList);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
 
+// getUndeployed data
+
+
+	$scope.getUndeployments = function() {
+		var org = $scope.organization;
+		if ($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		var commonConfiguration = {
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
+			"organization" : $scope.organization,
+			"apiProxyName" : $scope.apiProxyName
+		};
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/getundeployments", commonConfiguration, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.disable = true;
+			$scope.dataMap = data;
+			$scope.envList = Object.keys(data);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Submitting form failed!");
+		});
+	}
+	
+	//get revision on change env
+	$scope.changeEnv = function() {
+		$scope.revisionList=$scope.dataMap[$scope.environment];
+	};
 
 	$scope.deployProxy = function() {
 		var org = $scope.organization;
@@ -45,4 +107,5 @@ app.controller('DeployProxyCtrl', function($scope, $http, $location,
 			alert("Submitting form failed!");
 		});
 	}
+	
 });
