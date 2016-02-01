@@ -17,7 +17,7 @@ app.run(function($rootScope, $localStorage, $location,$timeout) {
 	$rootScope.routeMap = {
 			"dashboard":['/dashboard'],
 			"organization":['/backUpOrg','/cleanOrg','/restoreOrg'],
-			"apiproxies":['/deleteProxy','/cleanUpProxy', '/restoreProxy','/undeployProxy','/deployProxy','/createProxy','/getProxy','/exportProxy','/backupProxy','/importProxy'],
+			"apiproxies":['/deleteProxy','/cleanUpProxy','/cleanRevisions', '/restoreProxy','/undeployProxy','/deployProxy','/createProxy','/getProxy','/exportProxy','/backupProxy','/importProxy'],
 			"products":['/backUpProducts','/cleanUpProducts','/restoreProducts'],
 			"developers":['/backUpDevelopers','/cleanUpDevelopers','/restoreDevelopers'],
 			"apps":['/backUpApp','/cleanUpApp','/restoreApps'],
