@@ -46,8 +46,10 @@
 							<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
 						</td>
 						<td>
-							<button class="btn btn-success btn-xs" ng-click="confirmAction(item,'restore')" ng-disabled="disableButton(item.disableButtons)">Restore</button>
-							<button class="btn btn-danger btn-xs" ng-click="confirmAction(item,'delete')" ng-disabled="disableButton(item.disableButtons)">Delete</button>
+							<div class="row acmAction">
+								<div class="col-sm-6 col-md-6 restoreBtn"><button class="btn btn-success btn-xs" ng-click="confirmAction(item,'restore')" ng-disabled="disableButton(item.disableButtons)">Restore</button><img ng-if="item.restoreLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+								<div class="col-sm-6 col-md-6 deleteBtn" ><button class="btn btn-danger btn-xs" ng-click="confirmAction(item,'delete')" ng-disabled="disableButton(item.disableButtons)">Delete</button><img ng-if="item.deleteLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+							</div>
 						</td>
 					</tr>    
 				</table>

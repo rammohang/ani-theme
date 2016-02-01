@@ -41,6 +41,8 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			item.disableButtons = false;
 			item.status = "Completed";
 			item.tempToken = "";
+			item.restoreLoader = false;
+			item.deleteLoader = false;
 		}
 		return item;
 	}
@@ -176,11 +178,20 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	}
 	
 	$scope.deleteOrg = function(oid,filename) {
+		for(var i = 0; i < $scope.orgHis.length; i++) {
+			if(oid == $scope.orgHis[i].fileOid) {
+				$scope.orgHis[i].deleteLoader = true;
+				$scope.orgHis[i].disableButtons = true;
+				break;
+			}
+		}
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/deletebackup?sys=org&oid="+oid, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			for(var i = 0; i < $scope.orgHis.length; i++) {
 				if($scope.orgHis[i].fileOid == oid) {
+					$scope.orgHis[i].deleteLoader = false;
+					$scope.orgHis[i].disableButtons = false;
 					$scope.orgHis.splice(i, 1);
 					break;
 				}
@@ -188,6 +199,13 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});		
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");
+			for(var i = 0; i < $scope.orgHis.length; i++) {
+				if($scope.orgHis[i].fileOid == oid) {
+					$scope.orgHis[i].deleteLoader = false;
+					$scope.orgHis[i].disableButtons = false;
+					break;
+				}
+			}
 		});
 	}
 	
@@ -196,25 +214,38 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		if($scope.organization == 'Other') {
 			org = $scope.orgText;
 		}
-		alert(oid);
-		$scope.oid = oid;
-		$scope.filename = filename;
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
 			"organization" : org
 		};
-		console.log(commonConfiguration);
+		for(var i = 0; i < $scope.orgHis.length; i++) {
+			if(oid == $scope.orgHis[i].fileOid) {
+				$scope.orgHis[i].restoreLoader = true;
+				$scope.orgHis[i].disableButtons = true;
+				break;
+			}
+		}
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/restoreorg?oid="+$scope.oid+"&filename="+$scope.filename+"&sys="+"org", commonConfiguration, {});
+				+ "apigee/restoreorg?oid="+oid+"&filename="+filename+"&sys="+"org", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-			$scope.backUpzip+= "Organization Restored successfully\n";
-			$scope.organization = "";
-			$scope.orgHis = data;
-			console.log($scope.orgHis);
+			for(var i = 0; i < $scope.orgHis.length; i++) {
+				if(oid == $scope.orgHis[i].fileOid) {
+					$scope.orgHis[i].restoreLoader = false;
+					$scope.orgHis[i].disableButtons = false;
+					break;
+				}
+			}
 		});		
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");
+			for(var i = 0; i < $scope.orgHis.length; i++) {
+				if(oid == $scope.orgHis[i].fileOid) {
+					$scope.orgHis[i].restoreLoader = false;
+					$scope.orgHis[i].disableButtons = false;
+					break;
+				}
+			}
 		});
 	}
 
@@ -242,7 +273,9 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 				"organization" : org,
 				"tempToken":tempToken,
 				"disableButtons": true,
-				"status":"In Progress"
+				"status":"In Progress",
+				"restoreLoader" : false,
+				"deleteLoader": false
 		}
 		$scope.orgHis.unshift(dbmodel);
 		
@@ -261,6 +294,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		responsePromise.error(function(data, status, headers,
 				config) {
 			alert("Submitting form failed!");
+			// TODO in case backup fails
 		});
 	}
 	
