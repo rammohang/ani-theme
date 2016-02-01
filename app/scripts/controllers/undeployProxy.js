@@ -57,6 +57,13 @@ app.controller('UndeployProxyCtrl', function($scope, $http, $location,
 	}
 
 	$scope.getAPIProxies = function() {
+		
+		var org = $scope.organization;
+		if ($scope.organization == 'Other') {
+			org = $scope.orgText;
+		}
+		
+		
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
