@@ -1,6 +1,7 @@
 app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage,AppService,$q,$uibModal, $log) {
 	
 	$scope.showModal = false;
+	$scope.showBackups = false;
 	$scope.proxyInfo = [];
 	$scope.resourceInfo = [];
 	$scope.developersInfo = [];
@@ -10,6 +11,8 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.showOther = false;
 	$scope.orgText = "";
 	$scope.orgHis = [];
+	$scope.backupSchedules = [];
+	$scope.periodicities = ['Weekly','Daily','Hourly'];
 	
 	$scope.curPage = 0;
 	$scope.pageSize = 8;
@@ -65,6 +68,8 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		"password" : $rootScope.userDetails.password
 	};
     
+	getScheduledBackups();
+	
     var responsePromise = $http.post($rootScope.baseUrl
 			+ "apigee/getorgbackuphistory1?sys="+"org", commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
@@ -299,6 +304,82 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			// TODO in case backup fails
 		});
 	}
+	
+	$scope.saveBackupSchedule = function() {
+		if(!$scope.scheduledOrg || !$scope.scheduledOrg) {
+			alert('Please select organization and periodicity');
+			return;
+		}
+		var backupSchedule = {
+				"organization":$scope.scheduledOrg,
+				"periodicity" : $scope.periodicity
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "backup/save", backupSchedule, {});
+		responsePromise.success(function(data, status, headers, config) {
+			alert("schedule saved");
+		});
+		responsePromise.error(function(data, status, headers,
+				config) {
+			alert("Failed to save!");
+		});
+	}
+	
+	$scope.seeAllSchedules = function() {
+		$scope.showBackups = !$scope.showBackups;
+		getScheduledBackups();
+	}
+	
+	$scope.changeScheduleOrg = function() {
+		if(!$scope.scheduledOrg) {
+			$scope.periodicity = '';
+		} else {
+			var flag = false;
+			for(var i=0;i<$scope.backupSchedules.length;i++) {
+				if($scope.backupSchedules[i].organization == $scope.scheduledOrg ) {
+					flag = true;
+					$scope.periodicity = $scope.backupSchedules[i].periodicity;
+					break;
+				}
+			}
+			if(!flag) {
+				$scope.periodicity = '';
+			}
+		}
+	}
+	
+	$scope.deleteScheduleOrg = function(id) {
+		var scheduledBackup = {
+				"id": id
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "backup/delete", scheduledBackup, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.scheduledOrg = '';
+			$scope.periodicity = '';
+			for(var i = 0; i < $scope.backupSchedules.length; i++) {
+				if($scope.backupSchedules[i].id == id) {
+					$scope.backupSchedules.splice(i, 1);
+					break;
+				}
+			}
+		});
+		responsePromise.error(function(data, status, headers,
+				config) {
+			alert("Failed to delete!");
+		});
+	}
+	
+	function getScheduledBackups() {
+		var user = {
+				"email": $rootScope.userDetails.userName
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "backup/schduledbackups", user, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.backupSchedules = data;
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Failed to retrieve!");
+		});
+	} 
 	
 });
 

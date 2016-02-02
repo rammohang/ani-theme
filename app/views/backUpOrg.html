@@ -14,12 +14,27 @@
 		      	</p>
 			</div>
 			<div class="form-group">
-				<button class="btn btn-default" ng-click="backUpOrg()" >Backup</button>
+				<button class="btn btn-primary" ng-click="backUpOrg()" >Backup</button>
 			</div>
 		</div>
 		<div class="col-md-4">
-			
+			<div class="form-group">
+    			<label for="proxyName">Schedule Organization Backup</label>
+    			<p>
+		        	<select ng-model="scheduledOrg" name="organization" id="organization" ng-click="changeScheduleOrg()" ng-options="org for org in userDetails.organizations">
+		          		<option value="">Select Organization</option>
+		        	</select>
+		        	<select ng-model="periodicity" name="periodicity" id="periodicity" ng-options="periodicity for periodicity in periodicities">
+		          		<option value="">Select Periodicity</option>
+		        	</select>
+		      	</p>
+			</div>
+			<div class="form-group">
+				<button class="btn btn-warning" ng-click="seeAllSchedules()" >See All Schedules</button>
+				<button class="btn btn-primary" ng-click="saveBackupSchedule()" >Schedule Backup</button>
+			</div>
 		</div>
+		<div class="col-md-2"></div>
 	</div>
 	<!--  ROW END -->
 		
@@ -236,4 +251,23 @@
 		</div>
 	</div>
 	
+ </mymodal>
+ 
+ <mymodal class="schedulesModal" title="Scheduled Backups" visible="showBackups">
+ 	<table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<td class="info">Organization</td>
+    			<td class="info">Periodicty</td>
+    			<td class="info">Actions</td>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr ng-repeat="backupSchedule in backupSchedules">
+    			<td>{{backupSchedule.organization}}</td>
+    			<td>{{backupSchedule.periodicity}}</td>
+    			<td><button class="btn btn-danger btn-xs" ng-click="deleteScheduleOrg(backupSchedule.id)" >Delete</button></td>
+    		</tr>
+    	</tbody>
+  	</table>
  </mymodal>
