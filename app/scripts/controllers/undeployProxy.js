@@ -3,6 +3,10 @@ app.controller('UndeployProxyCtrl', function($scope, $http, $location,
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
+	
+	$scope.fetchProxiesLoader=false;
+	
+	
 	var orgs = $rootScope.userDetails.organizations || [];
 	for (var i = 0; i < orgs.length; i++) {
 		$scope.orgs.push(orgs[i]);
@@ -57,7 +61,7 @@ app.controller('UndeployProxyCtrl', function($scope, $http, $location,
 	}
 
 	$scope.getAPIProxies = function() {
-		
+		$scope.fetchProxiesLoader=true;
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
@@ -72,6 +76,7 @@ app.controller('UndeployProxyCtrl', function($scope, $http, $location,
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/listapiproxies", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
+			$scope.fetchProxiesLoader=false;
 			$scope.disable = true;
 			$scope.apiProxyName = "";
 			$scope.proxiesList = data;

@@ -3,6 +3,8 @@ app.controller('DeleteProxyCtrl', function($scope, $http, $location,
 	$scope.orgs = [];
 	$scope.showOther = false;
 	$scope.orgText = "";
+	$scope.displayLoader = false;
+	$scope.delteProxyLoader = false;
 	var orgs = $rootScope.userDetails.organizations || [];
 	for (var i = 0; i < orgs.length; i++) {
 		$scope.orgs.push(orgs[i]);
@@ -22,6 +24,8 @@ app.controller('DeleteProxyCtrl', function($scope, $http, $location,
 	$scope.disable = false;
 
 	$scope.getAPIProxies = function() {
+		$scope.displayLoader = true;
+		
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
@@ -38,6 +42,7 @@ app.controller('DeleteProxyCtrl', function($scope, $http, $location,
 			$scope.apiProxyName = "";
 			$scope.proxiesList = data;
 			console.log($scope.proxiesList);
+			$scope.displayLoader = false;
 		});
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Submitting form failed!");
@@ -45,6 +50,7 @@ app.controller('DeleteProxyCtrl', function($scope, $http, $location,
 	}
 
 	$scope.deleteApiProxy = function() {
+		$scope.delteProxyLoader = true;
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
@@ -59,6 +65,7 @@ app.controller('DeleteProxyCtrl', function($scope, $http, $location,
 		var responsePromise = $http.post($rootScope.baseUrl
 				+ "apigee/deleteapi", commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
+			$scope.delteProxyLoader = false;
 			$scope.organization = "";
 			$scope.apiProxyName = "";
 			$scope.disable = false;
