@@ -9,34 +9,51 @@
  */
 var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage','ui.bootstrap' ]);
 
-app.run(function($rootScope, $localStorage) {
+app.run(function($rootScope, $localStorage, $location,$timeout) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 	$rootScope.noLoginRoutes = ['/login','/signUp'];
-});
-
-app.config(function($httpProvider) {
-	 $httpProvider.interceptors.push('myInterceptor');
-});
-
-app.factory('myInterceptor', function ($q,$location,$rootScope, $localStorage) {
-    return {
-        request: function (config) {
-        	var userDetails = $localStorage.userDetails;
-        	console.log("==================== httpInterceptor ====================");
-        	$rootScope.userDetails = userDetails;
-        	if (!userDetails || !userDetails.userLoggedIn) {
-        		if(!$.inArray($location.path(), $rootScope.noLoginRoutes)) {
-        			$location.path('/login');
-        		}
-        	}
-        	$rootScope.logout = function() {
-        		$localStorage.userDetails = undefined;
-        	};
-            return config || $q.when(config);
-        }
-    };
+	$rootScope.routeMap = {
+			"dashboard":['/dashboard'],
+			"organization":['/backUpOrg','/cleanOrg','/restoreOrg'],
+			"apiproxies":['/deleteProxy','/cleanUpProxy','/cleanRevisions', '/restoreProxy','/undeployProxy','/deployProxy','/createProxy','/getProxy','/exportProxy','/backupProxy','/importProxy'],
+			"products":['/backUpProducts','/cleanUpProducts','/restoreProducts'],
+			"developers":['/backUpDevelopers','/cleanUpDevelopers','/restoreDevelopers'],
+			"apps":['/backUpApp','/cleanUpApp','/restoreApps'],
+			"resources":['/backUpResource','/cleanUpResource','/restoreResource']
+	};
+	
+	$rootScope.$on('$routeChangeStart', function (event) {
+        var userDetails = $localStorage.userDetails;
+    	$rootScope.userDetails = userDetails;
+    	if (!userDetails || !userDetails.userLoggedIn) {
+    		if($.inArray($location.path(), $rootScope.noLoginRoutes) == -1) {
+    			$location.path('/login');
+    		}
+    	}
+    });
+	
+	$rootScope.$on('$routeChangeSuccess', function (event) {
+		// TODO
+	});
+	
+	$rootScope.$on('$includeContentLoaded', function(event) {
+		$timeout(function() {
+			for(var key in $rootScope.routeMap) {
+				if($.inArray($location.path(), $rootScope.routeMap[key]) != -1) {
+					$('li.acmmenu').removeClass('active1');
+					$('li.'+key).addClass('active1');
+					break;
+	    		}
+			}
+		}, 100);
+	});
+	
+	$rootScope.logout = function() {
+		$localStorage.userDetails = undefined;
+	};
+	
 });
 
 app.config(function($routeProvider) {
