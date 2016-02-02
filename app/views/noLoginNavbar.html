@@ -11,4 +11,21 @@
   <h3 class="apigee"><a href="#"></a>T-mobile Apigee Devops</h3>
           </div>
 </div><!--/.container-fluid -->
+   
+   		 <div id="navbar" class="navbar-collapse collapse" ng-if="userDetails">
+          <ul class="nav navbar-nav navbar-right">
+              
+              <li class="dropdown active1">
+                <a href="./">Welcome {{userDetails.displayName}} ! <span class="sr-only">(current)</span></a>
+               
+                <ul class="dropdown-menu">
+                   <li><a href="#" ng-click="logout()">Logout</a></li>
+                 
+                </ul>
+              </li>
+              
+            </ul>
+          </div>
+       
+   
       </nav>

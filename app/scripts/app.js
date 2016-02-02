@@ -144,6 +144,9 @@ app.config(function($routeProvider) {
 	}).when('/cleanRevisions', {
 		templateUrl : 'views/cleanRevisions.html',
 		controller : 'cleanRevisionsCtrl'
+	}).when('/releaseMgmt', {
+		templateUrl : 'views/release.html',
+		controller : 'releaseCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});

@@ -155,6 +155,9 @@
 				    		<tr ng-repeat="product in productsInfo">
 				    			<td>{{product}}</td>
 				    		</tr>
+				    		<tr ng-repeat="sproduct in skippedProductsInfo">
+				    			<td>{{sproduct}}</td>
+				    		</tr>
 				    	</tbody>
 				  </table>
 				</div>
@@ -179,6 +182,57 @@
 				</div>
 		    </div>
 		    
+		</div>
+		<!-- SKIPPED -->
+		<div class="row">
+		
+		
+	<hr>	
+		
+		    <div class="col-sm-4 col-md-4" >
+		    	<h4 class="info">Products that were not backedup</h4>
+		    	<div class="table-responsive">
+				  <table class="table table-bordered">
+				    	<thead>
+				    		<tr>
+				    			<td class="warning">Products</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="sproduct in skippedProductsInfo">
+				    			<td>{{sproduct}}</td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				</div>
+			</div>
+		    <div class="col-sm-8 col-md-8" >
+		    	<h4 class="info">Resources that were not backedup</h4>
+		    	<div class="table-responsive">
+				  <table class="table table-bordered">
+				    	<thead>
+				    		<tr>
+				    			<td class="info">Env</td>
+				    			<td class="info">Caches</td>
+				    			<td class="info">KV</td>
+				    			<td class="info">Target Servers</td>
+				    			<td class="info">Virtual Hosts</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="resource in resourceInfo">
+				    			<td>{{resource.envName}}</td>
+				    			<td><span ng-repeat="cache in resource.SKIPPEDCACHES"> {{cache}} {{$last ? '' : ', '}}</span></td>
+				    			<td><span ng-repeat="kv in resource.SKIPPEDKV">{{kv}} {{$last ? '' : ', '}}</span> </td>
+				    			<td><span ng-repeat="ts in resource.SKIPPEDTARGETSERVERS">{{ts}} {{$last ? '' : ', '}}</span></td>
+				    			<td><span ng-repeat="vh in resource.SKIPPEDVIRTUALHOSTS">{{vh}} {{$last ? '' : ', '}}</span></td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				</div>
+		    </div>
+		   
+		 
 		</div>
 	</div>
 	

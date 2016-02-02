@@ -168,7 +168,9 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		//3. APPS info to be displayed
 		$scope.appsInfo = JSON.parse(consoleInfo.appsInfo);
 		//4. PRODUCTS info to be displayed
-		$scope.productsInfo = JSON.parse(consoleInfo.productsInfo);
+		var productData = JSON.parse(consoleInfo.productsInfo);
+		$scope.productsInfo = productData.PRODUCTS;
+		$scope.skippedProductsInfo = productData.SKIPPEDPRODUCTS;
 		//5. DEV info to be displayed
 		$scope.developersInfo = JSON.parse(consoleInfo.developersInfo);
 	}
