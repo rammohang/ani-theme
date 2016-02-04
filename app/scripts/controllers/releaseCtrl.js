@@ -45,6 +45,53 @@ app.controller('releaseCtrl', function($scope, $http, $location,$rootScope, $loc
 		});
 		
 		
+		// call to restore org to different env
+		$scope.restoreToDifferentEnv = function(oid,filename) {
+			var org = $scope.organization;
+			if ($scope.organization == 'Other') {
+				org = $scope.orgText;
+			}
+			console.log(oid,filename,org,$scope.newEnv+"====");
+			var commonConfiguration = {
+					"userName" : $rootScope.userDetails.userName,
+					"password" : $rootScope.userDetails.password,
+					"organization" : filename,
+					"newOrg" : org,
+					"newEnv" : $scope.newEnv
+				};
+			
+			
+			console.log(commonConfiguration);
+			
+			
+			var responsePromise = $http.post($rootScope.baseUrl
+					+ "apigee/restoreorg?oid="+oid+"&filename="+filename+"&sys="+"org", commonConfiguration, {});
+			responsePromise.success(function(data, status, headers, config) {
+				for(var i = 0; i < $scope.orgHis.length; i++) {
+					if(oid == $scope.orgHis[i].fileOid) {
+						$scope.orgHis[i].restoreLoader = false;
+						$scope.orgHis[i].disableButtons = false;
+						break;
+					}
+				}
+			});		
+			responsePromise.error(function(data, status, headers, config) {
+				alert("Submitting form failed!");
+				for(var i = 0; i < $scope.orgHis.length; i++) {
+					if(oid == $scope.orgHis[i].fileOid) {
+						$scope.orgHis[i].restoreLoader = false;
+						$scope.orgHis[i].disableButtons = false;
+						break;
+					}
+				}
+			});
+			
+			
+			
+			
+		};
+		
+		
 		$scope.viewDetailedStatus = function(consoleInfo) {
 			// use this oid as a key to get detailed console info
 			$scope.showModal = !$scope.showModal;
