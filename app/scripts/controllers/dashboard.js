@@ -6,10 +6,9 @@ app.controller('DashboardCtrl', ['$scope', '$location', '$rootScope', '$http', '
 	$scope.userDetails = $localStorage.userDetails;
 	
 	// tree view js
-	var org = $rootScope.userDetails.organizations[0];
 	
 	var margin = {top: 20, right: 120, bottom: 20, left: 120},
-    width = 960 - margin.right - margin.left,
+    width = 1280 - margin.right - margin.left,
     height = 800 - margin.top - margin.bottom;
 
 	var i = 0,
@@ -31,14 +30,14 @@ app.controller('DashboardCtrl', ['$scope', '$location', '$rootScope', '$http', '
 	var userName = $rootScope.userDetails.userName;
 	var password = $rootScope.userDetails.password;
 	
-d3.json($rootScope.baseUrl + "apigee/getOrgInfo?userName="+userName + "&password=" +password+"&orgName="+org, function(error, org) {
+d3.json($rootScope.baseUrl + "apigee/getOrgInfo?userName="+userName, function(error, userName) {
   if (error) throw error;
 
-  root = org;
+  root = userName;
   root.x0 = height / 2;
   root.y0 = 0;
 
-  function collapse(d) {
+  /*function collapse(d) {
     if (d.children) {
       d._children = d.children;
       d._children.forEach(collapse);
@@ -46,7 +45,7 @@ d3.json($rootScope.baseUrl + "apigee/getOrgInfo?userName="+userName + "&password
     }
   }
 
-  root.children.forEach(collapse);
+  root.children.forEach(collapse);*/
   update(root);
 });
 
