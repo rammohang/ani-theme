@@ -1,0 +1,38 @@
+<!-- Static navbar -->
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <h3 class="apigee"><a href="#"></a>T-mobile Apigee Devops</h3>
+          </div>
+          <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+           	  <li class="dropdown acmmenu dashboard">
+				<a href="#/dashboard" uib-tooltip="Dashboard For APIGEE Deployments" tooltip-placement="bottom" tooltip-trigger="mouseenter" class="dropdown-toggle green-tooltip bottom-tooltip"
+				 data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dashboard</a>
+			  </li>
+              <li class="dropdown acmmenu releaseManagement">
+				<a href="#"  uib-tooltip="Manages organization backups and restore" tooltip-placement="bottom" tooltip-trigger="mouseenter" class="dropdown-toggle green-tooltip bottom-tooltip"
+				 data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Release Management</a>
+			  </li>
+		  	</ul>
+            <ul class="nav navbar-nav navbar-right">
+              
+              <li class="dropdown active1">
+                <a href="./">Welcome {{userDetails.displayName}} ! <span class="sr-only">(current)</span></a>
+               
+                <ul class="dropdown-menu">
+                   <li><a href="#" ng-click="logout()">Logout</a></li>
+                 
+                </ul>
+              </li>
+              
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div><!--/.container-fluid -->
+      </nav>

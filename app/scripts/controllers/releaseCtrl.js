@@ -1,4 +1,4 @@
-app.controller('releaseCtrl', function($scope, $http, $location,$rootScope, $localStorage) {
+app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootScope, $localStorage) {
 	
 	$scope.showModal = false;
 	$scope.proxyInfo = [];

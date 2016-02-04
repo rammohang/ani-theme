@@ -1,8 +1,10 @@
-app.controller('DashboardCtrl', ['$scope', '$location', '$rootScope', '$http', '$localStorage','AppService','$q','$uibModal', '$log'
-                                 ,function($scope, $location, $rootScope, $http, $localStorage,AppService,$q,$uibModal, $log) {
+app.controller('DashboardCtrl', ['$scope', '$location', '$rootScope', '$http', '$localStorage','$sessionStorage','AppService','$q','$uibModal', '$log'
+                                 ,function($scope, $location, $rootScope, $http, $localStorage,$sessionStorage,AppService,$q,$uibModal, $log) {
 
-	// modal window
-	$scope.showModal = true;
+	if(!$sessionStorage.respondedForReleaseManagement) {
+		// modal window
+		$scope.showModal = true;
+	}
 	$scope.userDetails = $localStorage.userDetails;
 	
 	// tree view js
@@ -153,13 +155,14 @@ function click(d) {
 
 
 $scope.stayHere = function() {
+	$sessionStorage.respondedForReleaseManagement = true;
 	$scope.showModal = false;
 }
 
 $scope.releaseManagement = function() {
+	$sessionStorage.respondedForReleaseManagement = true;
 	$('.modal-backdrop').remove();
 	$location.path('/releaseMgmt');
-	
 //	$('.modal-backdrop.in').css('opacity','0');
 }
 
