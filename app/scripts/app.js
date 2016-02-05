@@ -278,6 +278,18 @@ app.controller('ConfirmPopupCtrl', function($scope, $uibModalInstance) {
 	};
 });
 
+app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, consoleInfo) {
+
+	$scope.consoleInfo = consoleInfo;
+	  $scope.ok = function () {
+	    $uibModalInstance.close();
+	  };
+
+	  $scope.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	  };
+});
+
 
 // common methods used in all controllers
 

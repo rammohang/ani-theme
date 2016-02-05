@@ -84,14 +84,34 @@
 	</div>
 </div>
 
-<mymodal class="statusModal" title="Backup Status" visible="showModal">
-   <div class="statusContainer">
-		<div class="row">
-			
-			<div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Proxies</h4>
+<div ng-controller="BackUpOrgCtrl">
+
+	<script type="text/ng-template" id="group-template.html">
+    	<div class="panel {{panelClass || 'panel-default'}}">
+      		<div class="panel-heading">
+        	<h4 class="panel-title" style="color:#333333">
+          	<a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading"><span
+            ng-class="{'text-muted': isDisabled}">{{heading}}</span></a>
+        	</h4>
+      	</div>
+      	<div class="panel-collapse collapse" uib-collapse="!isOpen">
+        	<div class="panel-body" style="text-align: right" ng-transclude></div>
+      	</div>
+    	</div>
+  </script>
+
+    <script type="text/ng-template" id="myModalContent.html">
+        <div class="statusModal modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+            <h3 class="modal-title">Backup Staus</h3>
+        </div>
+        <div class="modal-body ">
+
+  			<uib-accordion close-others="true">
+
+    			<uib-accordion-group  heading="Proxies" panel-class="panel-danger" template-url="group-template.html" is-open="true">
 		    	<div class="table-responsive">
-				  <table class="table table-bordered">
+				  <table class="table table-bordered text-align-left">
 				    	<thead>
 				    		<tr>
 				    			<td class="danger">Proxy</td>
@@ -99,19 +119,18 @@
 				    		</tr>
 				    	</thead>
 				    	<tbody>
-				    		<tr ng-repeat="proxy in proxyInfo">
+				    		<tr ng-repeat="proxy in consoleInfo.proxyInfo">
 				    			<td>{{proxy.proxyName}}</td>
 				    			<td><span ng-repeat="env in proxy.environments">({{env.environment}}, {{env.revision}}) {{$last ? '' : ', '}}</span></td>
 				    		</tr>
 				    	</tbody>
 				  </table>
 				</div>
-		    </div>
-		
-			<div class="col-sm-8 col-md-8" >
-		    	<h4 class="info">Resources</h4>
+    			</uib-accordion-group>
+
+    			<uib-accordion-group heading="Resources" panel-class="panel-info" template-url="group-template.html">
 		    	<div class="table-responsive">
-				  <table class="table table-bordered">
+				  <table class="table table-bordered text-align-left">
 				    	<thead>
 				    		<tr>
 				    			<td class="info">Env</td>
@@ -122,7 +141,7 @@
 				    		</tr>
 				    	</thead>
 				    	<tbody>
-				    		<tr ng-repeat="resource in resourceInfo">
+				    		<tr ng-repeat="resource in consoleInfo.resourceInfo">
 				    			<td>{{resource.envName}}</td>
 				    			<td><span ng-repeat="cache in resource.CACHES"> {{cache}} {{$last ? '' : ', '}}</span></td>
 				    			<td><span ng-repeat="kv in resource.KV">{{kv}} {{$last ? '' : ', '}}</span> </td>
@@ -132,41 +151,35 @@
 				    	</tbody>
 				  </table>
 				</div>
-		    </div>
-		    
-		</div>
-		<div class="row">
-		
-			<div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Apps</h4>
+    			</uib-accordion-group>	
+			
+				<uib-accordion-group heading="Apps" panel-class="panel-success" template-url="group-template.html">
 		    	<div class="table-responsive">
-				  <table class="table table-bordered">
+				  <table class="table table-bordered text-align-left">
 				    	<thead>
 				    		<tr>
 				    			<td class="success">Apps</td>
 				    		</tr>
 				    	</thead>
 				    	<tbody>
-				    		<tr ng-repeat="app in appsInfo">
+				    		<tr ng-repeat="app in consoleInfo.appsInfo">
 				    			<td>{{app}}</td>
 				    		</tr>
 				    	</tbody>
 				  </table>
 				</div>
-			</div>
-		
-		
-		    <div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Products</h4>
+				</uib-accordion-group>	
+
+				<uib-accordion-group heading="Products" panel-class="panel-warning" template-url="group-template.html">
 		    	<div class="table-responsive">
-				  <table class="table table-bordered">
+				  <table class="table table-bordered text-align-left">
 				    	<thead>
 				    		<tr>
 				    			<td class="warning">Products</td>
 				    		</tr>
 				    	</thead>
 				    	<tbody>
-				    		<tr ng-repeat="product in productsInfo">
+				    		<tr ng-repeat="product in consoleInfo.productsInfo">
 				    			<td>{{product}}</td>
 				    		</tr>
 				    		<tr ng-repeat="sproduct in skippedProductsInfo">
@@ -175,55 +188,45 @@
 				    	</tbody>
 				  </table>
 				</div>
-			</div>
-		    
-		   
-		    <div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Developers</h4>
+				</uib-accordion-group>	
+
+				<uib-accordion-group heading="Developers" panel-class="panel-danger" template-url="group-template.html">
 		    	<div class="table-responsive">
-				  <table class="table table-bordered">
+				  <table class="table table-bordered text-align-left">
 				    	<thead>
 				    		<tr>
 				    			<td class="danger">Developers</td>
 				    		</tr>
 				    	</thead>
 				    	<tbody>
-				    		<tr ng-repeat="developer in developersInfo">
+				    		<tr ng-repeat="developer in consoleInfo.developersInfo">
 				    			<td>{{developer}}</td>
 				    		</tr>
 				    	</tbody>
 				  </table>
-				</div>
-		    </div>
-		    
-		</div>
-		<!-- SKIPPED -->
-		<div class="row">
-		
-		
-	<hr>	
-		
-		    <div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Products that were not backedup</h4>
+				</div>		    	
+				</uib-accordion-group>	
+
+				<uib-accordion-group heading="Products that were not backedup" panel-class="panel-warning" template-url="group-template.html">
 		    	<div class="table-responsive">
-				  <table class="table table-bordered">
+				  <table class="table table-bordered text-align-left">
 				    	<thead>
 				    		<tr>
 				    			<td class="warning">Products</td>
 				    		</tr>
 				    	</thead>
 				    	<tbody>
-				    		<tr ng-repeat="sproduct in skippedProductsInfo">
+				    		<tr ng-repeat="sproduct in consoleInfo.skippedProductsInfo">
 				    			<td>{{sproduct}}</td>
 				    		</tr>
 				    	</tbody>
 				  </table>
 				</div>
-			</div>
-		    <div class="col-sm-8 col-md-8" >
-		    	<h4 class="info">Resources that were not backedup</h4>
+				</uib-accordion-group>
+
+				<uib-accordion-group heading="Resources that were not backedup" panel-class="panel-info" template-url="group-template.html">
 		    	<div class="table-responsive">
-				  <table class="table table-bordered">
+				  <table class="table table-bordered text-align-left">
 				    	<thead>
 				    		<tr>
 				    			<td class="info">Env</td>
@@ -234,7 +237,7 @@
 				    		</tr>
 				    	</thead>
 				    	<tbody>
-				    		<tr ng-repeat="resource in resourceInfo">
+				    		<tr ng-repeat="resource in consoleInfo.resourceInfo">
 				    			<td>{{resource.envName}}</td>
 				    			<td><span ng-repeat="cache in resource.SKIPPEDCACHES"> {{cache}} {{$last ? '' : ', '}}</span></td>
 				    			<td><span ng-repeat="kv in resource.SKIPPEDKV">{{kv}} {{$last ? '' : ', '}}</span> </td>
@@ -244,13 +247,16 @@
 				    	</tbody>
 				  </table>
 				</div>
-		    </div>
-		   
-		 
-		</div>
-	</div>
-	
- </mymodal>
+				</uib-accordion-group>	
+				
+  			</uib-accordion>
+
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="cancel()">Close</button>
+        </div>
+    </script>
+</div>
  
  <mymodal class="schedulesModal" title="Scheduled Backups" visible="showBackups">
  	<table class="table table-bordered">
