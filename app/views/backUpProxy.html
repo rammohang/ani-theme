@@ -62,7 +62,7 @@
 							<td>{{item.cts | date:'medium'}}</td>
 							<td>{{item.organization}}</td>
 							<td>{{item.backUpTimeTaken}}</td>
-							<td>Completed</td>
+							<td>{{item.status}}</td>
 							<td>
 								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
 							</td>

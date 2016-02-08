@@ -10,7 +10,7 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 	$scope.showOther = false;
 	$scope.orgText = "";
 	$scope.orgHis = [];
-	
+	$scope.restoreLoader = false;
 	$scope.curPage = 0;
 	$scope.pageSize = 8;
 	
@@ -47,6 +47,17 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 		
 		// call to restore org to different env
 		$scope.restoreToDifferentEnv = function(oid,filename) {
+			
+			for(var i = 0; i < $scope.orgHis.length; i++) {
+				if(oid == $scope.orgHis[i].fileOid) {
+					$scope.orgHis[i].restoreLoader = true;
+					$scope.orgHis[i].disableButtons = true;
+					break;
+				}
+			}
+			var tempToken = generateRandomString();
+			
+			
 			var org = $scope.organization;
 			if ($scope.organization == 'Other') {
 				org = $scope.orgText;
@@ -57,23 +68,30 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 					"password" : $rootScope.userDetails.password,
 					"organization" : filename,
 					"newOrg" : org,
-					"newEnv" : $scope.newEnv
+					"newEnv" : $scope.newEnv,
+					"tempToken" : tempToken
 				};
 			
 			
 			console.log(commonConfiguration);
 			
-			
 			var responsePromise = $http.post($rootScope.baseUrl
 					+ "apigee/restoreorg?oid="+oid+"&filename="+filename+"&sys="+"org", commonConfiguration, {});
 			responsePromise.success(function(data, status, headers, config) {
+				$scope.newEnv = "";
+				
+				var tempToken = data.tempToken;
 				for(var i = 0; i < $scope.orgHis.length; i++) {
-					if(oid == $scope.orgHis[i].fileOid) {
+					if($scope.orgHis[i].fileOid == oid) {
 						$scope.orgHis[i].restoreLoader = false;
 						$scope.orgHis[i].disableButtons = false;
 						break;
 					}
 				}
+				
+				
+				
+				
 			});		
 			responsePromise.error(function(data, status, headers, config) {
 				alert("Submitting form failed!");

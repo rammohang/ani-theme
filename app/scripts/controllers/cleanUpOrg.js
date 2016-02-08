@@ -33,7 +33,8 @@ app.controller('CleanUpOrgCtrl', function($scope, $http, $location, $rootScope,
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
-			"organization" : org
+			"organization" : org,
+			"tempToken" : "temptoken"
 		};
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
