@@ -98,7 +98,8 @@ h3.apigee {
     color: white;
 }
 
-.statusModal .modal-body {
+.statusModal .modal-body,
+ .statusModal + .modal-body {
 	min-height:calc(100vh - 50px);
     max-height: calc(100vh - 30px);
     overflow-y: auto;
@@ -171,11 +172,19 @@ img.spinner16X16 {
   stroke-width: 1.5px;
 }
 
-.dedrogramHeader {
+.dendrogramHeader {
 	width:500px;
 	margin: 50px auto 20px auto;
 }
 
 #dashboardBody {
 	margin: 0px 0px 50px 0px;
+}
+
+table.text-align-left {
+	text-align: left;
+}
+
+.scheduleBackupContainer {
+	margin-left: 18px;
 }

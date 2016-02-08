@@ -19,49 +19,12 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.numberOfPages = function() {
 		return Math.ceil($scope.orgHis.length / $scope.pageSize);
 	};
-	
+	$scope.consoleInfo = {};
 	var orgs = $rootScope.userDetails.organizations || [];
 	for (var i = 0; i < orgs.length; i++) {
 		$scope.orgs.push(orgs[i]);
 	}
 	$scope.orgs.push('Other');
-	
-	function generateRandomString() {
-		var text = "";
-		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-		for( var i=0; i < 16; i++ )
-		    text += possible.charAt(Math.floor(Math.random() * possible.length));
-		return text;
-	}
-	
-	function getProcessedHistoryItem(dataItem) {
-		var item = null;
-		if(dataItem) {
-			var item = {};
-			for(var key in dataItem) {
-				item[key]=dataItem[key];
-			}
-			item.disableButtons = false;
-			item.status = "Completed";
-			item.tempToken = "";
-			item.restoreLoader = false;
-			item.deleteLoader = false;
-		}
-		return item;
-	}
-	
-	function getProcessedHistory(data) {
-		var items = [];
-		if(data) {
-			var items = [];
-			for(var i=0;i<data.length;i++) {
-				var dataItem = data[i];
-				var item = getProcessedHistoryItem(dataItem);
-				items.push(item);
-			}
-		}
-		return items;
-	}
 	
 	var commonConfiguration = {
 		"userName" : $rootScope.userDetails.userName,
@@ -137,7 +100,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	
 	$scope.viewDetailedStatus = function(consoleInfo) {
 		// use this oid as a key to get detailed console info
-		$scope.showModal = !$scope.showModal;
+		//$scope.showModal = !$scope.showModal;
 		// populate detailed into bootstrap modal
 		
 		// 1. Proxies Info to be displayed
@@ -153,7 +116,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		  }
 		  formattedArray.push(singleProxyInfo);
 		}
-		$scope.proxyInfo = formattedArray;
+		$scope.consoleInfo.proxyInfo = formattedArray;
 		
 		// 2.Resource Info to be displayed
 		var resourceInfo = JSON.parse(consoleInfo.resourceInfo);
@@ -169,15 +132,16 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		  resourceArray.push(singleResourceInfo);
 		}
 		
-		$scope.resourceInfo = resourceArray;
+		$scope.consoleInfo.resourceInfo = resourceArray;
 		//3. APPS info to be displayed
-		$scope.appsInfo = JSON.parse(consoleInfo.appsInfo);
+		$scope.consoleInfo.appsInfo = JSON.parse(consoleInfo.appsInfo);
 		//4. PRODUCTS info to be displayed
 		var productData = JSON.parse(consoleInfo.productsInfo);
-		$scope.productsInfo = productData.PRODUCTS;
-		$scope.skippedProductsInfo = productData.SKIPPEDPRODUCTS;
+		$scope.consoleInfo.productsInfo = productData.PRODUCTS;
+		$scope.consoleInfo.skippedProductsInfo = productData.SKIPPEDPRODUCTS;
 		//5. DEV info to be displayed
-		$scope.developersInfo = JSON.parse(consoleInfo.developersInfo);
+		$scope.consoleInfo.developersInfo = JSON.parse(consoleInfo.developersInfo);
+		$scope.open('lg');
 	}
 	
 	$scope.disableButton = function(disable) {
@@ -381,5 +345,28 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 	} 
 	
+	  $scope.animationsEnabled = true;
+
+	  $scope.open = function (size) {
+
+	    var modalInstance = $uibModal.open({
+	      animation: $scope.animationsEnabled,
+	      templateUrl: 'myModalContent.html',
+	      controller: 'ModalInstanceCtrl',
+	      size: size,
+	      resolve: {
+	    	 consoleInfo: function () {
+	          return $scope.consoleInfo;
+	        }
+	      }
+	    });
+
+	   /* modalInstance.result.then(function (selectedItem) {
+	      $scope.selected = selectedItem;
+	    }, function () {
+	      $log.info('Modal dismissed at: ' + new Date());
+	    });*/
+	  };
+
 });
 
