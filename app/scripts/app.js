@@ -313,6 +313,7 @@ function getProcessedHistoryItem(dataItem) {
 		item.tempToken = "";
 		item.restoreLoader = false;
 		item.deleteLoader = false;
+		item.updateLoader = false;
 	}
 	return item;
 }

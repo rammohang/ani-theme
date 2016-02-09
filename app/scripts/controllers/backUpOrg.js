@@ -332,12 +332,30 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 	}
 	
+	$scope.updateScheduleOrg = function(organization,periodicity) {
+		var scheduledBackup = {
+				"organization": organization,
+				"periodicity":periodicity
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "backup/save", scheduledBackup, {});
+		responsePromise.success(function(data, status, headers, config) {
+			alert("updated!");
+		});
+		responsePromise.error(function(data, status, headers,
+				config) {
+			alert("Failed to update!");
+		});
+	}
+	
 	function getScheduledBackups() {
 		var user = {
 				"email": $rootScope.userDetails.userName
 		}
 		var responsePromise = $http.post($rootScope.baseUrl+ "backup/schduledbackups", user, {});
 		responsePromise.success(function(data, status, headers, config) {
+			/*for(var i=0;i<data.length;i++) {
+				data[i].periodicities = $scope.periodicities;
+			}*/
 			$scope.backupSchedules = data;
 		});
 		responsePromise.error(function(data, status, headers, config) {
