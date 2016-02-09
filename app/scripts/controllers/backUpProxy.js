@@ -46,7 +46,7 @@ var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1
 	// call finish
 	
 
-	$scope.backUpAPIProxy = function() {
+	$scope.backUpAPIProxy = function(action) {
 		var org = $scope.organization;
 		if ($scope.organization == 'Other') {
 			org = $scope.orgText;
@@ -79,7 +79,7 @@ var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/backupsubsystems?sys=" + "apiproxies&saveandzip=true",
+				+ "apigee/backupsubsystems?sys=" + "apiproxies&saveandzip=true&action="+action,
 				commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			$scope.organization = "";

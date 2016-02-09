@@ -22,7 +22,8 @@
 			      </p>
   				</div>
   				<div class="form-group">
-					<button class="btn btn-default" ng-click="backUpAPIProxy()" ng-disabled="enable">Backup API Proxy</button>
+					<button class="btn btn-primary" ng-click="backUpAPIProxy('backup')" ng-disabled="enable">Backup API Proxy</button>
+					<button class="btn btn-danger" ng-click="backUpAPIProxy('cleanup')" ng-disabled="enable">Cleanup API Proxy</button>
 					<div class="throbber-loader" ng-show="showLoader=='Y'">
   Loading…
 </div>
