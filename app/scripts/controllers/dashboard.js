@@ -1,10 +1,10 @@
 app.controller('DashboardCtrl', ['$scope', '$location', '$rootScope', '$http', '$localStorage','$sessionStorage','AppService','$q','$uibModal', '$log'
                                  ,function($scope, $location, $rootScope, $http, $localStorage,$sessionStorage,AppService,$q,$uibModal, $log) {
 
-	if(!$sessionStorage.respondedForReleaseManagement) {
+	/*if(!$sessionStorage.respondedForReleaseManagement) {
 		// modal window
 		$scope.showModal = true;
-	}
+	}*/
 	$scope.userDetails = $localStorage.userDetails;
 	
 	// tree view js

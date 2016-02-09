@@ -93,10 +93,10 @@
           	<a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading"><span
             ng-class="{'text-muted': isDisabled}">{{heading}}</span></a>
         	</h4>
-      	</div>
-      	<div class="panel-collapse collapse" uib-collapse="!isOpen">
-        	<div class="panel-body" style="text-align: right" ng-transclude></div>
-      	</div>
+      		</div>
+      		<div class="panel-collapse collapse" uib-collapse="!isOpen">
+        		<div class="panel-body" style="text-align: right" ng-transclude></div>
+      		</div>
     	</div>
   </script>
 
@@ -207,48 +207,6 @@
 				</div>		    	
 				</uib-accordion-group>	
 
-				<uib-accordion-group heading="Products that were not backedup" panel-class="panel-warning" template-url="group-template.html">
-		    	<div class="table-responsive">
-				  <table class="table table-bordered text-align-left">
-				    	<thead>
-				    		<tr>
-				    			<td class="warning">Products</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="sproduct in consoleInfo.skippedProductsInfo">
-				    			<td>{{sproduct}}</td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
-				</uib-accordion-group>
-
-				<uib-accordion-group heading="Resources that were not backedup" panel-class="panel-info" template-url="group-template.html">
-		    	<div class="table-responsive">
-				  <table class="table table-bordered text-align-left">
-				    	<thead>
-				    		<tr>
-				    			<td class="info">Env</td>
-				    			<td class="info">Caches</td>
-				    			<td class="info">KV</td>
-				    			<td class="info">Target Servers</td>
-				    			<td class="info">Virtual Hosts</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="resource in consoleInfo.resourceInfo">
-				    			<td>{{resource.envName}}</td>
-				    			<td><span ng-repeat="cache in resource.SKIPPEDCACHES"> {{cache}} {{$last ? '' : ', '}}</span></td>
-				    			<td><span ng-repeat="kv in resource.SKIPPEDKV">{{kv}} {{$last ? '' : ', '}}</span> </td>
-				    			<td><span ng-repeat="ts in resource.SKIPPEDTARGETSERVERS">{{ts}} {{$last ? '' : ', '}}</span></td>
-				    			<td><span ng-repeat="vh in resource.SKIPPEDVIRTUALHOSTS">{{vh}} {{$last ? '' : ', '}}</span></td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
-				</uib-accordion-group>	
-				
   			</uib-accordion>
 
         </div>

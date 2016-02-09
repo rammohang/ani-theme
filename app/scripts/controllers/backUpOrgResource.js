@@ -35,12 +35,25 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,$rootS
 		};
 	var responsePromise = $http.post($rootScope.baseUrl+"apigee/getorgbackuphistory1?sys=resources", commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
-				$scope.showLoader = "N";
-				$scope.organization = "";
-				$scope.proxyHis = getProcessedHistory(data.resourceBackUpInfoList);
+		$scope.showLoader = "N";
+		$scope.organization = "";
+		var resourceInfo = data.resourceBackUpInfoList;
+		var resourceArray = [];
+		for (var i = 0; i < resourceInfo.length; i++) {
+			var proxyObj = resourceInfo[i];
+			var singleResourceInfo = {};
+			singleResourceInfo["envName"] = Object.keys(proxyObj)[0];
+			var proxyContents = proxyObj[singleResourceInfo["envName"]];
+			for ( var key in proxyContents) {
+				singleResourceInfo[key] = proxyContents[key];
+			}
+			resourceArray.push(singleResourceInfo);
+		}
+		$scope.resourceInfo = getProcessedHistory(resourceArray);
 	});		
+
 	responsePromise.error(function(data, status, headers, config) {
-				$scope.showLoader = "N";
+		$scope.showLoader = "N";
 		alert("Submitting form failed!");
 	});	
 	// call finish
@@ -73,7 +86,6 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,$rootS
 				"status":"In Progress"
 		}
 		$scope.proxyHis.unshift(dbmodel);
-		$scope.showLoader = true;
 		//logic finsih
 		$scope.showLoader = "Y";
 		console.log(commonConfiguration);
@@ -101,8 +113,6 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,$rootS
 			alert("Submitting form failed!");
 		});
 	}
-	
-	
 	
 	$scope.deleteBackup = function(oid,filename) {
 		var responsePromise = $http.post($rootScope.baseUrl
