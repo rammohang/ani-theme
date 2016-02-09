@@ -22,7 +22,8 @@
 			      </p>
   				</div>
   				<div class="form-group">
-					<button class="btn btn-default" ng-click="backUpAPIProduct()" ng-disabled="enable">Backup Products</button>
+					<button class="btn btn-primary" ng-click="backUpAPIProduct('backup')" ng-disabled="enable">Backup</button>
+					<button class="btn btn-danger" ng-click="backUpAPIProduct('cleanup')" ng-disabled="enable">Cleanup</button>
 					<div class="throbber-loader" ng-show="showLoader=='Y'">
   Loading…
 </div>

@@ -14,7 +14,8 @@
 		      	</p>
 			</div>
 			<div class="form-group">
-				<button class="btn btn-primary" ng-click="backUpOrg()" >Backup</button>
+				<button class="btn btn-primary" ng-click="backUpOrg('backup')" >Backup</button>
+				<button class="btn btn-danger" ng-click="backUpOrg('cleanup')" >Cleanup</button>
 			</div>
 		</div>
 		<div class="col-md-4 scheduleBackupContainer">
@@ -52,9 +53,16 @@
 						<th>Action</th>
 					</tr>
 					<tr ng-repeat="item in orgHis | pagination: curPage * pageSize | limitTo: pageSize">
-						<td>{{item.cts | date:'medium'}}</td>
+						<td>
+							<span  ng-if="item.cts">{{item.cts | date:'medium'}}</span>
+							<img ng-if="!item.cts" ng-src="../images/16x16-spinner.gif"/>
+						</td>
 						<td>{{item.organization}}</td>
-						<td>{{item.backUpTimeTaken}}</td>
+						<td>
+						
+							<span  ng-if="item.backUpTimeTaken">{{item.backUpTimeTaken}}</span>
+							<img ng-if="!item.backUpTimeTaken" ng-src="../images/16x16-spinner.gif"/>
+						</td>
 						<td>{{item.status}}</td>
 						<td>
 							<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>

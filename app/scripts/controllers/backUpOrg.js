@@ -220,7 +220,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 	}
 
-	$scope.backUpOrg = function() {
+	$scope.backUpOrg = function(action) {
 		$scope.showStatus = true;
 		var org = $scope.organization;
 		
@@ -251,7 +251,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		$scope.orgHis.unshift(dbmodel);
 		
 		//1.call for backup proxies
-		var responsePromise = $http.post($rootScope.baseUrl+ "apigee/backupsubsystems?sys=" + "org"+ "&saveandzip=true", commonConfiguration, {});
+		var responsePromise = $http.post($rootScope.baseUrl+ "apigee/backupsubsystems?sys=org&saveandzip=true&action="+action, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			var consoleInfo = data.orgBackUpInfo;
 			for(var i=0;i<$scope.orgHis.length;i++) {
