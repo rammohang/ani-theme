@@ -228,8 +228,20 @@
     	<tbody>
     		<tr ng-repeat="backupSchedule in backupSchedules">
     			<td>{{backupSchedule.organization}}</td>
-    			<td>{{backupSchedule.periodicity}}</td>
-    			<td><button class="btn btn-danger btn-xs" ng-click="deleteScheduleOrg(backupSchedule.id)" >Delete</button></td>
+    			<td>
+    				<select name="{{backupSchedule.organization}}" ng-model="backupSchedule.periodicity">
+		          		<option value="">Select Periodicity</option>
+		          		<option value="Weekly">Weekly</option>
+		          		<option value="Daily">Daily</option>
+		          		<option value="Hourly">Hourly</option>
+		        	</select>
+    			</td>
+    			<td>
+    				<div class="row acmPopupAction">
+						<div class="col-sm-6 col-md-6 deleteBtn"><button class="btn btn-danger btn-xs" ng-click="deleteScheduleOrg(backupSchedule.id)" >Delete</button><img ng-if="backupSchedule.deleteLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+	    				<div class="col-sm-6 col-md-6 updateBtn"><button class="btn btn-warning btn-xs" ng-click="updateScheduleOrg(backupSchedule.organization,backupSchedule.periodicity)" >Update</button><img ng-if="backupSchedule.updateLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+    				</div>
+   				</td>
     		</tr>
     	</tbody>
   	</table>
