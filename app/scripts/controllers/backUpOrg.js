@@ -312,6 +312,13 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	}
 	
 	$scope.deleteScheduleOrg = function(id) {
+		for(var i = 0; i < $scope.backupSchedules.length; i++) {
+			if($scope.backupSchedules[i].id == id) {
+				$scope.backupSchedules[i].deleteLoader = true;
+				$scope.backupSchedules.splice(i, 1);
+				break;
+			}
+		}
 		var scheduledBackup = {
 				"id": id
 		}
@@ -322,6 +329,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			for(var i = 0; i < $scope.backupSchedules.length; i++) {
 				if($scope.backupSchedules[i].id == id) {
 					$scope.backupSchedules.splice(i, 1);
+					$scope.backupSchedules[i].deleteLoader = false;
 					break;
 				}
 			}
@@ -329,21 +337,44 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		responsePromise.error(function(data, status, headers,
 				config) {
 			alert("Failed to delete!");
+			for(var i = 0; i < $scope.backupSchedules.length; i++) {
+				if($scope.backupSchedules[i].id == id) {
+					$scope.backupSchedules.splice(i, 1);
+					$scope.backupSchedules[i].deleteLoader = false;
+					break;
+				}
+			}
 		});
 	}
 	
 	$scope.updateScheduleOrg = function(organization,periodicity) {
+		for(var i=0;i<$scope.backupSchedules.length;i++) {
+			if(organization==$scope.backupSchedules[i].organization) {
+				$scope.backupSchedules[i].updateLoader = true;
+				break;
+			}
+		}
 		var scheduledBackup = {
 				"organization": organization,
 				"periodicity":periodicity
 		}
 		var responsePromise = $http.post($rootScope.baseUrl+ "backup/save", scheduledBackup, {});
 		responsePromise.success(function(data, status, headers, config) {
-			alert("updated!");
+			for(var i=0;i<$scope.backupSchedules.length;i++) {
+				if(organization==$scope.backupSchedules[i].organization) {
+					$scope.backupSchedules[i].updateLoader = false;
+					break;
+				}
+			}
 		});
-		responsePromise.error(function(data, status, headers,
-				config) {
+		responsePromise.error(function(data, status, headers,config) {
 			alert("Failed to update!");
+			for(var i=0;i<$scope.backupSchedules.length;i++) {
+				if(organization==$scope.backupSchedules[i].organization) {
+					$scope.backupSchedules[i].updateLoader = false;
+					break;
+				}
+			}
 		});
 	}
 	
@@ -353,10 +384,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		}
 		var responsePromise = $http.post($rootScope.baseUrl+ "backup/schduledbackups", user, {});
 		responsePromise.success(function(data, status, headers, config) {
-			/*for(var i=0;i<data.length;i++) {
-				data[i].periodicities = $scope.periodicities;
-			}*/
-			$scope.backupSchedules = data;
+			$scope.backupSchedules = getProcessedHistory(data);
 		});
 		responsePromise.error(function(data, status, headers, config) {
 			alert("Failed to retrieve!");
