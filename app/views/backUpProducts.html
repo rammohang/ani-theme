@@ -22,7 +22,7 @@
 			      </p>
   				</div>
   				<div class="form-group">
-					<button class="btn btn-default" ng-click="backUpOrgProd()" ng-disabled="enable">Backup Products</button>
+					<button class="btn btn-default" ng-click="backUpAPIProduct()" ng-disabled="enable">Backup Products</button>
 					<div class="throbber-loader" ng-show="showLoader=='Y'">
   Loading…
 </div>
@@ -37,25 +37,104 @@
 		<!--  column3 END-->
 	</div>
 	<!--  ROW END -->
-		</form>
-		<div class="alert alert-success" role="alert" ng-if="backUpSuccess">
-			{{backUpSuccess}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpApps">
-			{{backUpApps}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpDev">
-			{{backUpDev}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpProd">
-			{{backUpProd}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpRes">
-			{{backUpRes}}
-		</div>
-		<div class="alert alert-success" role="alert" ng-if="backUpzip">
-			{{backUpzip}}
+</form>
+		
+		
+		<!-- Display backedup results -->
+		<div class="backupOrgContainer">
+			<div class="row">
+				<!--  column1 -->
+				<div class="col-md-2">
+				</div>
+		
+				<div class="col-md-8" ng-if="proxyHis">
+		
+					<table class="table table-hover">
+						<tr>
+							<th>Backedup On</th>
+							<th>Organization</th>
+							<th>Time Taken(sec)</th>
+							<th>Status</th>
+							<th>Console</th>
+							<th>Action</th>
+						</tr>
+						<tr ng-repeat="item in proxyHis | pagination: curPage * pageSize | limitTo: pageSize">
+							<td>{{item.cts | date:'medium'}}</td>
+							<td>{{item.organization}}</td>
+							<td>{{item.backUpTimeTaken}}</td>
+							<td>{{item.status}}</td>
+							<td>
+								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
+							</td>
+							<td>
+								<div class="row acmAction">
+									<div class="col-sm-6 col-md-6 restoreBtn"><button class="btn btn-success btn-xs" ng-click="restoreProxyBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Restore</button><img ng-if="item.restoreRevLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+									<div class="col-sm-6 col-md-6 deleteBtn"><button class="btn btn-danger btn-xs" ng-click="deleteProductBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Delete</button></div>
+								</div>
+							</td>
+							
+						</tr>    
+		
+					</table>
+		
+					<ul class="pagination-controle pagination">
+						<li>
+							<button type="button" class="btn btn-primary" ng-disabled="curPage == 0"
+		       ng-click="curPage=curPage-1"> &lt; PREV</button>
+						</li>
+						<li>
+							<span>Page {{curPage + 1}} of {{ numberOfPages() }}</span>
+						</li>
+						<li>
+							<button type="button" class="btn btn-primary"
+		       ng-disabled="curPage >= proxyHis.length/pageSize - 1"
+		       ng-click="curPage = curPage+1">NEXT &gt;</button>
+						</li>
+					</ul>
+		
+				</div>
+		
+				<div class="col-md-4">
+				</div>
+		
+			</div>
 		</div>
 		
+		<!-- Displayed all resut -->
+		
+		
+		
 </div>
-<div data-ng-include="'views/footer.html'"></div>
+<mymodal class="proxyStatusModal" title="Backup Status" visible="showModal">
+   <div class="statusContainer">
+		<div class="row">
+			<div class="col-sm-12 col-md-12" >
+		    	<h4 class="info">Products</h4>
+		    	<div class="table-responsive">
+				 
+				 <table class="table table-bordered text-align-left">
+				    	<thead>
+				    		<tr>
+				    			<td class="warning">Products</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="product in productsInfo">
+				    			<td>{{product}}</td>
+				    		</tr>
+				    		<tr ng-repeat="sproduct in skippedProductsInfo">
+				    			<td>{{sproduct}}</td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				 
+				 
+				 
+				</div>
+		    </div>
+		
+		</div>
+	
+	</div>
+	
+ </mymodal>
