@@ -1,5 +1,8 @@
 app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage,AppService,$q,$uibModal, $log) {
 	
+	$scope.subsystem = $rootScope.apigeeSubsystems.org.name;
+	$scope.subsystemid = $rootScope.apigeeSubsystems.org.id;
+	$scope.showOrgBackupSchedules = true;
 	$scope.showModal = false;
 	$scope.showBackups = false;
 	$scope.proxyInfo = [];
@@ -26,15 +29,16 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	}
 	$scope.orgs.push('Other');
 	
+	if($scope.showOrgBackupSchedules == true) {
+		getScheduledBackups();
+	}
 	var commonConfiguration = {
 		"userName" : $rootScope.userDetails.userName,
 		"password" : $rootScope.userDetails.password
 	};
     
-	getScheduledBackups();
-	
     var responsePromise = $http.post($rootScope.baseUrl
-			+ "apigee/getorgbackuphistory1?sys="+"org", commonConfiguration, {});
+			+ "apigee/getorgbackuphistory1?sys="+$scope.subsystemid, commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
 		 $scope.orgHis = getProcessedHistory(data.orgBackUpInfoList);
 	});		
@@ -78,10 +82,10 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		modalInstance.result.then(function() {
 			switch(action) {
 			case 'delete':
-				$scope.deleteOrg(item.fileOid, item.organization);
+				$scope.deleteItem(item.fileOid, item.organization);
 				break;
 			case 'restore':
-				$scope.restoreOrg(item.fileOid, item.organization);
+				$scope.restoreItem(item.fileOid, item.organization);
 				break;
 			}
 		}, function() {
@@ -148,7 +152,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		return disable;
 	}
 	
-	$scope.deleteOrg = function(oid,filename) {
+	$scope.deleteItem = function(oid,filename) {
 		for(var i = 0; i < $scope.orgHis.length; i++) {
 			if(oid == $scope.orgHis[i].fileOid) {
 				$scope.orgHis[i].deleteLoader = true;
@@ -157,7 +161,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			}
 		}
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/deletebackup?sys=org&oid="+oid, commonConfiguration, {});
+				+ "apigee/deletebackup?sys="+$scope.subsystemid+"&oid="+oid, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			for(var i = 0; i < $scope.orgHis.length; i++) {
 				if($scope.orgHis[i].fileOid == oid) {
@@ -180,7 +184,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 	}
 	
-	$scope.restoreOrg = function(oid,filename) {
+	$scope.restoreItem = function(oid,filename) {
 		var org = $scope.organization;
 		if($scope.organization == 'Other') {
 			org = $scope.orgText;
@@ -198,7 +202,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			}
 		}
 		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/restoreorg?oid="+oid+"&filename="+filename+"&sys="+"org", commonConfiguration, {});
+				+ "apigee/restoreorg?oid="+oid+"&filename="+filename+"&sys="+$scope.subsystemid, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			for(var i = 0; i < $scope.orgHis.length; i++) {
 				if(oid == $scope.orgHis[i].fileOid) {
@@ -220,7 +224,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 	}
 
-	$scope.backUpOrg = function(action) {
+	$scope.backUp = function(action) {
 		$scope.showStatus = true;
 		var org = $scope.organization;
 		
@@ -251,9 +255,33 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		$scope.orgHis.unshift(dbmodel);
 		
 		//1.call for backup proxies
-		var responsePromise = $http.post($rootScope.baseUrl+ "apigee/backupsubsystems?sys=org&saveandzip=true&action="+action, commonConfiguration, {});
+		var responsePromise = $http.post($rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
-			var consoleInfo = data.orgBackUpInfo;
+			var consoleInfo = {};
+			switch($scope.subsystemid) {
+			case $rootScope.apigeeSubsystems.org.id:
+				consoleInfo = data.orgBackUpInfo;
+				break;
+			case $rootScope.apigeeSubsystems.apiproxies.id:
+				consoleInfo = data.proxyBackUpInfo;
+				break;
+			case $rootScope.apigeeSubsystems.apps.id:
+				consoleInfo = data.appBackUpInfo;
+				break;
+			case $rootScope.apigeeSubsystems.resources.id:
+				consoleInfo = data.resourceBackUpInfo;
+				break;
+			case $rootScope.apigeeSubsystems.apiproducts.id:
+				consoleInfo = data.productBackUpInfo;
+				break;
+			case $rootScope.apigeeSubsystems.appdevelopers.id:
+				consoleInfo = data.developerBackUpInfo;
+				break;
+			case $rootScope.apigeeSubsystems.proxyrevision.id:
+				consoleInfo = data.proxyrevisionBackUpInfo;
+				break;
+			}
+			
 			for(var i=0;i<$scope.orgHis.length;i++) {
 				if($scope.orgHis[i].tempToken==data.tempToken) {
 					var dataItem = getProcessedHistoryItem(consoleInfo);

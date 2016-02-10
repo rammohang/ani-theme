@@ -56,6 +56,37 @@ app.run(function($rootScope, $localStorage, $location,$timeout) {
 		$sessionStorage.respondedForReleaseManagement = false;
 	};
 	
+	$rootScope.apigeeSubsystems = {
+		"org" : {
+			"id" : "org",
+			"name" : "Organization"
+		},
+		"apiproxies" : {
+			"id" : "apiproxies",
+			"name" : "API Proxies"
+		},
+		"apps" : {
+			"id" : "apps",
+			"name" : "Apps"
+		},
+		"resources" : {
+			"id" : "resources",
+			"name" : "Resources"
+		},
+		"apiproducts" : {
+			"id" : "apiproducts",
+			"name" : "Products"
+		},
+		"appdevelopers" : {
+			"id" : "appdevelopers",
+			"name" : "Developers"
+		},
+		"proxyrevision" : {
+			"id" : "proxyrevision",
+			"name" : "Proxy Revision"
+		}
+	};
+	
 });
 
 app.config(function($routeProvider) {
