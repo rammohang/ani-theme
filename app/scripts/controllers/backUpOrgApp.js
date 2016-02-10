@@ -19,12 +19,4 @@ app.controller('BackUpOrgAppCtrl', function($scope, $http, $location,$rootScope,
 		alert("oops !!! we are facing issues.");
 	});
 	
-	//Display row data
-	$scope.viewDetailedStatus = function(consoleInfo) {
-		// use this oid as a key to get detailed console info
-		$scope.showModal = !$scope.showModal;
-		// populate detailed into bootstrap modal
-		$scope.appsInfo = JSON.parse(consoleInfo.appInfo);
-	}
-	
 });

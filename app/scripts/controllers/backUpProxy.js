@@ -18,24 +18,4 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,$rootScope, 
 		alert("oops !!! we are facing issues.");
 	});
 	
-	//Display row data
-	$scope.viewDetailedStatus = function(consoleInfo) {
-		// use this oid as a key to get detailed console info
-		$scope.showModal = !$scope.showModal;
-		// populate detailed into bootstrap modal
-		var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
-		var formattedArray = [];
-		for(var i=0;i<proxyInfo.length;i++) {
-		  var proxyObj = proxyInfo[i];
-		  var singleProxyInfo = {};
-		  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
-		  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
-		  for(var key in proxyContents) {
-		    singleProxyInfo[key] = proxyContents[key];
-		  }
-		  formattedArray.push(singleProxyInfo);
-		}
-		$scope.proxyInfo = formattedArray;
-	}
-	
 });

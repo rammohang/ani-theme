@@ -103,49 +103,101 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	}
 	
 	$scope.viewDetailedStatus = function(consoleInfo) {
-		// use this oid as a key to get detailed console info
-		//$scope.showModal = !$scope.showModal;
-		// populate detailed into bootstrap modal
 		
-		// 1. Proxies Info to be displayed
-		var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
-		var formattedArray = [];
-		for(var i=0;i<proxyInfo.length;i++) {
-		  var proxyObj = proxyInfo[i];
-		  var singleProxyInfo = {};
-		  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
-		  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
-		  for(var key in proxyContents) {
-		    singleProxyInfo[key] = proxyContents[key];
-		  }
-		  formattedArray.push(singleProxyInfo);
+		switch($scope.subsystemid) {
+		case $rootScope.apigeeSubsystems.org.id:
+			// use this oid as a key to get detailed console info
+			//$scope.showModal = !$scope.showModal;
+			// populate detailed into bootstrap modal
+			
+			// 1. Proxies Info to be displayed
+			var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
+			var formattedArray = [];
+			for(var i=0;i<proxyInfo.length;i++) {
+			  var proxyObj = proxyInfo[i];
+			  var singleProxyInfo = {};
+			  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
+			  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
+			  for(var key in proxyContents) {
+			    singleProxyInfo[key] = proxyContents[key];
+			  }
+			  formattedArray.push(singleProxyInfo);
+			}
+			$scope.consoleInfo.proxyInfo = formattedArray;
+			
+			// 2.Resource Info to be displayed
+			var resourceInfo = JSON.parse(consoleInfo.resourceInfo);
+			var resourceArray = [];
+			for(var i=0;i<resourceInfo.length;i++) {
+			  var proxyObj = resourceInfo[i];
+			  var singleResourceInfo = {};
+			  singleResourceInfo["envName"]=Object.keys(proxyObj)[0];
+			  var proxyContents = proxyObj[singleResourceInfo["envName"]];
+			  for(var key in proxyContents) {
+			    singleResourceInfo[key] = proxyContents[key];
+			  }
+			  resourceArray.push(singleResourceInfo);
+			}
+			
+			$scope.consoleInfo.resourceInfo = resourceArray;
+			//3. APPS info to be displayed
+			$scope.consoleInfo.appsInfo = JSON.parse(consoleInfo.appsInfo);
+			//4. PRODUCTS info to be displayed
+			var productData = JSON.parse(consoleInfo.productsInfo);
+			$scope.consoleInfo.productsInfo = productData.PRODUCTS;
+			$scope.consoleInfo.skippedProductsInfo = productData.SKIPPEDPRODUCTS;
+			//5. DEV info to be displayed
+			$scope.consoleInfo.developersInfo = JSON.parse(consoleInfo.developersInfo);
+			$scope.open('lg');
+			break;
+		case $rootScope.apigeeSubsystems.apiproxies.id:
+			// use this oid as a key to get detailed console info
+			$scope.showModal = !$scope.showModal;
+			// populate detailed into bootstrap modal
+			var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
+			var formattedArray = [];
+			for(var i=0;i<proxyInfo.length;i++) {
+			  var proxyObj = proxyInfo[i];
+			  var singleProxyInfo = {};
+			  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
+			  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
+			  for(var key in proxyContents) {
+			    singleProxyInfo[key] = proxyContents[key];
+			  }
+			  formattedArray.push(singleProxyInfo);
+			}
+			$scope.proxyInfo = formattedArray;
+			break;
+		case $rootScope.apigeeSubsystems.apps.id:
+			// use this oid as a key to get detailed console info
+			$scope.showModal = !$scope.showModal;
+			// populate detailed into bootstrap modal
+			$scope.appsInfo = JSON.parse(consoleInfo.appInfo);
+			break;
+		case $rootScope.apigeeSubsystems.resources.id:
+			// TODO
+			break;
+		case $rootScope.apigeeSubsystems.apiproducts.id:
+			// use this oid as a key to get detailed console info
+			$scope.showModal = !$scope.showModal;
+			// populate detailed into bootstrap modal
+			
+			// 1. Proxies Info to be displayed
+			//4. PRODUCTS info to be displayed
+			var productData = JSON.parse(consoleInfo.productInfo);
+			console.log(productData+"---");
+			$scope.productsInfo = productData.PRODUCTS;
+			break;
+		case $rootScope.apigeeSubsystems.appdevelopers.id:
+			$scope.showModal = !$scope.showModal;
+			// populate detailed into bootstrap modal
+			$scope.appsInfo = JSON.parse(consoleInfo.developerInfo);
+			break;
+		case $rootScope.apigeeSubsystems.proxyrevision.id:
+			// TODO
+			break;
 		}
-		$scope.consoleInfo.proxyInfo = formattedArray;
 		
-		// 2.Resource Info to be displayed
-		var resourceInfo = JSON.parse(consoleInfo.resourceInfo);
-		var resourceArray = [];
-		for(var i=0;i<resourceInfo.length;i++) {
-		  var proxyObj = resourceInfo[i];
-		  var singleResourceInfo = {};
-		  singleResourceInfo["envName"]=Object.keys(proxyObj)[0];
-		  var proxyContents = proxyObj[singleResourceInfo["envName"]];
-		  for(var key in proxyContents) {
-		    singleResourceInfo[key] = proxyContents[key];
-		  }
-		  resourceArray.push(singleResourceInfo);
-		}
-		
-		$scope.consoleInfo.resourceInfo = resourceArray;
-		//3. APPS info to be displayed
-		$scope.consoleInfo.appsInfo = JSON.parse(consoleInfo.appsInfo);
-		//4. PRODUCTS info to be displayed
-		var productData = JSON.parse(consoleInfo.productsInfo);
-		$scope.consoleInfo.productsInfo = productData.PRODUCTS;
-		$scope.consoleInfo.skippedProductsInfo = productData.SKIPPEDPRODUCTS;
-		//5. DEV info to be displayed
-		$scope.consoleInfo.developersInfo = JSON.parse(consoleInfo.developersInfo);
-		$scope.open('lg');
 	}
 	
 	$scope.disableButton = function(disable) {

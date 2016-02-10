@@ -19,23 +19,4 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,$rootS
 		alert("oops !!! we are facing issues.");
 	});
 	
-	//Display row data
-	$scope.viewDetailedStatus = function(consoleInfo) {
-		// use this oid as a key to get detailed console info
-		$scope.showModal = !$scope.showModal;
-		var resourceInfo = JSON.parse(consoleInfo.resourceInfo);
-		var resourceArray = [];
-		for(var i=0;i<resourceInfo.length;i++) {
-		  var proxyObj = resourceInfo[i];
-		  var singleResourceInfo = {};
-		  singleResourceInfo["envName"]=Object.keys(proxyObj)[0];
-		  var proxyContents = proxyObj[singleResourceInfo["envName"]];
-		  for(var key in proxyContents) {
-		    singleResourceInfo[key] = proxyContents[key];
-		  }
-		  resourceArray.push(singleResourceInfo);
-		}
-		$scope.resourceInfo = resourceArray;
-	}
-	
 });
