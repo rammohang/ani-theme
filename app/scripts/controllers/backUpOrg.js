@@ -68,8 +68,8 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 							+ bodyMsg
 							+ '</div>'
 							+ '<div class="modal-footer">'
-							+ '<button class="btn btn-primary" type="button" ng-click="ok()">OK</button>'
-							+ '<button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>'
+							+ '<button class="btn btn-primary" type="button" ng-click="ok()"><span class="glyphicon glyphicon-ok" aria-hidden="true"> OK</button>'
+							+ '<button class="btn btn-warning" type="button" ng-click="cancel()"><span class="glyphicon glyphicon-remove" aria-hidden="true"> Cancel</button>'
 							+ '</div>' + '</div>',
 					controller : 'ConfirmPopupCtrl',
 					size : undefined,
@@ -362,6 +362,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		responsePromise.success(function(data, status, headers, config) {
 			for(var i=0;i<$scope.backupSchedules.length;i++) {
 				if(organization==$scope.backupSchedules[i].organization) {
+					$scope.backupSchedules[i].periodicity = periodicity;
 					$scope.backupSchedules[i].updateLoader = false;
 					break;
 				}

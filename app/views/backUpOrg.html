@@ -14,8 +14,8 @@
 		      	</p>
 			</div>
 			<div class="form-group">
-				<button class="btn btn-primary" ng-click="backUpOrg('backup')" >Backup</button>
-				<button class="btn btn-danger" ng-click="backUpOrg('cleanup')" >Cleanup</button>
+				<button class="btn btn-primary" ng-click="backUpOrg('backup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Backup</button>
+				<button class="btn btn-danger" ng-click="backUpOrg('cleanup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cleanup</button>
 			</div>
 		</div>
 		<div class="col-md-4 scheduleBackupContainer">
@@ -31,8 +31,8 @@
 		      	</p>
 			</div>
 			<div class="form-group">
-				<button class="btn btn-warning" ng-click="seeAllSchedules()" >See All Schedules</button>
-				<button class="btn btn-primary" ng-click="saveBackupSchedule()" >Schedule Backup</button>
+				<button class="btn btn-warning" ng-click="seeAllSchedules()" ><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> See All Schedules</button>
+				<button class="btn btn-primary" ng-click="saveBackupSchedule()" ><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Schedule Backup</button>
 			</div>
 		</div>
 	</div>
@@ -65,25 +65,25 @@
 						</td>
 						<td>{{item.status}}</td>
 						<td>
-							<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
+							<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)"><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> Console</button>
 						</td>
 						<td>
 							<div class="row acmAction">
-								<div class="col-sm-6 col-md-6 restoreBtn"><button class="btn btn-success btn-xs" ng-click="confirmAction(item,'restore')" ng-disabled="disableButton(item.disableButtons)">Restore</button><img ng-if="item.restoreLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
-								<div class="col-sm-6 col-md-6 deleteBtn" ><button class="btn btn-danger btn-xs" ng-click="confirmAction(item,'delete')" ng-disabled="disableButton(item.disableButtons)">Delete</button><img ng-if="item.deleteLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+								<div class="col-sm-6 col-md-6 restoreBtn"><button class="btn btn-success btn-xs" ng-click="confirmAction(item,'restore')" ng-disabled="disableButton(item.disableButtons)"><span class="glyphicon glyphicon-upload" aria-hidden="true"></span> Restore</button><img ng-if="item.restoreLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+								<div class="col-sm-6 col-md-6 deleteBtn" ><button class="btn btn-danger btn-xs" ng-click="confirmAction(item,'delete')" ng-disabled="disableButton(item.disableButtons)"><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button><img ng-if="item.deleteLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
 							</div>
 						</td>
 					</tr>    
 				</table>
 				<ul class="pagination-controle pagination">
 					<li>
-						<button type="button" class="btn btn-primary" ng-disabled="curPage == 0" ng-click="curPage=curPage-1"> &lt; PREV</button>
+						<button type="button" class="btn btn-primary" ng-disabled="curPage == 0" ng-click="curPage=curPage-1"><span class="glyphicon glyphicon-step-backward" aria-hidden="true"></span> PREV</button>
 					</li>
 					<li>
 						<span>Page {{curPage + 1}} of {{ numberOfPages() }}</span>
 					</li>
 					<li>
-						<button type="button" class="btn btn-primary" ng-disabled="curPage >= orgHis.length/pageSize - 1" ng-click="curPage = curPage+1">NEXT &gt;</button>
+						<button type="button" class="btn btn-primary" ng-disabled="curPage >= orgHis.length/pageSize - 1" ng-click="curPage = curPage+1">NEXT <span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span> </button>
 					</li>
 				</ul>
 			</div>
@@ -219,7 +219,7 @@
 
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="cancel()">Close</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close</button>
         </div>
     </script>
 </div>
@@ -246,8 +246,8 @@
     			</td>
     			<td>
     				<div class="row acmPopupAction">
-						<div class="col-sm-6 col-md-6 deleteBtn"><button class="btn btn-danger btn-xs" ng-click="deleteScheduleOrg(backupSchedule.id)" >Delete</button><img ng-if="backupSchedule.deleteLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
-	    				<div class="col-sm-6 col-md-6 updateBtn"><button class="btn btn-warning btn-xs" ng-click="updateScheduleOrg(backupSchedule.organization,backupSchedule.periodicity)" >Update</button><img ng-if="backupSchedule.updateLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+						<div class="col-sm-6 col-md-6 deleteBtn"><button class="btn btn-danger btn-xs" ng-click="deleteScheduleOrg(backupSchedule.id)" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete</button><img ng-if="backupSchedule.deleteLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+	    				<div class="col-sm-6 col-md-6 updateBtn"><button class="btn btn-primary btn-xs" ng-click="updateScheduleOrg(backupSchedule.organization,backupSchedule.periodicity)" ><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Update</button><img ng-if="backupSchedule.updateLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
     				</div>
    				</td>
     		</tr>

@@ -183,7 +183,7 @@ app.directive('mymodal', function () {
               '</div>' + 
               '<div class="modal-body" ng-transclude></div>' +
               '<div class="modal-footer">'+
-              '<button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>'+
+              '<button type="button" class="btn btn-warning" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Close</button>'+
             '</div>'+
             '</div>' + 
           '</div>' + 
