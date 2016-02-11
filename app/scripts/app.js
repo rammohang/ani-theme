@@ -321,6 +321,27 @@ app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, console
 	  };
 });
 
+app.controller('RestoreModalInstanceCtrl', function ($scope, $uibModalInstance,formData) {
+
+	  $scope.formData = formData;
+	  
+	  $scope.changeOrg = function() {
+		if ($scope.formData.organization == 'Other') {
+			$scope.formData.orgText = "";
+			$scope.formData.showOther = true;
+		} else {
+			$scope.formData.showOther = false;
+		}
+	  }
+
+	  $scope.ok = function () {
+	    $uibModalInstance.close($scope.formData);
+	  };
+
+	  $scope.cancel = function () {
+	    $uibModalInstance.dismiss('cancel');
+	  };
+});
 
 // common methods used in all controllers
 

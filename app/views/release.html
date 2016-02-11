@@ -1,244 +1,36 @@
 <div data-ng-include="'views/navbar.html'"></div>
-<div>
-
 <div class="row">
-		<div class="col-md-2"/>
-		<div class="col-md-8">
-			<div class="form-group">
-    			<label for="proxyName">Restore to New Organization</label>
-    			<p>
-		        	<select ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs">
-		          		<option value="">Select Organization</option>
-		        	</select>
-		        	<input ng-model="orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="showOther" />
-		      		<input ng-model="newEnv" id="newEnv" name="new_env" type="text" placeholder="Enter new environment" />
-		      	</p>
-			</div>
-		</div>
-		
-		<div class="col-md-2"/>
-			
+	<div class="col-md-2"></div>
+	<div class="col-md-10">
+		<br>
+		<h4>Restore to New Organization</h4>
+		<br>
+		<br>
 	</div>
-
-
-
-
-<div class="backupOrgContainer">
-		<div class="row">
-			<!--  column1 -->
-			<div class="col-md-2"></div>
-			<div class="col-md-8" ng-if="orgHis">
-				<table class="table table-hover">
-					<tr>
-						<th>Backedup On</th>
-						<th>Organization</th>
-						<th>Time Taken(sec)</th>
-						<th>Status</th>
-						<th>Console</th>
-						<th>Action</th>
-					</tr>
-					<tr ng-repeat="item in orgHis | pagination: curPage * pageSize | limitTo: pageSize">
-						<td>{{item.cts | date:'medium'}}</td>
-						<td>{{item.organization}}</td>
-						<td>{{item.backUpTimeTaken}}</td>
-						<td>{{item.status}}</td>
-						<td>
-							<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
-						</td>
-						<td>
-							<div class="row acmAction">
-								<div class="col-sm-6 col-md-6 restoreBtn"><button class="btn btn-success btn-xs" ng-click="restoreToDifferentEnv(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Restore</button><img ng-if="item.restoreLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
-								<div class="col-sm-6 col-md-6 deleteBtn" ><button class="btn btn-danger btn-xs" ng-click="confirmAction(item,'delete')" ng-disabled="!disableButton(item.disableButtons)">Delete</button><img ng-if="item.deleteLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
-							</div>
-						</td>
-					</tr>    
-				</table>
-				<ul class="pagination-controle pagination">
-					<li>
-						<button type="button" class="btn btn-primary" ng-disabled="curPage == 0" ng-click="curPage=curPage-1"> &lt; PREV</button>
-					</li>
-					<li>
-						<span>Page {{curPage + 1}} of {{ numberOfPages() }}</span>
-					</li>
-					<li>
-						<button type="button" class="btn btn-primary" ng-disabled="curPage >= orgHis.length/pageSize - 1" ng-click="curPage = curPage+1">NEXT &gt;</button>
-					</li>
-				</ul>
-			</div>
-			<div class="col-md-4"></div>
-		</div>
-	</div>
-
-	
-		
 </div>
 
+<div data-ng-include="'views/backUpOrgConsoleInfo.html'"></div>
+<div data-ng-include="'views/backupCommonTable.html'"></div>
 
-
-<mymodal class="statusModal" title="Backup Status" visible="showModal">
-   <div class="statusContainer">
-		<div class="row">
-			
-			<div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Proxies</h4>
-		    	<div class="table-responsive">
-				  <table class="table table-bordered">
-				    	<thead>
-				    		<tr>
-				    			<td class="danger">Proxy</td>
-				    			<td class="danger">(Env, Rev)</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="proxy in proxyInfo">
-				    			<td>{{proxy.proxyName}}</td>
-				    			<td><span ng-repeat="env in proxy.environments">({{env.environment}}, {{env.revision}}) {{$last ? '' : ', '}}</span></td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
-		    </div>
-		
-			<div class="col-sm-8 col-md-8" >
-		    	<h4 class="info">Resources</h4>
-		    	<div class="table-responsive">
-				  <table class="table table-bordered">
-				    	<thead>
-				    		<tr>
-				    			<td class="info">Env</td>
-				    			<td class="info">Caches</td>
-				    			<td class="info">KV</td>
-				    			<td class="info">Target Servers</td>
-				    			<td class="info">Virtual Hosts</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="resource in resourceInfo">
-				    			<td>{{resource.envName}}</td>
-				    			<td><span ng-repeat="cache in resource.CACHES"> {{cache}} {{$last ? '' : ', '}}</span></td>
-				    			<td><span ng-repeat="kv in resource.KV">{{kv}} {{$last ? '' : ', '}}</span> </td>
-				    			<td><span ng-repeat="ts in resource.TARGETSERVERS">{{ts}} {{$last ? '' : ', '}}</span></td>
-				    			<td><span ng-repeat="vh in resource.VIRTUALHOSTS">{{vh}} {{$last ? '' : ', '}}</span></td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
-		    </div>
-		    
-		</div>
-		<div class="row">
-		
-			<div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Apps</h4>
-		    	<div class="table-responsive">
-				  <table class="table table-bordered">
-				    	<thead>
-				    		<tr>
-				    			<td class="success">Apps</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="app in appsInfo">
-				    			<td>{{app}}</td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
+<div ng-controller="ReleaseManagementCtrl">
+    <script type="text/ng-template" id="restoreModalContent.html">
+        <div class="modal-header">
+            <h3 class="modal-title">Restore to New Organization</h3>
+        </div>
+        <div class="modal-body">
+			<div class="form-group">
+    			<p>
+		        	<select ng-model="formData.organization" name="organization" id="organization" ng-change="changeOrg($event)" ng-options="org for org in formData.orgs">
+		          		<option value="">Select Organization</option>
+		        	</select>
+		        	<input ng-model="formData.orgText" id="other_organization" name="other_organization" type="text" placeholder="Enter Organization Name" ng-show="formData.showOther" />
+		      		<input ng-model="formData.newEnv" id="newEnv" name="new_env" type="text" placeholder="Enter New Environment" />
+		      	</p>
 			</div>
-		
-		
-		    <div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Products</h4>
-		    	<div class="table-responsive">
-				  <table class="table table-bordered">
-				    	<thead>
-				    		<tr>
-				    			<td class="warning">Products</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="product in productsInfo">
-				    			<td>{{product}}</td>
-				    		</tr>
-				    		<tr ng-repeat="sproduct in skippedProductsInfo">
-				    			<td>{{sproduct}}</td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
-			</div>
-		    
-		   
-		    <div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Developers</h4>
-		    	<div class="table-responsive">
-				  <table class="table table-bordered">
-				    	<thead>
-				    		<tr>
-				    			<td class="danger">Developers</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="developer in developersInfo">
-				    			<td>{{developer}}</td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
-		    </div>
-		    
-		</div>
-		<!-- SKIPPED -->
-		<div class="row">
-		
-		
-	<hr>	
-		
-		    <div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Products that were not backedup</h4>
-		    	<div class="table-responsive">
-				  <table class="table table-bordered">
-				    	<thead>
-				    		<tr>
-				    			<td class="warning">Products</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="sproduct in skippedProductsInfo">
-				    			<td>{{sproduct}}</td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
-			</div>
-		    <div class="col-sm-8 col-md-8" >
-		    	<h4 class="info">Resources that were not backedup</h4>
-		    	<div class="table-responsive">
-				  <table class="table table-bordered">
-				    	<thead>
-				    		<tr>
-				    			<td class="info">Env</td>
-				    			<td class="info">Caches</td>
-				    			<td class="info">KV</td>
-				    			<td class="info">Target Servers</td>
-				    			<td class="info">Virtual Hosts</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="resource in resourceInfo">
-				    			<td>{{resource.envName}}</td>
-				    			<td><span ng-repeat="cache in resource.SKIPPEDCACHES"> {{cache}} {{$last ? '' : ', '}}</span></td>
-				    			<td><span ng-repeat="kv in resource.SKIPPEDKV">{{kv}} {{$last ? '' : ', '}}</span> </td>
-				    			<td><span ng-repeat="ts in resource.SKIPPEDTARGETSERVERS">{{ts}} {{$last ? '' : ', '}}</span></td>
-				    			<td><span ng-repeat="vh in resource.SKIPPEDVIRTUALHOSTS">{{vh}} {{$last ? '' : ', '}}</span></td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
-		    </div>
-		   
-		 
-		</div>
-	</div>
-	
- </mymodal>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="ok()">Restore</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+        </div>
+    </script>
+</div>
