@@ -21,7 +21,7 @@ app.controller('BackUpOrgDevCtrl', function($scope, $http, $location,$rootScope,
 	$scope.viewDetailedStatus = function(consoleInfo) {
 		$scope.showModal = !$scope.showModal;
 		// populate detailed into bootstrap modal
-		$scope.developerInfo = JSON.parse(consoleInfo.developerInfo);
+		$scope.developersInfo = JSON.parse(consoleInfo.developerInfo);
 	}
 	
 });

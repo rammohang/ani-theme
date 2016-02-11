@@ -2,4 +2,18 @@
 <div>
 	<div data-ng-include="'views/backupCommon.html'"></div>
 </div>
-
+ <mymodal class="subsystemModal" title="Backup Status" visible="showModal">
+ 	<table class="table table-bordered">
+	    	<thead>
+	    		<tr>
+	    			<td class="danger">Developers</td>
+	    		</tr>
+	    	</thead>
+	    	<tbody>
+	    		<tr ng-repeat="developer in developersInfo">
+	    			<td>{{developer}}</td>
+	    		</tr>
+	    	</tbody>
+	  </table>
+	</div>	
+ </mymodal>

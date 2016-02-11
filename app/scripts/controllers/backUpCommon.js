@@ -213,7 +213,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 				consoleInfo = data.productBackUpInfo;
 				break;
 			case $rootScope.apigeeSubsystems.appdevelopers.id:
-				consoleInfo = data.developerBackUpInfo;
+				consoleInfo = data.developersInfo;
 				break;
 			case $rootScope.apigeeSubsystems.proxyrevision.id:
 				consoleInfo = data.proxyrevisionBackUpInfo;
