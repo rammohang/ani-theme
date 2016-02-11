@@ -1,42 +1,22 @@
-app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage,AppService,$q,$uibModal, $log) {
+app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $localStorage,$uibModal,$controller) {
 	
+	$controller('BackUpCommonCtrl', {$scope: $scope}); //inherits BackUpCommonCtrl controller
 	$scope.subsystem = $rootScope.apigeeSubsystems.org.name;
 	$scope.subsystemid = $rootScope.apigeeSubsystems.org.id;
 	$scope.showOrgBackupSchedules = true;
-	$scope.showModal = false;
-	$scope.showBackups = false;
-	$scope.proxyInfo = [];
-	$scope.resourceInfo = [];
-	$scope.developersInfo = [];
-	$scope.productsInfo = [];
-	$scope.appsInfo = [];
-	$scope.orgs = [];
-	$scope.showOther = false;
-	$scope.orgText = "";
-	$scope.orgHis = [];
+	$scope.animationsEnabled = true;
 	$scope.backupSchedules = [];
 	$scope.periodicities = ['Weekly','Daily','Hourly'];
-	
-	$scope.curPage = 0;
-	$scope.pageSize = 8;
-	$scope.numberOfPages = function() {
-		return Math.ceil($scope.orgHis.length / $scope.pageSize);
-	};
 	$scope.consoleInfo = {};
-	var orgs = $rootScope.userDetails.organizations || [];
-	for (var i = 0; i < orgs.length; i++) {
-		$scope.orgs.push(orgs[i]);
-	}
-	$scope.orgs.push('Other');
 	
 	if($scope.showOrgBackupSchedules == true) {
 		getScheduledBackups();
 	}
+    
 	var commonConfiguration = {
 		"userName" : $rootScope.userDetails.userName,
 		"password" : $rootScope.userDetails.password
 	};
-    
     var responsePromise = $http.post($rootScope.baseUrl
 			+ "apigee/getorgbackuphistory1?sys="+$scope.subsystemid, commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
@@ -46,317 +26,58 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		alert("oops !!! we are facing issues.");
 	});
 	
-	//https://angular-ui.github.io/bootstrap/#/modal
-	$scope.confirmAction = function(item, action) {
-		var popupTitle = '';
-		var bodyMsg = '' ;
-		switch(action) {
-		case 'delete':
-			popupTitle = 'Delete Organization';
-			bodyMsg = 'Are you Sure want to delete?<br/><br/>This will delete the backedup Organization.';
-			break;
-		case 'restore':
-			popupTitle = 'Restore Organization';
-			bodyMsg = 'Are you Sure want to restore?<br/><br/>This will replace the current revision of Organization.';
-			break;
-		}
-		var modalInstance = $uibModal
-				.open({
-					animation : true,
-					template : '<div >'
-							+ '<div class="modal-header">'
-							+ '<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>'
-							+ '<h3 class="modal-title">'+ popupTitle +'</h3>'
-							+ '</div>'
-							+ '<div class="modal-body">'
-							+ bodyMsg
-							+ '</div>'
-							+ '<div class="modal-footer">'
-							+ '<button class="btn btn-primary" type="button" ng-click="ok()"><span class="glyphicon glyphicon-ok" aria-hidden="true"> OK</button>'
-							+ '<button class="btn btn-warning" type="button" ng-click="cancel()"><span class="glyphicon glyphicon-remove" aria-hidden="true"> Cancel</button>'
-							+ '</div>' + '</div>',
-					controller : 'ConfirmPopupCtrl',
-					size : undefined,
-					resolve : {}
-				});
-		modalInstance.result.then(function() {
-			switch(action) {
-			case 'delete':
-				$scope.deleteItem(item.fileOid, item.organization);
-				break;
-			case 'restore':
-				$scope.restoreItem(item.fileOid, item.organization);
-				break;
-			}
-		}, function() {
-			$log.info('Modal dismissed at: ' + new Date());
-		});
-	};
-  
-	$scope.changeOrg = function(event) {
-		if ($scope.organization == 'Other') {
-			$scope.orgText = "";
-			$scope.showOther = true;
-		} else {
-			$scope.showOther = false;
-		}
-	}
-	
 	$scope.viewDetailedStatus = function(consoleInfo) {
-		
-		switch($scope.subsystemid) {
-		case $rootScope.apigeeSubsystems.org.id:
-			// use this oid as a key to get detailed console info
-			//$scope.showModal = !$scope.showModal;
-			// populate detailed into bootstrap modal
-			
-			// 1. Proxies Info to be displayed
-			var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
-			var formattedArray = [];
-			for(var i=0;i<proxyInfo.length;i++) {
-			  var proxyObj = proxyInfo[i];
-			  var singleProxyInfo = {};
-			  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
-			  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
-			  for(var key in proxyContents) {
-			    singleProxyInfo[key] = proxyContents[key];
-			  }
-			  formattedArray.push(singleProxyInfo);
-			}
-			$scope.consoleInfo.proxyInfo = formattedArray;
-			
-			// 2.Resource Info to be displayed
-			var resourceInfo = JSON.parse(consoleInfo.resourceInfo);
-			var resourceArray = [];
-			for(var i=0;i<resourceInfo.length;i++) {
-			  var proxyObj = resourceInfo[i];
-			  var singleResourceInfo = {};
-			  singleResourceInfo["envName"]=Object.keys(proxyObj)[0];
-			  var proxyContents = proxyObj[singleResourceInfo["envName"]];
-			  for(var key in proxyContents) {
-			    singleResourceInfo[key] = proxyContents[key];
-			  }
-			  resourceArray.push(singleResourceInfo);
-			}
-			
-			$scope.consoleInfo.resourceInfo = resourceArray;
-			//3. APPS info to be displayed
-			$scope.consoleInfo.appsInfo = JSON.parse(consoleInfo.appsInfo);
-			//4. PRODUCTS info to be displayed
-			var productData = JSON.parse(consoleInfo.productsInfo);
-			$scope.consoleInfo.productsInfo = productData.PRODUCTS;
-			$scope.consoleInfo.skippedProductsInfo = productData.SKIPPEDPRODUCTS;
-			//5. DEV info to be displayed
-			$scope.consoleInfo.developersInfo = JSON.parse(consoleInfo.developersInfo);
-			$scope.open('lg');
-			break;
-		case $rootScope.apigeeSubsystems.apiproxies.id:
-			// use this oid as a key to get detailed console info
-			$scope.showModal = !$scope.showModal;
-			// populate detailed into bootstrap modal
-			var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
-			var formattedArray = [];
-			for(var i=0;i<proxyInfo.length;i++) {
-			  var proxyObj = proxyInfo[i];
-			  var singleProxyInfo = {};
-			  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
-			  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
-			  for(var key in proxyContents) {
-			    singleProxyInfo[key] = proxyContents[key];
-			  }
-			  formattedArray.push(singleProxyInfo);
-			}
-			$scope.proxyInfo = formattedArray;
-			break;
-		case $rootScope.apigeeSubsystems.apps.id:
-			// use this oid as a key to get detailed console info
-			$scope.showModal = !$scope.showModal;
-			// populate detailed into bootstrap modal
-			$scope.appsInfo = JSON.parse(consoleInfo.appInfo);
-			break;
-		case $rootScope.apigeeSubsystems.resources.id:
-			// TODO
-			break;
-		case $rootScope.apigeeSubsystems.apiproducts.id:
-			// use this oid as a key to get detailed console info
-			$scope.showModal = !$scope.showModal;
-			// populate detailed into bootstrap modal
-			
-			// 1. Proxies Info to be displayed
-			//4. PRODUCTS info to be displayed
-			var productData = JSON.parse(consoleInfo.productInfo);
-			console.log(productData+"---");
-			$scope.productsInfo = productData.PRODUCTS;
-			break;
-		case $rootScope.apigeeSubsystems.appdevelopers.id:
-			$scope.showModal = !$scope.showModal;
-			// populate detailed into bootstrap modal
-			$scope.appsInfo = JSON.parse(consoleInfo.developerInfo);
-			break;
-		case $rootScope.apigeeSubsystems.proxyrevision.id:
-			// TODO
-			break;
+		// use this oid as a key to get detailed console info
+		//$scope.showModal = !$scope.showModal;
+		// populate detailed into bootstrap modal
+		// 1. Proxies Info to be displayed
+		var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
+		var formattedArray = [];
+		for(var i=0;i<proxyInfo.length;i++) {
+		  var proxyObj = proxyInfo[i];
+		  var singleProxyInfo = {};
+		  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
+		  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
+		  for(var key in proxyContents) {
+		    singleProxyInfo[key] = proxyContents[key];
+		  }
+		  formattedArray.push(singleProxyInfo);
 		}
+		$scope.consoleInfo.proxyInfo = formattedArray;
 		
+		// 2.Resource Info to be displayed
+		var resourceInfo = JSON.parse(consoleInfo.resourceInfo);
+		var resourceArray = [];
+		for(var i=0;i<resourceInfo.length;i++) {
+		  var proxyObj = resourceInfo[i];
+		  var singleResourceInfo = {};
+		  singleResourceInfo["envName"]=Object.keys(proxyObj)[0];
+		  var proxyContents = proxyObj[singleResourceInfo["envName"]];
+		  for(var key in proxyContents) {
+		    singleResourceInfo[key] = proxyContents[key];
+		  }
+		  resourceArray.push(singleResourceInfo);
+		}
+		$scope.consoleInfo.resourceInfo = resourceArray;
+		//3. APPS info to be displayed
+		$scope.consoleInfo.appsInfo = JSON.parse(consoleInfo.appsInfo);
+		//4. PRODUCTS info to be displayed
+		var productData = JSON.parse(consoleInfo.productsInfo);
+		$scope.consoleInfo.productsInfo = productData.PRODUCTS;
+		$scope.consoleInfo.skippedProductsInfo = productData.SKIPPEDPRODUCTS;
+		//5. DEV info to be displayed
+		$scope.consoleInfo.developersInfo = JSON.parse(consoleInfo.developersInfo);
+		$scope.open('lg');
 	}
 	
-	$scope.disableButton = function(disable) {
-		return disable;
-	}
-	
-	$scope.deleteItem = function(oid,filename) {
-		for(var i = 0; i < $scope.orgHis.length; i++) {
-			if(oid == $scope.orgHis[i].fileOid) {
-				$scope.orgHis[i].deleteLoader = true;
-				$scope.orgHis[i].disableButtons = true;
-				break;
-			}
-		}
-		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/deletebackup?sys="+$scope.subsystemid+"&oid="+oid, commonConfiguration, {});
-		responsePromise.success(function(data, status, headers, config) {
-			for(var i = 0; i < $scope.orgHis.length; i++) {
-				if($scope.orgHis[i].fileOid == oid) {
-					$scope.orgHis[i].deleteLoader = false;
-					$scope.orgHis[i].disableButtons = false;
-					$scope.orgHis.splice(i, 1);
-					break;
-				}
-			}
-		});		
-		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
-			for(var i = 0; i < $scope.orgHis.length; i++) {
-				if($scope.orgHis[i].fileOid == oid) {
-					$scope.orgHis[i].deleteLoader = false;
-					$scope.orgHis[i].disableButtons = false;
-					break;
-				}
-			}
-		});
-	}
-	
-	$scope.restoreItem = function(oid,filename) {
-		var org = $scope.organization;
-		if($scope.organization == 'Other') {
-			org = $scope.orgText;
-		}
-		var commonConfiguration = {
-			"userName" : $rootScope.userDetails.userName,
-			"password" : $rootScope.userDetails.password,
-			"organization" : org
-		};
-		for(var i = 0; i < $scope.orgHis.length; i++) {
-			if(oid == $scope.orgHis[i].fileOid) {
-				$scope.orgHis[i].restoreLoader = true;
-				$scope.orgHis[i].disableButtons = true;
-				break;
-			}
-		}
-		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/restoreorg?oid="+oid+"&filename="+filename+"&sys="+$scope.subsystemid, commonConfiguration, {});
-		responsePromise.success(function(data, status, headers, config) {
-			for(var i = 0; i < $scope.orgHis.length; i++) {
-				if(oid == $scope.orgHis[i].fileOid) {
-					$scope.orgHis[i].restoreLoader = false;
-					$scope.orgHis[i].disableButtons = false;
-					break;
-				}
-			}
-		});		
-		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
-			for(var i = 0; i < $scope.orgHis.length; i++) {
-				if(oid == $scope.orgHis[i].fileOid) {
-					$scope.orgHis[i].restoreLoader = false;
-					$scope.orgHis[i].disableButtons = false;
-					break;
-				}
-			}
-		});
-	}
-
-	$scope.backUp = function(action) {
-		$scope.showStatus = true;
-		var org = $scope.organization;
-		
-		if ($scope.organization == 'Other') {
-			org = $scope.orgText;
-		}
-		if(!org) {
-			alert("No Organization Selected!!");
-			return false;
-		}
-
-		var tempToken = generateRandomString();
-		var commonConfiguration = {
-			"userName" : $rootScope.userDetails.userName,
-			"password" : $rootScope.userDetails.password,
-			"organization" : org,
-			"tempToken" : tempToken
-		};
-		console.dir(commonConfiguration);
-		var dbmodel = {
-				"organization" : org,
-				"tempToken":tempToken,
-				"disableButtons": true,
-				"status":"In Progress",
-				"restoreLoader" : false,
-				"deleteLoader": false
-		}
-		$scope.orgHis.unshift(dbmodel);
-		
-		//1.call for backup proxies
-		var responsePromise = $http.post($rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action, commonConfiguration, {});
-		responsePromise.success(function(data, status, headers, config) {
-			var consoleInfo = {};
-			switch($scope.subsystemid) {
-			case $rootScope.apigeeSubsystems.org.id:
-				consoleInfo = data.orgBackUpInfo;
-				break;
-			case $rootScope.apigeeSubsystems.apiproxies.id:
-				consoleInfo = data.proxyBackUpInfo;
-				break;
-			case $rootScope.apigeeSubsystems.apps.id:
-				consoleInfo = data.appBackUpInfo;
-				break;
-			case $rootScope.apigeeSubsystems.resources.id:
-				consoleInfo = data.resourceBackUpInfo;
-				break;
-			case $rootScope.apigeeSubsystems.apiproducts.id:
-				consoleInfo = data.productBackUpInfo;
-				break;
-			case $rootScope.apigeeSubsystems.appdevelopers.id:
-				consoleInfo = data.developerBackUpInfo;
-				break;
-			case $rootScope.apigeeSubsystems.proxyrevision.id:
-				consoleInfo = data.proxyrevisionBackUpInfo;
-				break;
-			}
-			
-			for(var i=0;i<$scope.orgHis.length;i++) {
-				if($scope.orgHis[i].tempToken==data.tempToken) {
-					var dataItem = getProcessedHistoryItem(consoleInfo);
-					$scope.orgHis[i]=dataItem;
-					break;
-				}
-			}
-		});
-		responsePromise.error(function(data, status, headers,
-				config) {
-			alert("Submitting form failed!");
-			// TODO in case backup fails
-		});
-	}
-	
-	$scope.saveBackupSchedule = function() {
-		if(!$scope.scheduledOrg || !$scope.scheduledOrg) {
+	$scope.saveBackupSchedule = function(scheduledOrg,periodicity) {
+		if(!scheduledOrg || !periodicity) {
 			alert('Please select organization and periodicity');
 			return;
 		}
 		var backupSchedule = {
-				"organization":$scope.scheduledOrg,
-				"periodicity" : $scope.periodicity
+				"organization":scheduledOrg,
+				"periodicity" : periodicity
 		}
 		var responsePromise = $http.post($rootScope.baseUrl+ "backup/save", backupSchedule, {});
 		responsePromise.success(function(data, status, headers, config) {
@@ -472,28 +193,19 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 	} 
 	
-	  $scope.animationsEnabled = true;
-
-	  $scope.open = function (size) {
-
-	    var modalInstance = $uibModal.open({
-	      animation: $scope.animationsEnabled,
-	      templateUrl: 'myModalContent.html',
-	      controller: 'ModalInstanceCtrl',
-	      size: size,
-	      resolve: {
-	    	 consoleInfo: function () {
-	          return $scope.consoleInfo;
-	        }
-	      }
-	    });
-
-	   /* modalInstance.result.then(function (selectedItem) {
-	      $scope.selected = selectedItem;
-	    }, function () {
-	      $log.info('Modal dismissed at: ' + new Date());
-	    });*/
-	  };
+	$scope.open = function(size) {
+		var modalInstance = $uibModal.open({
+			animation : $scope.animationsEnabled,
+			templateUrl : 'myModalContent.html',
+			controller : 'ModalInstanceCtrl',
+			size : size,
+			resolve : {
+				consoleInfo : function() {
+					return $scope.consoleInfo;
+				}
+			}
+		});
+	};
 
 });
 
