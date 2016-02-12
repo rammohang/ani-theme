@@ -4,6 +4,7 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,$rootScope, 
 	$scope.subsystem = $rootScope.apigeeSubsystems.apiproxies.name;
 	$scope.subsystemid = $rootScope.apigeeSubsystems.apiproxies.id;
 	$scope.showOrgBackupSchedules = false;
+	$scope.pageHeading = 'Backup Proxies';
 	
 	var commonConfiguration = {
 		"userName" : $rootScope.userDetails.userName,

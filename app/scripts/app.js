@@ -16,12 +16,11 @@ app.run(function($rootScope, $localStorage, $location,$timeout) {
 	$rootScope.noLoginRoutes = ['/login','/signUp'];
 	$rootScope.routeMap = {
 			"dashboard":['/dashboard'],
-			"organization":['/backUpOrg','/cleanOrg','/restoreOrg'],
-			"apiproxies":['/deleteProxy','/cleanUpProxy','/cleanRevisions', '/restoreProxy','/undeployProxy','/deployProxy','/createProxy','/getProxy','/exportProxy','/backupProxy','/importProxy'],
-			"products":['/backUpProducts','/cleanUpProducts','/restoreProducts'],
-			"developers":['/backUpDevelopers','/cleanUpDevelopers','/restoreDevelopers'],
-			"apps":['/backUpApp','/cleanUpApp','/restoreApps'],
-			"resources":['/backUpResource','/cleanUpResource','/restoreResource'],
+			"organization":['/backUpOrg'],
+			"apiproxies":['/backupProxy','/cleanRevisions'],
+			"publish":['/backUpProducts','/backUpDevelopers','/backUpApp','/backUpResource'],
+			"monetize":['/monetizeApis'],
+			"documentation":['/documentation'],
 			"releaseManagement":['/releaseMgmt']
 	};
 	
@@ -180,6 +179,12 @@ app.config(function($routeProvider) {
 	}).when('/releaseMgmt', {
 		templateUrl : 'views/release.html',
 		controller : 'ReleaseManagementCtrl'
+	}).when('/monetizeApis', {
+		templateUrl : 'views/monetizeApis.html',
+		controller : 'monetizeApisCtrl'
+	}).when('/documentation', {
+		templateUrl : 'views/documentation.html',
+		controller : 'documentationCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});

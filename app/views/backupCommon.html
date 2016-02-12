@@ -1,18 +1,22 @@
 <div class="row">
+	<h4 style="text-align: center">{{pageHeading}}</h4>
+	<br>
+</div>
+<div class="row">
 	<div class="col-md-2"></div>
 	<div class="col-md-5">
 		<div class="form-group">
-   			<label for="proxyName">Backup {{subsystem}}</label>
-   			<p>
-	        	<select ng-model="$parent.organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs">
-	          		<option value="">Select Organization</option>
-	        	</select>
-	        	<input ng-model="$parent.orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="$parent.showOther" />
-	      	</p>
+ 			<div>
+				<label for="proxyName">Select Organization</label>
+			</div>
+        	<select ng-model="$parent.organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs">
+          		<option value="">Select Organization</option>
+        	</select>
+        	<input ng-model="$parent.orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="$parent.showOther" />
 		</div>
 		<div class="form-group">
-			<button class="btn btn-primary" ng-click="backUp('backup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Backup</button>
-			<button class="btn btn-danger" ng-click="backUp('cleanup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cleanup</button>
+			<button ng-if="showBackupBtn" class="btn btn-primary" ng-click="backUp('backup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Backup</button>
+			<button ng-if="showCleanupBtn" class="btn btn-danger" ng-click="backUp('cleanup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cleanup</button>
 		</div>
 	</div>
 	<div class="col-md-4 scheduleBackupContainer" ng-if="showOrgBackupSchedules">

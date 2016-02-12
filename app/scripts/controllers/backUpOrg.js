@@ -4,6 +4,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.subsystem = $rootScope.apigeeSubsystems.org.name;
 	$scope.subsystemid = $rootScope.apigeeSubsystems.org.id;
 	$scope.showOrgBackupSchedules = true;
+	$scope.pageHeading = 'Backup Organization';
 	$scope.animationsEnabled = true;
 	$scope.backupSchedules = [];
 	$scope.periodicities = ['Weekly','Daily','Hourly'];

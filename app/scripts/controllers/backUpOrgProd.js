@@ -4,6 +4,7 @@ app.controller('BackUpOrgProdCtrl', function($scope, $http, $location,$rootScope
 	$scope.subsystem = $rootScope.apigeeSubsystems.apiproducts.name;
 	$scope.subsystemid = $rootScope.apigeeSubsystems.apiproducts.id;
 	$scope.showOrgBackupSchedules = false;
+	$scope.pageHeading = 'Backup Products';
 	
 	var commonConfiguration = {
 		"userName" : $rootScope.userDetails.userName,

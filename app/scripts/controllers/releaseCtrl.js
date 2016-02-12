@@ -4,6 +4,7 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 	$scope.subsystem = undefined;
 	$scope.releaseManagement = true;
 	$scope.showOrgBackupSchedules = false;
+	$scope.pageHeading = 'Restore to New Organization';
 	$scope.animationsEnabled = true;
 	$scope.formData = {};
 	$scope.formData.orgs = [];

@@ -1,131 +1,23 @@
 <div data-ng-include="'views/navbar.html'"></div>
 <div>
-<form>
-	 <!--  ROW BEGIN -->
-	<div class="row">
-		<!--  column1 -->
-		<div class="col-md-4">
-			
-
-		</div>
-		<!--  column1 END -->
-		<!--  column2 -->
-		<div class="col-md-4">
-			
-				<div class="form-group">
-	    			<label for="proxyName">CleanUp Revisions</label>
-	    			<p>
-			        <select ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs">
-			          <option value="">Select Organization</option>
-			        </select>
-			        <input ng-model="orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="showOther" />
-			      </p>
-  				</div>
-  				<div class="form-group">
-					<button class="btn btn-default" ng-click="cleanRevisions()">CleanUp Revisions</button>
-					<div class="throbber-loader" ng-show="showLoader=='Y'">
-  Loading…
+	<div data-ng-include="'views/backupCommon.html'"></div>		
 </div>
-				</div>
-		
-		</div>
-		<!--  column2 END -->
-
-		<!--  column3 -->
-		<div class="col-md-4"></div>
-		<!--  column3 END-->
+<mymodal class="" title="Backup Status" visible="showModal">
+	<h4 class="info">Proxies</h4>
+   	<div class="table-responsive">
+	  <table class="table table-bordered">
+	    	<thead>
+	    		<tr>
+	    			<td class="danger">Proxy</td>
+	    			<td class="danger">Deployment Status</td>
+	    		</tr>
+	    	</thead>
+	    	<tbody>
+	    		<tr ng-repeat="proxy in proxyInfo">
+	    			<td>{{proxy.proxyName}}</td>
+	    			<td>NO</span></td>
+	    		</tr>
+	    	</tbody>
+	  </table>
 	</div>
-	<!--  ROW END -->
-		</form>
-		
-		<div class="backupOrgContainer">
-			<div class="row">
-				<!--  column1 -->
-				<div class="col-md-2">
-				</div>
-		
-				<div class="col-md-8" ng-if="proxyRevHis">
-		
-					<table class="table table-hover">
-						<tr>
-							<th>Backedup On</th>
-							<th>Organization</th>
-							<th>Time Taken(sec)</th>
-							<th>Status</th>
-							<th>Console</th>
-							<th>Action</th>
-						</tr>
-						<tr ng-repeat="item in proxyRevHis | pagination: curPage * pageSize | limitTo: pageSize">
-							<td>{{item.cts | date:'medium'}}</td>
-							<td>{{item.organization}}</td>
-							<td>{{item.backUpTimeTaken}}</td>
-							<td>{{item.status}}</td>
-							<td>
-								<button class="btn btn-warning btn-xs" ng-click="viewDetailedStatus(item)" ng-disabled="disableButton(item.disableButtons)">Console</button>
-							</td>
-							<td>
-								<button class="btn btn-success btn-xs" ng-click="restoreProxyRevisionBackUp(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Restore</button>
-								<button class="btn btn-danger btn-xs" ng-click="deleteProxyRevision(item.fileOid,item.organization)" ng-disabled="disableButton(item.disableButtons)">Delete</button>
-							</td>
-							
-						</tr>    
-		
-					</table>
-		
-					<ul class="pagination-controle pagination">
-						<li>
-							<button type="button" class="btn btn-primary" ng-disabled="curPage == 0"
-		       ng-click="curPage=curPage-1"> &lt; PREV</button>
-						</li>
-						<li>
-							<span>Page {{curPage + 1}} of {{ numberOfPages() }}</span>
-						</li>
-						<li>
-							<button type="button" class="btn btn-primary"
-		       ng-disabled="curPage >= proxyRevHis.length/pageSize - 1"
-		       ng-click="curPage = curPage+1">NEXT &gt;</button>
-						</li>
-					</ul>
-		
-				</div>
-		
-				<div class="col-md-4">
-				</div>
-		
-			</div>
-		</div>
-		
-	
-		
-</div>
-<mymodal class="statusModal" title="Backup Status" visible="showModal">
-   <div class="statusContainer">
-		<div class="row">
-			
-			<div class="col-sm-4 col-md-4" >
-		    	<h4 class="info">Proxies</h4>
-		    	<div class="table-responsive">
-				  <table class="table table-bordered">
-				    	<thead>
-				    		<tr>
-				    			<td class="danger">Proxy</td>
-				    			<td class="danger">Deployment Status</td>
-				    		</tr>
-				    	</thead>
-				    	<tbody>
-				    		<tr ng-repeat="proxy in proxyInfo">
-				    			<td>{{proxy.proxyName}}</td>
-				    			<td>NO</span></td>
-				    		</tr>
-				    	</tbody>
-				  </table>
-				</div>
-		    </div>
-		
-		
-		
-		</div>
-	
-	</div>
-	
  </mymodal>

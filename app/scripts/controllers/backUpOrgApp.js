@@ -4,6 +4,7 @@ app.controller('BackUpOrgAppCtrl', function($scope, $http, $location,$rootScope,
 	$scope.subsystem = $rootScope.apigeeSubsystems.apps.name;
 	$scope.subsystemid = $rootScope.apigeeSubsystems.apps.id;
 	$scope.showOrgBackupSchedules = false;
+	$scope.pageHeading = 'Backup Apps';
 	
 	var commonConfiguration = {
 		"userName" : $rootScope.userDetails.userName,

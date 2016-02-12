@@ -1,12 +1,8 @@
 <div data-ng-include="'views/navbar.html'"></div>
 <div class="row">
-	<div class="col-md-2"></div>
-	<div class="col-md-10">
-		<br>
-		<h4>Restore to New Organization</h4>
-		<br>
-		<br>
-	</div>
+	<h4 style="text-align: center">{{pageHeading}}</h4>
+	<br>
+	<br>
 </div>
 
 <div data-ng-include="'views/backUpOrgConsoleInfo.html'"></div>
@@ -29,8 +25,8 @@
 			</div>
         </div>
         <div class="modal-footer">
-            <button class="btn btn-primary" type="button" ng-click="ok()">Restore</button>
-            <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+            <button class="btn btn-primary" type="button" ng-click="ok()"><span class="glyphicon glyphicon-ok" aria-hidden="true"> Restore</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()"><span class="glyphicon glyphicon-remove" aria-hidden="true"> Cancel</button>
         </div>
     </script>
 </div>

@@ -2,9 +2,12 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 	
 	$scope.subsystem = '';
 	$scope.subsystemid = '';
+	$scope.pageHeading = '';
 	$scope.showOrgBackupSchedules = false;
 	$scope.showModal = false;
 	$scope.showBackups = false;
+	$scope.showBackupBtn = true;
+	$scope.showCleanupBtn = true;
 	$scope.proxyInfo = [];
 	$scope.resourceInfo = [];
 	$scope.developersInfo = [];
@@ -36,12 +39,12 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 		var bodyMsg = '' ;
 		switch(action) {
 		case 'delete':
-			popupTitle = 'Delete Organization';
-			bodyMsg = 'Are you Sure want to delete?<br/><br/>This will delete the backedup Organization.';
+			popupTitle = 'Delete';
+			bodyMsg = 'Are you Sure want to delete?<br/><br/>This will delete the backedup Version.';
 			break;
 		case 'restore':
-			popupTitle = 'Restore Organization';
-			bodyMsg = 'Are you Sure want to restore?<br/><br/>This will replace the current revision of Organization.';
+			popupTitle = 'Restore';
+			bodyMsg = 'Are you Sure want to restore?<br/><br/>This will replace the current revision.';
 			break;
 		}
 		var modalInstance = $uibModal
@@ -192,8 +195,13 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 		}
 		$scope.orgHis.unshift(dbmodel);
 		
+		var url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
+		if($scope.subsystemid == $rootScope.apigeeSubsystems.proxyrevision.id) {
+			url = $rootScope.baseUrl + "apigee/cleanrevisions";
+		}
+		
 		//1.call for backup proxies
-		var responsePromise = $http.post($rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action, commonConfiguration, {});
+		var responsePromise = $http.post(url, commonConfiguration, {});
 		responsePromise.success(function(data, status, headers, config) {
 			var consoleInfo = {};
 			switch($scope.subsystemid) {
@@ -216,7 +224,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 				consoleInfo = data.developersInfo;
 				break;
 			case $rootScope.apigeeSubsystems.proxyrevision.id:
-				consoleInfo = data.proxyrevisionBackUpInfo;
+				consoleInfo = data.proxyRevisionBackUpInfo;
 				break;
 			}
 			
