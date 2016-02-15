@@ -377,7 +377,11 @@ app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInst
 	}, true);
 
 	$scope.ok = function() {
-		$uibModalInstance.close($scope.data);
+		if($scope.data.proxiesList.length > 0) {
+			$uibModalInstance.close($scope.data);
+		} else {
+			alert('Please select Proxies to be cleaned up.');
+		}
 	};
 	$scope.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
