@@ -348,6 +348,42 @@ app.controller('RestoreModalInstanceCtrl', function ($scope, $uibModalInstance,f
 	  };
 });
 
+app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInstance, data) {
+	
+	$scope.data = data;
+	$scope.checkAll = function() {
+		if ($scope.data.selectedAll) {
+			$scope.data.selectedAll = true;
+		} else {
+			$scope.data.selectedAll = false;
+		}
+		for (var i = 0; i < $scope.data.proxies.length; i++) {
+			$scope.data.proxies[i].selected = $scope.data.selectedAll;
+		}
+	};
+
+	// helper method to get selected proxies
+	$scope.data.selectedProxies = function selectedFruits() {
+		return filterFilter($scope.data.proxies, {
+			selected : true
+		});
+	};
+
+	// watch proxies for changes
+	$scope.$watch('data.proxies|filter:{selected:true}', function(nv) {
+		$scope.data.selection = nv.map(function(proxy) {
+			return proxy.name;
+		});
+	}, true);
+
+	$scope.ok = function() {
+		$uibModalInstance.close($scope.data);
+	};
+	$scope.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+});
+
 // common methods used in all controllers
 
 function generateRandomString() {

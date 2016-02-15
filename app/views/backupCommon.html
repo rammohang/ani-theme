@@ -15,8 +15,10 @@
         	<input ng-model="$parent.orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="$parent.showOther" />
 		</div>
 		<div class="form-group">
-			<button ng-if="showBackupBtn" class="btn btn-primary" ng-click="backUp('backup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Backup</button>
-			<button ng-if="showCleanupBtn" class="btn btn-danger" ng-click="backUp('cleanup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cleanup</button>
+			<div class="row acmAction">
+				<div class="col-sm-2 col-md-2 backupBtn"><button ng-if="showBackupBtn" class="btn btn-primary" ng-click="backUp('backup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Backup</button><img ng-if="backupupLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+				<div class="col-sm-2 col-md-2 cleanupBtn" ><button ng-if="showCleanupBtn" class="btn btn-danger" ng-click="backUp('cleanup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cleanup</button><img ng-if="cleanupLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+			</div>
 		</div>
 	</div>
 	<div class="col-md-4 scheduleBackupContainer" ng-if="showOrgBackupSchedules">

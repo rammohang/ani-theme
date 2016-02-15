@@ -8,6 +8,9 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 	$scope.showBackups = false;
 	$scope.showBackupBtn = true;
 	$scope.showCleanupBtn = true;
+	$scope.backupupLoader = false;
+	$scope.cleanupLoader = false;
+	
 	$scope.proxyInfo = [];
 	$scope.resourceInfo = [];
 	$scope.developersInfo = [];
@@ -166,7 +169,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 	}
 
 	$scope.backUp = function(action) {
-		$scope.showStatus = true;
+		
 		var org = $scope.organization;
 		
 		if ($scope.organization == 'Other') {
@@ -176,7 +179,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			alert("No Organization Selected!!");
 			return false;
 		}
-
+		
 		var tempToken = generateRandomString();
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
@@ -185,6 +188,11 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			"tempToken" : tempToken
 		};
 		console.dir(commonConfiguration);
+		if($scope.subsystemid == $rootScope.apigeeSubsystems.apiproxies.id && action == 'cleanup') {
+			// refer to backUpProxy.js
+			$scope.showCleanupProxies(commonConfiguration);
+			return;
+		}
 		var dbmodel = {
 				"organization" : org,
 				"tempToken":tempToken,
@@ -195,6 +203,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 		}
 		$scope.orgHis.unshift(dbmodel);
 		
+		$scope.showStatus = true; 
 		var url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
 		if($scope.subsystemid == $rootScope.apigeeSubsystems.proxyrevision.id) {
 			url = $rootScope.baseUrl + "apigee/cleanrevisions";
