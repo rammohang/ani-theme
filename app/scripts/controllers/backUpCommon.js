@@ -168,7 +168,8 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 		});
 	}
 
-	$scope.backUp = function(action) {
+	$scope.backUp = function(action,data) {
+		$scope.data = data;
 		
 		var org = $scope.organization;
 		
@@ -188,11 +189,18 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			"tempToken" : tempToken
 		};
 		console.dir(commonConfiguration);
-		if($scope.subsystemid == $rootScope.apigeeSubsystems.apiproxies.id && action == 'cleanup') {
-			// refer to backUpProxy.js
-			$scope.showCleanupProxies(commonConfiguration);
-			return;
+		
+		if(data) {
+			commonConfiguration.proxiesList = data.proxiesList;
+			console.dir(commonConfiguration);
+		} else {
+			if($scope.subsystemid == $rootScope.apigeeSubsystems.apiproxies.id && action == 'cleanup') {
+				// refer to backUpProxy.js
+				$scope.showCleanupProxies(commonConfiguration);
+				return;
+			}
 		}
+		
 		var dbmodel = {
 				"organization" : org,
 				"tempToken":tempToken,

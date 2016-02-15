@@ -74,24 +74,10 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,$rootScope, 
 		});
 		modalInstance.result.then(function(data) {
 			$scope.data = data;
-			$scope.cleanupProxies();
+			$scope.backUp('cleanup',data);
 		}, function() {
 			$log.info('Modal dismissed at: ' + new Date());
 		});
 	};
-	
-	$scope.cleanupProxies = function() {
-		$scope.cleanupLoader = true;
-		var commonConfiguration = $scope.data;
-		var responsePromise = $http.post($rootScope.baseUrl
-				+ "apigee/cleanupapiproxies", commonConfiguration, {});
-		responsePromise.success(function(data, status, headers, config) {
-			$scope.cleanupLoader = false;
-			alert("Selected Proxies cleaned up..");
-		});		
-		responsePromise.error(function(data, status, headers, config) {
-			alert("oops !!! we are facing issues.");
-		});
-	}
 	
 });

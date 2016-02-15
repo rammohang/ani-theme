@@ -363,7 +363,7 @@ app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInst
 	};
 
 	// helper method to get selected proxies
-	$scope.data.selectedProxies = function selectedFruits() {
+	$scope.data.selectedProxies = function() {
 		return filterFilter($scope.data.proxies, {
 			selected : true
 		});
@@ -371,7 +371,7 @@ app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInst
 
 	// watch proxies for changes
 	$scope.$watch('data.proxies|filter:{selected:true}', function(nv) {
-		$scope.data.selection = nv.map(function(proxy) {
+		$scope.data.proxiesList = nv.map(function(proxy) {
 			return proxy.name;
 		});
 	}, true);
