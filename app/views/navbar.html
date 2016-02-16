@@ -21,22 +21,22 @@
 					 data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Go to Release Management</a>
 				  </li>
                 </ul> -->
-			  </li>
+			  </li> 
               <li class="dropdown acmmenu organization">
-				<a href="#/backUpOrg" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Organization </a>
+				<a href="#/backUpOrg" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Organization <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                   <li><a href="#/backUpOrg" uib-tooltip="Take backups of selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" class="green-tooltip right-tooltip">BackUp Organization</a></li>
                 </ul>
 			  </li>
               <li class="dropdown acmmenu apiproxies">
-                <a href="#/backupProxy" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">API Proxies</a>
+                <a href="#/backupProxy" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">API Proxies <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                    <li><a href="#/backupProxy" uib-tooltip="Take backups of Proxies for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" class="green-tooltip right-tooltip">BackUp Proxies</a></li>
                    <li><a href="#/cleanRevisions" uib-tooltip="Deletes all the undeployed proxies of selected organization" tooltip-placement="right" tooltip-trigger="mouseenter" class="green-tooltip right-tooltip">CleanUp Revisions</a></li>
                 </ul>
               </li>
               <li class="dropdown acmmenu publish">
-                <a href="#/backUpProducts" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Publish</a>
+                <a href="#/backUpProducts" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Publish <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                 	<li><a href="#/backUpProducts" uib-tooltip="Take backups of Products for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" class="green-tooltip right-tooltip">Products</a></li>
                 	<li><a href="#/backUpDevelopers" uib-tooltip="Take backups of Developers for selected organizations" tooltip-placement="right" tooltip-trigger="mouseenter" class="green-tooltip right-tooltip">Developers</a></li>
@@ -45,7 +45,7 @@
                 </ul>
               </li>
               <li class="dropdown acmmenu monetize">
-                <a href="#/monetizeApis" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Monetize APIs</a>
+                <a href="#/monetizeApis" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Monetization</a>
               </li>
               <li class="dropdown acmmenu documentation">
                 <a href="#/documentation" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Documentation</a>
@@ -62,7 +62,7 @@
             </ul>
             <ul class="nav navbar-nav navbar-right">
               <li class="dropdown active1">
-                <a href="./">{{userDetails.displayName}}!<span class="sr-only">(current)</span></a>
+                <a href="./">{{userDetails.displayName}}! <span class="caret"></span></a>
                 <ul class="dropdown-menu">
                    <li><a href="#" ng-click="logout()">Logout</a></li>
                 </ul>
