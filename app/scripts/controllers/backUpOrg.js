@@ -28,44 +28,19 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	});
 	
 	$scope.viewDetailedStatus = function(consoleInfo) {
-		// use this oid as a key to get detailed console info
-		//$scope.showModal = !$scope.showModal;
-		// populate detailed into bootstrap modal
 		// 1. Proxies Info to be displayed
-		var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
-		var formattedArray = [];
-		for(var i=0;i<proxyInfo.length;i++) {
-		  var proxyObj = proxyInfo[i];
-		  var singleProxyInfo = {};
-		  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
-		  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
-		  for(var key in proxyContents) {
-		    singleProxyInfo[key] = proxyContents[key];
-		  }
-		  formattedArray.push(singleProxyInfo);
-		}
+		var proxies = JSON.parse(consoleInfo.proxyInfo);
+		var formattedArray = $scope.getProcessedProxies(proxies);
 		$scope.consoleInfo.proxyInfo = formattedArray;
-		
 		// 2.Resource Info to be displayed
-		var resourceInfo = JSON.parse(consoleInfo.resourceInfo);
-		var resourceArray = [];
-		for(var i=0;i<resourceInfo.length;i++) {
-		  var proxyObj = resourceInfo[i];
-		  var singleResourceInfo = {};
-		  singleResourceInfo["envName"]=Object.keys(proxyObj)[0];
-		  var proxyContents = proxyObj[singleResourceInfo["envName"]];
-		  for(var key in proxyContents) {
-		    singleResourceInfo[key] = proxyContents[key];
-		  }
-		  resourceArray.push(singleResourceInfo);
-		}
+		var resources = JSON.parse(consoleInfo.resourceInfo);
+		var resourceArray = $scope.getProcessedResources(resources);
 		$scope.consoleInfo.resourceInfo = resourceArray;
 		//3. APPS info to be displayed
 		$scope.consoleInfo.appsInfo = JSON.parse(consoleInfo.appsInfo);
 		//4. PRODUCTS info to be displayed
 		var productData = JSON.parse(consoleInfo.productsInfo);
 		$scope.consoleInfo.productsInfo = productData.PRODUCTS;
-		$scope.consoleInfo.skippedProductsInfo = productData.SKIPPEDPRODUCTS;
 		//5. DEV info to be displayed
 		$scope.consoleInfo.developersInfo = JSON.parse(consoleInfo.developersInfo);
 		$scope.open('lg');

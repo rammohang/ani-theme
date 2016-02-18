@@ -21,18 +21,8 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,$rootS
 
 	$scope.viewDetailedStatus = function(consoleInfo) {
 		$scope.showModal = !$scope.showModal;
-		var resourceInfo = JSON.parse(consoleInfo.resourceInfo);
-		var resourceArray = [];
-		for (var i = 0; i < resourceInfo.length; i++) {
-			var proxyObj = resourceInfo[i];
-			var singleResourceInfo = {};
-			singleResourceInfo["envName"] = Object.keys(proxyObj)[0];
-			var proxyContents = proxyObj[singleResourceInfo["envName"]];
-			for ( var key in proxyContents) {
-				singleResourceInfo[key] = proxyContents[key];
-			}
-			resourceArray.push(singleResourceInfo);
-		}
+		var resources = JSON.parse(consoleInfo.resourceInfo);
+		var resourceArray = $scope.getProcessedResources(resources);
 		$scope.resourceInfo = resourceArray;
 	}
 	

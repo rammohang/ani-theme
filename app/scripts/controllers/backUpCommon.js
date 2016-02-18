@@ -36,6 +36,36 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 		"password" : $rootScope.userDetails.password
 	};
 	
+	$scope.getProcessedProxies = function(proxies) {
+		var formattedArray = [];
+		for(var i=0;i<proxies.length;i++) {
+		  var proxyObj = proxies[i];
+		  var singleProxyInfo = {};
+		  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
+		  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
+		  for(var key in proxyContents) {
+		    singleProxyInfo[key] = proxyContents[key];
+		  }
+		  formattedArray.push(singleProxyInfo);
+		}
+		return formattedArray;
+	}
+	
+	$scope.getProcessedResources = function(resources) {
+		var resourceArray = [];
+		for(var i=0;i<resources.length;i++) {
+		  var resourceObj = resources[i];
+		  var singleResourceInfo = {};
+		  singleResourceInfo["envName"]=Object.keys(resourceObj)[0];
+		  var resourceContents = resourceObj[singleResourceInfo["envName"]];
+		  for(var key in resourceContents) {
+		    singleResourceInfo[key] = resourceContents[key];
+		  }
+		  resourceArray.push(singleResourceInfo);
+		}
+		return resourceArray;
+	}
+	
 	//https://angular-ui.github.io/bootstrap/#/modal
 	$scope.confirmAction = function(item, action) {
 		var popupTitle = '';

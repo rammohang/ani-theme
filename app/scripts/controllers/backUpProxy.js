@@ -23,18 +23,8 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,$rootScope, 
 	
 	$scope.viewDetailedStatus = function(consoleInfo) {
 		$scope.showModal = !$scope.showModal;
-		var proxyInfo = JSON.parse(consoleInfo.proxyInfo);
-		var formattedArray = [];
-		for(var i=0;i<proxyInfo.length;i++) {
-		  var proxyObj = proxyInfo[i];
-		  var singleProxyInfo = {};
-		  singleProxyInfo["proxyName"]=Object.keys(proxyObj)[0];
-		  var proxyContents = proxyObj[singleProxyInfo["proxyName"]];
-		  for(var key in proxyContents) {
-		    singleProxyInfo[key] = proxyContents[key];
-		  }
-		  formattedArray.push(singleProxyInfo);
-		}
+		var proxies = JSON.parse(consoleInfo.proxyInfo);
+		var formattedArray = $scope.getProcessedProxies(proxies);
 		$scope.proxyInfo = formattedArray;
 	}
 	
