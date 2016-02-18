@@ -191,13 +191,23 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 		console.dir(commonConfiguration);
 		
 		if(data) {
-			commonConfiguration.proxiesList = data.proxiesList;
+			switch($scope.subsystemid) {
+			case $rootScope.apigeeSubsystems.apiproxies.id:
+				commonConfiguration.proxiesList = data.proxiesList;
+			case $rootScope.apigeeSubsystems.proxyrevision.id:
+				commonConfiguration.proxiesList = data.proxiesList;
+			}
 			console.dir(commonConfiguration);
 		} else {
-			if($scope.subsystemid == $rootScope.apigeeSubsystems.apiproxies.id && action == 'cleanup') {
-				// refer to backUpProxy.js
-				$scope.showCleanupProxies(commonConfiguration);
-				return;
+			if(action == 'cleanup') {
+				switch($scope.subsystemid) {
+				case $rootScope.apigeeSubsystems.apiproxies.id:
+					$scope.showCleanupProxies(commonConfiguration);
+					return;
+				case $rootScope.apigeeSubsystems.proxyrevision.id:
+					$scope.showCleanupRevisions(commonConfiguration);
+					return;
+				}
 			}
 		}
 		
