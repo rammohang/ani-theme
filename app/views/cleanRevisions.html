@@ -9,13 +9,13 @@
 	    	<thead>
 	    		<tr>
 	    			<td class="danger">Proxy</td>
-	    			<td class="danger">Deployment Status</td>
+	    			<td class="danger">Cleaned Revisions</td>
 	    		</tr>
 	    	</thead>
 	    	<tbody>
 	    		<tr ng-repeat="proxy in proxyInfo">
 	    			<td>{{proxy.proxyName}}</td>
-	    			<td>NO</span></td>
+	    			<td><span ng-repeat="version in proxy.versions"> {{version}} {{$last ? '' : ', '}}</span></td>
 	    		</tr>
 	    	</tbody>
 	  </table>
