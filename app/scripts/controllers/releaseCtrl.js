@@ -1,6 +1,6 @@
 app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootScope, $localStorage,$uibModal,$log,$controller) {
 	
-	$controller('BackUpOrgCtrl', {$scope: $scope}); //inherits BackUpCommonCtrl controller
+	$controller('BackUpOrgCtrl', {$scope: $scope}); //inherits BackUpOrgCtrl controller
 	$scope.subsystem = undefined;
 	$scope.releaseManagement = true;
 	$scope.showOrgBackupSchedules = false;
@@ -79,7 +79,7 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 	  
 	// call to restore org to different env
 	$scope.restoreToDifferentEnv = function(oid,filename) {
-		var tempToken = generateRandomString();
+		var tempToken = $scope.generateRandomString();
 		var org = $scope.formData.organization;
 		if (org == 'Other') {
 			org = $scope.orgText;

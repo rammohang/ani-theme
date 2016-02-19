@@ -13,7 +13,7 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,$rootS
     var responsePromise = $http.post($rootScope.baseUrl
 			+ "apigee/getorgbackuphistory1?sys="+$scope.subsystemid, commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
-		 $scope.orgHis = getProcessedHistory(data.resourceBackUpInfoList);
+		 $scope.orgHis = $scope.getProcessedHistory(data.resourceBackUpInfoList);
 	});		
 	responsePromise.error(function(data, status, headers, config) {
 		alert("oops !!! we are facing issues.");

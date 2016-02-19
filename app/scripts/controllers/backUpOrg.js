@@ -10,8 +10,21 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.periodicities = ['Weekly','Daily','Hourly'];
 	$scope.consoleInfo = {};
 	
+	$scope.getScheduledBackups = function() {
+		var user = {
+				"email": $rootScope.userDetails.userName
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "backup/schduledbackups", user, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.backupSchedules = $scope.getProcessedHistory(data);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			alert("Failed to retrieve!");
+		});
+	} 
+	
 	if($scope.showOrgBackupSchedules == true) {
-		getScheduledBackups();
+		$scope.getScheduledBackups();
 	}
     
 	var commonConfiguration = {
@@ -21,7 +34,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
     var responsePromise = $http.post($rootScope.baseUrl
 			+ "apigee/getorgbackuphistory1?sys="+$scope.subsystemid, commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
-		 $scope.orgHis = getProcessedHistory(data.orgBackUpInfoList);
+		 $scope.orgHis = $scope.getProcessedHistory(data.orgBackUpInfoList);
 	});		
 	responsePromise.error(function(data, status, headers, config) {
 		alert("oops !!! we are facing issues.");
@@ -67,7 +80,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	
 	$scope.seeAllSchedules = function() {
 		$scope.showBackups = !$scope.showBackups;
-		getScheduledBackups();
+		$scope.getScheduledBackups();
 	}
 	
 	$scope.changeScheduleOrg = function() {
@@ -155,19 +168,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			}
 		});
 	}
-	
-	function getScheduledBackups() {
-		var user = {
-				"email": $rootScope.userDetails.userName
-		}
-		var responsePromise = $http.post($rootScope.baseUrl+ "backup/schduledbackups", user, {});
-		responsePromise.success(function(data, status, headers, config) {
-			$scope.backupSchedules = getProcessedHistory(data);
-		});
-		responsePromise.error(function(data, status, headers, config) {
-			alert("Failed to retrieve!");
-		});
-	} 
 	
 	$scope.open = function(size) {
 		var modalInstance = $uibModal.open({

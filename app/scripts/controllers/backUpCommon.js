@@ -66,6 +66,44 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 		return resourceArray;
 	}
 	
+	$scope.generateRandomString = function() {
+		var text = "";
+		var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		for( var i=0; i < 16; i++ )
+		    text += possible.charAt(Math.floor(Math.random() * possible.length));
+		return text;
+	}
+
+	$scope.getProcessedHistoryItem = function(dataItem) {
+		var item = null;
+		if(dataItem) {
+			var item = {};
+			for(var key in dataItem) {
+				item[key]=dataItem[key];
+			}
+			item.disableButtons = false;
+			item.status = "Completed";
+			item.tempToken = "";
+			item.restoreLoader = false;
+			item.deleteLoader = false;
+			item.updateLoader = false;
+		}
+		return item;
+	}
+
+	$scope.getProcessedHistory = function(data) {
+		var items = [];
+		if(data) {
+			var items = [];
+			for(var i=0;i<data.length;i++) {
+				var dataItem = data[i];
+				var item = $scope.getProcessedHistoryItem(dataItem);
+				items.push(item);
+			}
+		}
+		return items;
+	}
+	
 	//https://angular-ui.github.io/bootstrap/#/modal
 	$scope.confirmAction = function(item, action) {
 		var popupTitle = '';
@@ -211,7 +249,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			return false;
 		}
 		
-		var tempToken = generateRandomString();
+		var tempToken = $scope.generateRandomString();
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
 			"password" : $rootScope.userDetails.password,
@@ -287,7 +325,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			
 			for(var i=0;i<$scope.orgHis.length;i++) {
 				if($scope.orgHis[i].tempToken==data.tempToken) {
-					var dataItem = getProcessedHistoryItem(consoleInfo);
+					var dataItem = $scope.getProcessedHistoryItem(consoleInfo);
 					$scope.orgHis[i]=dataItem;
 					break;
 				}

@@ -20,7 +20,7 @@ app.run(function($rootScope, $localStorage, $location,$timeout) {
 			"apiproxies":['/backupProxy','/cleanRevisions'],
 			"publish":['/backUpProducts','/backUpDevelopers','/backUpApp','/backUpResource'],
 			"monetize":['/monetizeApis'],
-			"documentation":['/documentation'],
+			"documentation":['/documentation', '/installationGuide'],
 			"releaseManagement":['/releaseMgmt']
 	};
 	
@@ -185,6 +185,9 @@ app.config(function($routeProvider) {
 	}).when('/documentation', {
 		templateUrl : 'views/documentation.html',
 		controller : 'documentationCtrl'
+	}).when('/installationGuide', {
+		templateUrl : 'views/installationGuide.html',
+		controller : 'installationGuideCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
@@ -387,43 +390,3 @@ app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInst
 		$uibModalInstance.dismiss('cancel');
 	};
 });
-
-// common methods used in all controllers
-
-function generateRandomString() {
-	var text = "";
-	var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-	for( var i=0; i < 16; i++ )
-	    text += possible.charAt(Math.floor(Math.random() * possible.length));
-	return text;
-}
-
-function getProcessedHistoryItem(dataItem) {
-	var item = null;
-	if(dataItem) {
-		var item = {};
-		for(var key in dataItem) {
-			item[key]=dataItem[key];
-		}
-		item.disableButtons = false;
-		item.status = "Completed";
-		item.tempToken = "";
-		item.restoreLoader = false;
-		item.deleteLoader = false;
-		item.updateLoader = false;
-	}
-	return item;
-}
-
-function getProcessedHistory(data) {
-	var items = [];
-	if(data) {
-		var items = [];
-		for(var i=0;i<data.length;i++) {
-			var dataItem = data[i];
-			var item = getProcessedHistoryItem(dataItem);
-			items.push(item);
-		}
-	}
-	return items;
-}

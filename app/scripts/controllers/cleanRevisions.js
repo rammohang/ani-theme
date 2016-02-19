@@ -14,7 +14,7 @@ app.controller('cleanRevisionsCtrl', function($scope, $http, $location,$rootScop
     var responsePromise = $http.post($rootScope.baseUrl
 			+ "apigee/getorgbackuphistory1?sys="+$scope.subsystemid, commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
-		 $scope.orgHis = getProcessedHistory(data.proxyRevisionBackUpInfoList);
+		 $scope.orgHis = $scope.getProcessedHistory(data.proxyRevisionBackUpInfoList);
 	});		
 	responsePromise.error(function(data, status, headers, config) {
 		alert("oops !!! we are facing issues.");

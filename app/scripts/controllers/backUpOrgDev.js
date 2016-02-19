@@ -13,7 +13,7 @@ app.controller('BackUpOrgDevCtrl', function($scope, $http, $location,$rootScope,
     var responsePromise = $http.post($rootScope.baseUrl
 			+ "apigee/getorgbackuphistory1?sys="+$scope.subsystemid, commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
-		 $scope.orgHis = getProcessedHistory(data.developerBackUpInfoList);
+		 $scope.orgHis = $scope.getProcessedHistory(data.developerBackUpInfoList);
 	});		
 	responsePromise.error(function(data, status, headers, config) {
 		alert("oops !!! we are facing issues.");
