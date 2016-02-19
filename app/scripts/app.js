@@ -9,7 +9,7 @@
  */
 var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage','ui.bootstrap' ]);
 
-app.run(function($rootScope, $localStorage, $location,$timeout) {
+app.run(function($rootScope, $localStorage, $location,$timeout,$sessionStorage) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
@@ -188,6 +188,12 @@ app.config(function($routeProvider) {
 	}).when('/installationGuide', {
 		templateUrl : 'views/installationGuide.html',
 		controller : 'installationGuideCtrl'
+	}).when('/myAccount', {
+		templateUrl : 'views/updateUserProfile.html',
+		controller : 'MyAccountCtrl'
+	}).when('/changePassword', {
+		templateUrl : 'views/changePassword.html',
+		controller : 'ChangePasswordCtrl'
 	}).otherwise({
 		redirectTo : '/login'
 	});
