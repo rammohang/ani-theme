@@ -1,17 +1,18 @@
-app.controller('ChangePasswordCtrl', function($scope, $http, $location, $rootScope, $localStorage) {
+app.controller('ChangePasswordCtrl', function($scope, $http, $location, $rootScope, $localStorage,$controller) {
+	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
 	
 	var oldPassword = $rootScope.userDetails.password;
 	var email = $rootScope.userDetails.userName;
 	
 	$scope.changePassword = function() {
 		if($scope.oldPassword != oldPassword) {
-			alert("Your old password do not match.");
+			$scope.addAlert({ type: 'danger', msg: 'Your old password do not match.' });
 			return;
 		}
 		var newPassword = $scope.newPassword;
 		var confirmPassword = $scope.confirmPassword;
 		if(newPassword != confirmPassword) {
-			alert("new password and confirmPassword do not match!!");
+			$scope.addAlert({ type: 'danger', msg: 'new password and confirmPassword do not match!!' });
 			return;
 		}
 		
@@ -22,7 +23,7 @@ app.controller('ChangePasswordCtrl', function($scope, $http, $location, $rootSco
 		var responsePromise = $http.post($rootScope.baseUrl + "user/changePassword", userDetails, {});
 		responsePromise.success(function(data, status, headers, config) {
 			if (data && data.id) {
-				alert("password changed successfully");
+				$scope.addAlert({ type: 'success', msg: 'password changed successfully!!' });
 				$localStorage.userDetails.password = data.password;
 				$rootScope.userDetails.password = data.password;
 				
@@ -30,11 +31,11 @@ app.controller('ChangePasswordCtrl', function($scope, $http, $location, $rootSco
 				$scope.newPassword = "";
 				$scope.confirmPassword = "";
 			} else {
-				alert("Failed to update");
+				$scope.addAlert({ type: 'danger', msg: 'Failed to update.' });
 			}
 		});
 		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
+			$scope.addAlert({ type: 'danger', msg: 'Failed to update.' });
 		});
 	}
 	

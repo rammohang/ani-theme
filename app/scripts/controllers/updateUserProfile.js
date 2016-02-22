@@ -1,4 +1,5 @@
-app.controller('MyAccountCtrl', function($scope, $http, $location, $rootScope, $localStorage) {
+app.controller('MyAccountCtrl', function($scope, $http, $location, $rootScope, $localStorage,$controller) {
+	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
 	
 	var userName = $rootScope.userDetails.displayName;
 	var email = $rootScope.userDetails.userName;
@@ -12,13 +13,12 @@ app.controller('MyAccountCtrl', function($scope, $http, $location, $rootScope, $
 			$scope.fullName = data.userName;
 			$scope.organizationInfo = data.organizations.join();
 		} else {
-			alert("Error loading user details!");
+			$scope.addAlert({ type: 'danger', msg: 'Error loading user details!! try again.' });
 		}
 	});
 	responsePromise.error(function(data, status, headers, config) {
-		alert("Submitting form failed!");
+		$scope.addAlert({ type: 'danger', msg: 'Error loading user details!! try again.' });
 	});
-	
 	
 	$scope.updateProfile = function() {
 		var organizationList = $scope.organizationInfo.split(',');
@@ -34,7 +34,7 @@ app.controller('MyAccountCtrl', function($scope, $http, $location, $rootScope, $
 		var responsePromise = $http.post($rootScope.baseUrl + "user/updateProfile", userDetails, {});
 		responsePromise.success(function(data, status, headers, config) {
 			if (data && data.id) {
-				alert("updated Successfully");
+				$scope.addAlert({ type: 'success', msg: 'Updated Successfully!!.' });
 				$localStorage.userDetails.displayName = data.userName;
 				$localStorage.userDetails.organizations = data.organizations;
 				$rootScope.userDetails.displayName = data.userName;
@@ -43,16 +43,12 @@ app.controller('MyAccountCtrl', function($scope, $http, $location, $rootScope, $
 				$scope.fullName = "";
 				$scope.organizationInfo = "";
 			} else {
-				alert("Failed to update");
+				$scope.addAlert({ type: 'danger', msg: 'Failed to update!! try again.' });
 			}
 		});
 		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
+			$scope.addAlert({ type: 'danger', msg: 'Failed to update!! try again.' });
 		});
-	}
-	
-	$scope.goBack = function() {
-		window.history.back();
 	}
 	
 });

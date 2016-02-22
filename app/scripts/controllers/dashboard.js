@@ -1,10 +1,6 @@
-app.controller('DashboardCtrl', ['$scope', '$location', '$rootScope', '$http', '$localStorage','$sessionStorage','AppService','$q','$uibModal', '$log'
-                                 ,function($scope, $location, $rootScope, $http, $localStorage,$sessionStorage,AppService,$q,$uibModal, $log) {
-
-	/*if(!$sessionStorage.respondedForReleaseManagement) {
-		// modal window
-		$scope.showModal = true;
-	}*/
+app.controller('DashboardCtrl', function($scope, $location, $rootScope, $http, $localStorage,$sessionStorage,$uibModal, $log,$controller) {
+	
+	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
 	$scope.userDetails = $localStorage.userDetails;
 	
 	// tree view js
@@ -168,4 +164,4 @@ $scope.releaseManagement = function() {
 
 
 
-}]);
+});

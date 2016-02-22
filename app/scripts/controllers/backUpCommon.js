@@ -1,4 +1,5 @@
-app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http, $localStorage,AppService,$q,$uibModal, $log) {
+app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http, $localStorage,$uibModal, $log,$controller) {
+	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
 	
 	$scope.subsystem = '';
 	$scope.subsystemid = '';

@@ -1,5 +1,6 @@
-app.controller('LoginCtrl', function($scope, $http, $location, $rootScope,
-		$localStorage) {
+app.controller('LoginCtrl', function($scope, $http, $location, $rootScope,$localStorage,$controller) {
+	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
+	
 	var userDetails = $localStorage.userDetails;
 	$rootScope.userDetails = userDetails;
 	if (userDetails && userDetails.userLoggedIn == true) {
@@ -25,11 +26,11 @@ app.controller('LoginCtrl', function($scope, $http, $location, $rootScope,
 				$localStorage.userDetails = userDetails;
 				$location.path('/dashboard');
 			} else {
-				alert("Invalid username/password. Please try again !!");
+				$scope.addAlert({ type: 'danger', msg: 'Invalid username/password. Please try again !!' });
 			}
 		});
 		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
+			$scope.addAlert({ type: 'danger', msg: 'Invalid username/password. Please try again !!' });
 		});
 
 	}
