@@ -1,4 +1,7 @@
 <div class="row">
+	<uib-alert class="col-sm-offset-3 col-md-6" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+</div>
+<div class="row">
 	<h4 style="text-align: center">{{pageHeading}}</h4>
 	<br>
 </div>

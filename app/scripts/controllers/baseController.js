@@ -6,6 +6,7 @@ app.controller('BaseCtrl', function($scope, $http, $location, $rootScope, $local
 	}
 	
 	$scope.addAlert = function(alert) {
+		$scope.alerts = [];
 		$scope.alerts.push(alert);
 	};
 

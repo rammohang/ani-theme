@@ -18,7 +18,7 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,$rootScope, 
 		 $scope.orgHis = $scope.getProcessedHistory(data.proxyBackUpInfoList);
 	});		
 	responsePromise.error(function(data, status, headers, config) {
-		alert("oops !!! we are facing issues.");
+		$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
 	});
 	
 	$scope.viewDetailedStatus = function(consoleInfo) {
@@ -46,7 +46,7 @@ app.controller('BackUpProxyCtrl', function($scope, $http, $location,$rootScope, 
 			$scope.open(commonConfiguration);
 		});		
 		responsePromise.error(function(data, status, headers, config) {
-			alert("oops !!! we are facing issues.");
+			$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
 		});
 	}
 	

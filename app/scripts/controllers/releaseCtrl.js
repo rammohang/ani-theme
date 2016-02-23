@@ -70,8 +70,7 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 
 		modalInstance.result.then(function(formData) {
 			$scope.formData = formData;
-			$scope.restoreToDifferentEnv(item.fileOid,
-					item.organization);
+			$scope.restoreToDifferentEnv(item.fileOid,item.organization);
 		}, function() {
 			$log.info('Modal dismissed at: ' + new Date());
 		});
@@ -82,7 +81,7 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 		var tempToken = $scope.generateRandomString();
 		var org = $scope.formData.organization;
 		if (org == 'Other') {
-			org = $scope.orgText;
+			org = $scope.formData.orgText;
 		}
 		var commonConfiguration = {
 			"userName" : $rootScope.userDetails.userName,
@@ -92,11 +91,6 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 			"newEnv" : $scope.formData.newEnv,
 			"tempToken" : tempToken
 		};
-		
-		if(!commonConfiguration.newEnv || !commonConfiguration.newOrg) {
-			alert('Please fill all the fields');
-			return;
-		}
 		
 		for(var i = 0; i < $scope.orgHis.length; i++) {
 			if(oid == $scope.orgHis[i].fileOid) {
@@ -120,7 +114,7 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 			}
 		});		
 		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
+			$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
 			for(var i = 0; i < $scope.orgHis.length; i++) {
 				if(oid == $scope.orgHis[i].fileOid) {
 					$scope.orgHis[i].restoreLoader = false;
@@ -130,6 +124,5 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 			}
 		});
 	};
-	
 		
 });

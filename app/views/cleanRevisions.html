@@ -31,6 +31,9 @@
         </div>
         <div class="modal-body ">
 			<div class="row">
+				<uib-alert class="col-sm-offset-1 col-md-10" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+			</div>
+			<div class="row">
 			<div class="col-sm-12 col-md-12" >
 		    	<h4 class="info">Proxies</h4>
 		    	<div class="table-responsive">

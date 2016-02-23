@@ -186,7 +186,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			}
 		});		
 		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
+			$scope.addAlert({ type: 'danger', msg: 'Failed to delete!!' });
 			for(var i = 0; i < $scope.orgHis.length; i++) {
 				if($scope.orgHis[i].fileOid == oid) {
 					$scope.orgHis[i].deleteLoader = false;
@@ -226,7 +226,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			}
 		});		
 		responsePromise.error(function(data, status, headers, config) {
-			alert("Submitting form failed!");
+			$scope.addAlert({ type: 'danger', msg: 'Restore Failed!!' });
 			for(var i = 0; i < $scope.orgHis.length; i++) {
 				if(oid == $scope.orgHis[i].fileOid) {
 					$scope.orgHis[i].restoreLoader = false;
@@ -246,7 +246,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			org = $scope.orgText;
 		}
 		if(!org) {
-			alert("No Organization Selected!!");
+			$scope.addAlert({ type: 'danger', msg: 'No Organization Selected!!' });
 			return false;
 		}
 		
@@ -333,7 +333,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			}
 		});
 		responsePromise.error(function(data, status, headers,config) {
-			alert("Backup failed!");
+			$scope.addAlert({ type: 'danger', msg: 'Backup Failed!!' });
 			for(var i=0;i<$scope.orgHis.length;i++) {
 				if($scope.orgHis[i].tempToken==tempToken) {
 					$scope.orgHis.splice(i, 1);

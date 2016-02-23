@@ -335,30 +335,38 @@ app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, console
 	  };
 });
 
-app.controller('RestoreModalInstanceCtrl', function ($scope, $uibModalInstance,formData) {
+app.controller('RestoreModalInstanceCtrl', function($scope, $uibModalInstance, $controller,formData) {
+	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
+	$scope.formData = formData;
 
-	  $scope.formData = formData;
-	  
-	  $scope.changeOrg = function() {
+	$scope.changeOrg = function() {
 		if ($scope.formData.organization == 'Other') {
 			$scope.formData.orgText = "";
 			$scope.formData.showOther = true;
 		} else {
 			$scope.formData.showOther = false;
 		}
-	  }
+	}
 
-	  $scope.ok = function () {
-	    $uibModalInstance.close($scope.formData);
-	  };
+	$scope.ok = function() {
+		var org = $scope.formData.organization;
+		if (org == 'Other') {
+			org = $scope.formData.orgText;
+		}
+		if (!$scope.formData.newEnv || !org) {
+			$scope.addAlert({type : 'danger',msg : 'Please fill in all the fields!!'});
+		} else {
+			$uibModalInstance.close($scope.formData);
+		}
+	};
 
-	  $scope.cancel = function () {
-	    $uibModalInstance.dismiss('cancel');
-	  };
+	$scope.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
 });
 
-app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInstance, data) {
-	
+app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInstance,$controller, data) {
+	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
 	$scope.data = data;
 	$scope.checkAll = function() {
 		if ($scope.data.selectedAll) {
@@ -389,7 +397,7 @@ app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInst
 		if($scope.data.proxiesList.length > 0) {
 			$uibModalInstance.close($scope.data);
 		} else {
-			alert('Please select Proxies to be cleaned up.');
+			$scope.addAlert({ type: 'danger', msg: 'Please select Proxies to be cleaned up.!!' });
 		}
 	};
 	$scope.cancel = function() {

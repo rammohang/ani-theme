@@ -16,7 +16,7 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,$rootS
 		 $scope.orgHis = $scope.getProcessedHistory(data.resourceBackUpInfoList);
 	});		
 	responsePromise.error(function(data, status, headers, config) {
-		alert("oops !!! we are facing issues.");
+		$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
 	});
 
 	$scope.viewDetailedStatus = function(consoleInfo) {

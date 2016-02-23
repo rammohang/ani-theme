@@ -14,7 +14,10 @@
             <h3 class="modal-title">Restore to New Organization</h3>
         </div>
         <div class="modal-body">
-			<div class="form-group">
+			<div class="row">
+				<uib-alert class="col-sm-offset-1 col-md-10" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+			</div>
+			<div class="row form-group">
     			<p>
 		        	<select ng-model="formData.organization" name="organization" id="organization" ng-change="changeOrg($event)" ng-options="org for org in formData.orgs">
 		          		<option value="">Select Organization</option>

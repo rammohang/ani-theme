@@ -16,7 +16,7 @@ app.controller('BackUpOrgProdCtrl', function($scope, $http, $location,$rootScope
 		 $scope.orgHis = $scope.getProcessedHistory(data.productBackUpInfoList);
 	});		
 	responsePromise.error(function(data, status, headers, config) {
-		alert("oops !!! we are facing issues.");
+		$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
 	});
 	
 	$scope.viewDetailedStatus = function(consoleInfo) {

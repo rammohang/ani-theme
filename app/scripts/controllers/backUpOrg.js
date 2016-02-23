@@ -19,7 +19,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			$scope.backupSchedules = $scope.getProcessedHistory(data);
 		});
 		responsePromise.error(function(data, status, headers, config) {
-			alert("Failed to retrieve!");
+			$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
 		});
 	} 
 	
@@ -37,7 +37,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		 $scope.orgHis = $scope.getProcessedHistory(data.orgBackUpInfoList);
 	});		
 	responsePromise.error(function(data, status, headers, config) {
-		alert("oops !!! we are facing issues.");
+		$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
 	});
 	
 	$scope.viewDetailedStatus = function(consoleInfo) {
@@ -61,7 +61,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	
 	$scope.saveBackupSchedule = function(scheduledOrg,periodicity) {
 		if(!scheduledOrg || !periodicity) {
-			alert('Please select organization and periodicity');
+			$scope.addAlert({ type: 'danger', msg: 'Please select organization and periodicity' });
 			return;
 		}
 		var backupSchedule = {
@@ -70,11 +70,11 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		}
 		var responsePromise = $http.post($rootScope.baseUrl+ "backup/save", backupSchedule, {});
 		responsePromise.success(function(data, status, headers, config) {
-			alert("schedule saved");
+			$scope.addAlert({ type: 'success', msg: 'Saved Successfully!!' });
 		});
 		responsePromise.error(function(data, status, headers,
 				config) {
-			alert("Failed to save!");
+			$scope.addAlert({ type: 'danger', msg: 'Failed to Save!!' });
 		});
 	}
 	
@@ -126,7 +126,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 		responsePromise.error(function(data, status, headers,
 				config) {
-			alert("Failed to delete!");
+			$scope.addAlert({ type: 'danger', msg: 'Failed to delete!!' });
 			for(var i = 0; i < $scope.backupSchedules.length; i++) {
 				if($scope.backupSchedules[i].id == id) {
 					$scope.backupSchedules.splice(i, 1);
@@ -159,7 +159,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			}
 		});
 		responsePromise.error(function(data, status, headers,config) {
-			alert("Failed to update!");
+			$scope.addAlert({ type: 'danger', msg: 'Failed to update!!' });
 			for(var i=0;i<$scope.backupSchedules.length;i++) {
 				if(organization==$scope.backupSchedules[i].organization) {
 					$scope.backupSchedules[i].updateLoader = false;
