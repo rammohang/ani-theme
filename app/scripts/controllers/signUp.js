@@ -27,6 +27,8 @@ app.controller('SignUpCtrl', function($scope, $http, $location, $rootScope, $loc
 				$scope.fullName = '';
 				$scope.email = '';
 				$scope.organizationInfo = '';
+				$scope.password = '';
+				$scope.confirmPassword = '';
 			} else {
 				$scope.addAlert({ type: 'danger', msg: 'registration failed!! Try again..' });
 			}
