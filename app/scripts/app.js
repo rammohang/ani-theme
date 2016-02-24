@@ -345,13 +345,16 @@ app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, console
 app.controller('RestoreModalInstanceCtrl', function($scope, $uibModalInstance, $controller,formData) {
 	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
 	$scope.formData = formData;
-
+	$scope.formData.organization = "";
+	$scope.formData.newEnv = "";
 	$scope.changeOrg = function() {
 		if ($scope.formData.organization == 'Other') {
 			$scope.formData.orgText = "";
-			$scope.formData.showOther = true;
+			//$scope.formData.showOther = true;
+			$scope.formData.envList = [];
 		} else {
 			$scope.formData.showOther = false;
+			$scope.formData.envList = $scope.formData.orgMap[$scope.formData.organization];
 		}
 	}
 

@@ -23,7 +23,10 @@
 		          		<option value="">Select Organization</option>
 		        	</select>
 		        	<input ng-model="formData.orgText" id="other_organization" name="other_organization" type="text" placeholder="Enter Organization Name" ng-show="formData.showOther" />
-		      		<input ng-model="formData.newEnv" id="newEnv" name="new_env" type="text" placeholder="Enter New Environment" />
+					<select ng-model="formData.newEnv" name="new_env" id="newEnv" ng-options="env for env in formData.envList">
+		          		<option value="">Select Environment</option>
+		        	</select>
+					<img ng-if="!formData.orgMap" class="" ng-src="../images/16x16-spinner.gif"/>
 		      	</p>
 			</div>
         </div>

@@ -7,14 +7,32 @@ app.controller('ReleaseManagementCtrl', function($scope, $http, $location,$rootS
 	$scope.pageHeading = 'Restore to New Organization';
 	$scope.animationsEnabled = true;
 	$scope.formData = {};
+	$scope.formData.environments = [];
 	$scope.formData.orgs = [];
 	$scope.formData.showOther = false;
+	$scope.formData.orgMap = undefined;
 	
 	var orgs = $rootScope.userDetails.organizations || [];
 	for (var i = 0; i < orgs.length; i++) {
 		$scope.formData.orgs.push(orgs[i]);
 	}
 	$scope.formData.orgs.push('Other');
+	
+	
+	var commonConfiguration = {
+		"userName" : $rootScope.userDetails.userName,
+		"password" : $rootScope.userDetails.password,
+		"organizations" : orgs
+	};
+    var responsePromise = $http.post($rootScope.baseUrl
+			+ "apigee/environmentslist/organizations", commonConfiguration, {});
+	responsePromise.success(function(data, status, headers, config) {
+		 console.dir(data);
+		 $scope.formData.orgMap = data;
+	});		
+	responsePromise.error(function(data, status, headers, config) {
+		$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
+	});
 	
 	//https://angular-ui.github.io/bootstrap/#/modal
 	$scope.confirmAction = function(item, action) {
