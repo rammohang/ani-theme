@@ -16,7 +16,7 @@ app.run(function($rootScope, $localStorage, $location,$timeout,$sessionStorage) 
 	$rootScope.noLoginRoutes = ['/login','/signUp'];
 	$rootScope.routeMap = {
 			"dashboard":['/dashboard'],
-			"organization":['/backUpOrg'],
+			"organization":['/backUpOrg','/backUpEnv'],
 			"apiproxies":['/backupProxy','/cleanRevisions'],
 			"publish":['/backUpProducts','/backUpDevelopers','/backUpApp','/backUpResource'],
 			"monetize":['/monetizeApis'],
@@ -83,6 +83,10 @@ app.run(function($rootScope, $localStorage, $location,$timeout,$sessionStorage) 
 		"proxyrevision" : {
 			"id" : "proxyrevision",
 			"name" : "Proxy Revision"
+		},
+		"environments" : {
+			"id" : "environments",
+			"name" : "Environments"
 		}
 	};
 	
@@ -98,6 +102,9 @@ app.config(function($routeProvider) {
 	}).when('/backUpOrg', {
 		templateUrl : 'views/backUpOrg.html',
 		controller : 'BackUpOrgCtrl'
+	}).when('/backUpEnv', {
+		templateUrl : 'views/backUpEnv.html',
+		controller : 'BackUpEnvCtrl'
 	}).when('/cleanOrg', {
 		templateUrl : 'views/cleanOrg.html',
 		controller : 'CleanUpOrgCtrl'
