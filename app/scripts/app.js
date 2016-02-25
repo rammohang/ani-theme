@@ -7,7 +7,7 @@
  *
  * Main module of the application.
  */
-var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage','ui.bootstrap' ]);
+var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage','ui.bootstrap','ui.multiselect' ]);
 
 app.run(function($rootScope, $localStorage, $location,$timeout,$sessionStorage) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
@@ -354,7 +354,7 @@ app.controller('RestoreModalInstanceCtrl', function($scope, $uibModalInstance, $
 			$scope.formData.envList = [];
 		} else {
 			$scope.formData.showOther = false;
-			$scope.formData.envList = $scope.formData.orgMap[$scope.formData.organization];
+			$scope.formData.envList = $scope.formData.orgMap[$scope.formData.organization] || [];
 		}
 	}
 
@@ -373,6 +373,7 @@ app.controller('RestoreModalInstanceCtrl', function($scope, $uibModalInstance, $
 	$scope.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
 });
 
 app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInstance,$controller, data) {

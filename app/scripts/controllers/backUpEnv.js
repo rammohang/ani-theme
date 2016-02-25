@@ -6,7 +6,24 @@ app.controller('BackUpEnvCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.showOrgBackupSchedules = false;
 	$scope.pageHeading = 'Backup Environment';
 	$scope.animationsEnabled = true;
+	$scope.orgMap = undefined;
+	$scope.envList = [];
 	$scope.consoleInfo = {};
+	
+	var orgs = $rootScope.userDetails.organizations || [];
+	var userInput = {
+		"userName" : $rootScope.userDetails.userName,
+		"password" : $rootScope.userDetails.password,
+		"organizations" : orgs
+	};
+    var responsePromise = $http.post($rootScope.baseUrl
+			+ "apigee/environmentslist/organizations", userInput, {});
+	responsePromise.success(function(data, status, headers, config) {
+		 $scope.orgMap = data;
+	});		
+	responsePromise.error(function(data, status, headers, config) {
+		$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
+	});
 	
 	var commonConfiguration = {
 		"userName" : $rootScope.userDetails.userName,
@@ -20,6 +37,46 @@ app.controller('BackUpEnvCtrl',function($scope, $location, $rootScope, $http, $l
 	responsePromise.error(function(data, status, headers, config) {
 		$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
 	});
+	
+	$scope.changeOrg = function() {
+		$scope.envList = [];
+		$scope.environments = [];
+		if ($scope.organization == 'Other') {
+			$scope.orgText = "";
+			//$scope.showOther = true;
+		} else {
+			$scope.showOther = false;
+			$scope.envList = $scope.orgMap[$scope.organization] || [];
+		}
+	}
+	
+
+	$scope.backUp = function() {
+		if(!$scope.organization || !$scope.environments.length) {
+			$scope.addAlert({ type: 'danger', msg: 'Please select Organization and Environments.' });
+			return;
+		}
+		console.dir($scope.environments);
+		$scope.cleanupLoader = true;
+		var reqObj = {
+			"userName" : $rootScope.userDetails.userName,
+			"password" : $rootScope.userDetails.password,
+			"organization" : $scope.organization,
+			"environments" : $scope.environments
+		};
+		
+		var responsePromise = $http.post($rootScope.baseUrl
+				+ "apigee/environment/resources", reqObj, {});
+		responsePromise.success(function(data, status, headers, config) {
+			 console.dir(data);
+			 $scope.cleanupLoader = false;
+			 $scope.open();
+		});		
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
+		});
+		
+	}
 	
 	$scope.viewDetailedStatus = function(consoleInfo) {
 		// 1. Proxies Info to be displayed
