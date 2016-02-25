@@ -415,3 +415,49 @@ app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInst
 		$uibModalInstance.dismiss('cancel');
 	};
 });
+
+app.controller('CleanupResourcesModalInstanceCtrl', function($scope, $uibModalInstance,$controller, data) {
+	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
+
+	$scope.data = data;
+	
+	
+	$scope.ok = function() {
+		
+		var envs = [];
+		
+		$('.environment').each(function(i,e) {
+			var env = {
+					"environment":$(e).val()
+			};
+			var caches = [];
+			$(e).parent().find('.cache:checked').each(function(ci,ce) {
+				caches.push($(ce).val());
+			});
+			env.caches = caches;
+			var keyValueMaps = [];
+			$(e).parent().find('.keyValueMap:checked').each(function(ki,ke) {
+				keyValueMaps.push($(ke).val());
+			});
+			env.keyValueMaps = keyValueMaps;
+			var targetServers = [];
+			$(e).parent().find('.targetServer:checked').each(function(ti,te) {
+				targetServers.push($(te).val());
+			});
+			env.targetServers = targetServers;
+			var virtualHosts = [];
+			$(e).parent().find('.virtualHost:checked').each(function(vi,ve) {
+				virtualHosts.push($(ve).val());
+			});
+			env.virtualHosts = virtualHosts;
+			envs.push(env);
+		});
+		
+		$scope.data.formData = envs;
+		
+		$uibModalInstance.close($scope.data);
+	};
+	$scope.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+});

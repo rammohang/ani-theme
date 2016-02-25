@@ -1,7 +1,35 @@
 <div data-ng-include="'views/navbar.html'"></div>
-<div>
-	<div data-ng-include="'views/backupCommon.html'"></div>
+
+<div class="row">
+	<uib-alert class="col-sm-offset-3 col-md-6" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
 </div>
+<div class="row">
+	<h4 style="text-align: center">{{pageHeading}}</h4>
+	<br>
+</div>
+<div class="row">
+	<div class="col-sm-offset-2 col-md-5">
+		<div class="form-group">
+ 			<div>
+				<label for="proxyName">Select Organization and Environments</label>
+			</div>
+        	<select ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs" ng-disabled="!orgMap">
+          		<option value="">Select Organization</option>
+        	</select>
+        	<input ng-model="orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="showOther" />
+        	<multiselect ng-model="environments" options="env for env in envList" data-multiple="true" > </multiselect>
+			<img ng-if="!orgMap" class="" ng-src="../images/16x16-spinner.gif"/>
+		</div>
+		<div class="form-group">
+			<div class="row acmAction">
+				<div class="col-sm-2 col-md-2 backupBtn" ng-if="showBackupBtn"><button class="btn btn-primary" ng-click="backUp('backup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Backup</button><img ng-if="backupupLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+				<div class="col-sm-2 col-md-2 cleanupBtn" ng-if="showCleanupBtn" ><button class="btn btn-danger" ng-click="backUp('cleanup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cleanup</button><img ng-if="cleanupLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div data-ng-include="'views/backupCommonTable.html'"></div>
 <mymodal class="subsystemModal" title="Backup Status" visible="showModal">
    <div class="statusContainer">
 		<div class="row">
@@ -33,3 +61,111 @@
 		</div>
 	</div>
  </mymodal>
+ 
+ <div>
+ 
+ 	<script type="text/ng-template" id="group-template.html">
+    	<div class="panel {{panelClass || 'panel-default'}}">
+      		<div class="panel-heading">
+        	<h4 class="panel-title" style="color:#333333">
+          	<a href tabindex="0" class="accordion-toggle" ng-click="toggleOpen()" uib-accordion-transclude="heading"><span
+            ng-class="{'text-muted': isDisabled}">{{heading}}</span></a>
+        	</h4>
+      		</div>
+      		<div class="panel-collapse collapse" uib-collapse="!isOpen">
+        		<div class="panel-body" style="text-align: right" ng-transclude></div>
+      		</div>
+    	</div>
+  	</script>
+
+    <script type="text/ng-template" id="cleanupResourcesModal.html">
+        <div class="statusModal modal-header">
+			<button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="cancel()">&times;</button>
+            <h3 class="modal-title">Resources</h3>
+        </div>
+        <div class="modal-body ">
+			<div class="row">
+				<uib-alert class="col-sm-offset-1 col-md-10" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+			</div>
+
+			<uib-accordion close-others="false">
+				<uib-accordion-group panel-class="panel-primary" heading="{{env.environment}}" ng-repeat="env in data">
+      				<input class="environment" type="hidden" ng-value="env.environment" />
+				  	<table class="table table-bordered text-align-left">
+				    	<thead>
+				    		<tr>
+				    			<td class="danger">Caches</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="cache in env.caches">
+								<td>
+								<label>
+									<input class="cache" type="checkbox" ng-value="cache"/>
+									 {{cache}}
+								</label>
+								</td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				  	<table class="table table-bordered text-align-left">
+				    	<thead>
+				    		<tr>
+				    			<td class="info">Key Value Maps</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="keyValueMap in env.keyValueMaps">
+								<td>
+								<label>
+									<input class="keyValueMap" type="checkbox" ng-value="keyValueMap"/>
+									 {{keyValueMap}}
+								</label>
+								</td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				  	<table class="table table-bordered text-align-left">
+				    	<thead>
+				    		<tr>
+				    			<td class="warning">Target Servers</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="targetServer in env.targetServers">
+								<td>
+								<label>
+									<input class="targetServer" type="checkbox" ng-value="targetServer"/>
+									 {{targetServer}}
+								</label>
+								</td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+				  	<table class="table table-bordered text-align-left">
+				    	<thead>
+				    		<tr>
+				    			<td class="success">Virtual Hosts</td>
+				    		</tr>
+				    	</thead>
+				    	<tbody>
+				    		<tr ng-repeat="virtualHost in env.virtualHosts">
+								<td>
+								<label>
+									<input class="virtualHost" type="checkbox" ng-value="virtualHost"/>
+									 {{virtualHost}}
+								</label>
+								</td>
+				    		</tr>
+				    	</tbody>
+				  </table>
+    			</uib-accordion-group>
+			</uib-accordion>
+
+        </div>
+        <div class="modal-footer">
+			<button class="btn btn-primary" type="button" ng-click="ok()"><span class="glyphicon glyphicon-ok" aria-hidden="true"> Cleanup</button>
+            <button class="btn btn-warning" type="button" ng-click="cancel()"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+        </div>
+    </script>
+</div>

@@ -263,8 +263,14 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			switch($scope.subsystemid) {
 			case $rootScope.apigeeSubsystems.apiproxies.id:
 				commonConfiguration.proxiesList = data.proxiesList;
+				break;
 			case $rootScope.apigeeSubsystems.proxyrevision.id:
 				commonConfiguration.proxiesList = data.proxiesList;
+				break;
+			case $rootScope.apigeeSubsystems.resources.id:
+				commonConfiguration.organization = data.organization;
+				commonConfiguration.environments = data.formData;
+				break;
 			}
 			console.dir(commonConfiguration);
 		} else {
@@ -275,6 +281,9 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 					return;
 				case $rootScope.apigeeSubsystems.proxyrevision.id:
 					$scope.showCleanupRevisions(commonConfiguration);
+					return;
+				case $rootScope.apigeeSubsystems.resources.id:
+					$scope.showCleanupResources(commonConfiguration);
 					return;
 				}
 			}
@@ -291,9 +300,31 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 		$scope.orgHis.unshift(dbmodel);
 		
 		$scope.showStatus = true; 
-		var url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
-		if($scope.subsystemid == $rootScope.apigeeSubsystems.proxyrevision.id) {
+		var url = '';
+		
+		switch($scope.subsystemid) {
+		case $rootScope.apigeeSubsystems.org.id:
+			url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
+			break;
+		case $rootScope.apigeeSubsystems.apiproxies.id:
+			url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
+			break;
+		case $rootScope.apigeeSubsystems.apps.id:
+			url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
+			break;
+		case $rootScope.apigeeSubsystems.resources.id:
+			commonConfiguration.selectedEnvironments = $scope.environments;
+			url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
+			break;
+		case $rootScope.apigeeSubsystems.apiproducts.id:
+			url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
+			break;
+		case $rootScope.apigeeSubsystems.appdevelopers.id:
+			url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
+			break;
+		case $rootScope.apigeeSubsystems.proxyrevision.id:
 			url = $rootScope.baseUrl + "apigee/cleanrevisions";
+			break;
 		}
 		
 		//1.call for backup proxies
