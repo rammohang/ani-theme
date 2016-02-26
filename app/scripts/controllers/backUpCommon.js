@@ -246,7 +246,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			org = $scope.orgText;
 		}
 		if(!org) {
-			$scope.addAlert({ type: 'danger', msg: 'No Organization Selected!!' });
+			$scope.addAlert({ type: 'danger', msg: 'Please Select Organization.' });
 			return false;
 		}
 		
@@ -268,7 +268,6 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 				commonConfiguration.proxiesList = data.proxiesList;
 				break;
 			case $rootScope.apigeeSubsystems.resources.id:
-				commonConfiguration.organization = data.organization;
 				commonConfiguration.environments = data.formData;
 				break;
 			}
@@ -289,17 +288,6 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			}
 		}
 		
-		var dbmodel = {
-				"organization" : org,
-				"tempToken":tempToken,
-				"disableButtons": true,
-				"status":"In Progress",
-				"restoreLoader" : false,
-				"deleteLoader": false
-		}
-		$scope.orgHis.unshift(dbmodel);
-		
-		$scope.showStatus = true; 
 		var url = '';
 		
 		switch($scope.subsystemid) {
@@ -313,6 +301,10 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
 			break;
 		case $rootScope.apigeeSubsystems.resources.id:
+			if(!$scope.environments.length) {
+				$scope.addAlert({ type: 'danger', msg: 'Please select environments' });
+				return;
+			}
 			commonConfiguration.selectedEnvironments = $scope.environments;
 			url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
 			break;
@@ -326,6 +318,18 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			url = $rootScope.baseUrl + "apigee/cleanrevisions";
 			break;
 		}
+		
+		var dbmodel = {
+				"organization" : org,
+				"tempToken":tempToken,
+				"disableButtons": true,
+				"status":"In Progress",
+				"restoreLoader" : false,
+				"deleteLoader": false
+		}
+		$scope.orgHis.unshift(dbmodel);
+		
+		$scope.showStatus = true; 
 		
 		//1.call for backup proxies
 		var responsePromise = $http.post(url, commonConfiguration, {});
