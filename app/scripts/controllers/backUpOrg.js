@@ -137,7 +137,7 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 		});
 	}
 	
-	$scope.updateScheduleOrg = function(organization,periodicity) {
+	$scope.updateScheduleOrg = function(organization,periodicity,id) {
 		for(var i=0;i<$scope.backupSchedules.length;i++) {
 			if(organization==$scope.backupSchedules[i].organization) {
 				$scope.backupSchedules[i].updateLoader = true;
@@ -145,10 +145,11 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 			}
 		}
 		var scheduledBackup = {
+				"id": id,
 				"organization": organization,
 				"periodicity":periodicity
 		}
-		var responsePromise = $http.post($rootScope.baseUrl+ "backup/save", scheduledBackup, {});
+		var responsePromise = $http.post($rootScope.baseUrl+ "backup/update", scheduledBackup, {});
 		responsePromise.success(function(data, status, headers, config) {
 			for(var i=0;i<$scope.backupSchedules.length;i++) {
 				if(organization==$scope.backupSchedules[i].organization) {
