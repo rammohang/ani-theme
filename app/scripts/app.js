@@ -7,7 +7,7 @@
  *
  * Main module of the application.
  */
-var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage','ui.bootstrap' ]);
+var app = angular.module('yapp', [ 'ngRoute', 'ngAnimate', 'ngStorage','ui.bootstrap','ui.multiselect' ]);
 
 app.run(function($rootScope, $localStorage, $location,$timeout,$sessionStorage) {
 	$rootScope.baseUrl = "http://localhost:8084/apigee_rest/services/";
@@ -16,7 +16,7 @@ app.run(function($rootScope, $localStorage, $location,$timeout,$sessionStorage) 
 	$rootScope.noLoginRoutes = ['/login','/signUp'];
 	$rootScope.routeMap = {
 			"dashboard":['/dashboard'],
-			"organization":['/backUpOrg'],
+			"organization":['/backUpOrg','/backUpEnv'],
 			"apiproxies":['/backupProxy','/cleanRevisions'],
 			"publish":['/backUpProducts','/backUpDevelopers','/backUpApp','/backUpResource'],
 			"monetize":['/monetizeApis'],
@@ -83,6 +83,10 @@ app.run(function($rootScope, $localStorage, $location,$timeout,$sessionStorage) 
 		"proxyrevision" : {
 			"id" : "proxyrevision",
 			"name" : "Proxy Revision"
+		},
+		"environments" : {
+			"id" : "environments",
+			"name" : "Environments"
 		}
 	};
 	
@@ -98,6 +102,9 @@ app.config(function($routeProvider) {
 	}).when('/backUpOrg', {
 		templateUrl : 'views/backUpOrg.html',
 		controller : 'BackUpOrgCtrl'
+	}).when('/backUpEnv', {
+		templateUrl : 'views/backUpEnv.html',
+		controller : 'BackUpEnvCtrl'
 	}).when('/cleanOrg', {
 		templateUrl : 'views/cleanOrg.html',
 		controller : 'CleanUpOrgCtrl'
@@ -338,13 +345,16 @@ app.controller('ModalInstanceCtrl', function ($scope, $uibModalInstance, console
 app.controller('RestoreModalInstanceCtrl', function($scope, $uibModalInstance, $controller,formData) {
 	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
 	$scope.formData = formData;
-
+	$scope.formData.organization = "";
+	$scope.formData.newEnv = "";
 	$scope.changeOrg = function() {
 		if ($scope.formData.organization == 'Other') {
 			$scope.formData.orgText = "";
-			$scope.formData.showOther = true;
+			//$scope.formData.showOther = true;
+			$scope.formData.envList = [];
 		} else {
 			$scope.formData.showOther = false;
+			$scope.formData.envList = $scope.formData.orgMap[$scope.formData.organization] || [];
 		}
 	}
 
@@ -363,6 +373,7 @@ app.controller('RestoreModalInstanceCtrl', function($scope, $uibModalInstance, $
 	$scope.cancel = function() {
 		$uibModalInstance.dismiss('cancel');
 	};
+	
 });
 
 app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInstance,$controller, data) {
@@ -399,6 +410,52 @@ app.controller('CleanupProxiesModalInstanceCtrl', function($scope, $uibModalInst
 		} else {
 			$scope.addAlert({ type: 'danger', msg: 'Please select Proxies to be cleaned up.!!' });
 		}
+	};
+	$scope.cancel = function() {
+		$uibModalInstance.dismiss('cancel');
+	};
+});
+
+app.controller('CleanupResourcesModalInstanceCtrl', function($scope, $uibModalInstance,$controller, data) {
+	$controller('BaseCtrl', {$scope: $scope}); //inherits BaseCtrl controller
+
+	$scope.data = data;
+	
+	
+	$scope.ok = function() {
+		
+		var envs = [];
+		
+		$('.environment').each(function(i,e) {
+			var env = {
+					"environment":$(e).val()
+			};
+			var caches = [];
+			$(e).parent().find('.cache:checked').each(function(ci,ce) {
+				caches.push($(ce).val());
+			});
+			env.caches = caches;
+			var keyValueMaps = [];
+			$(e).parent().find('.keyValueMap:checked').each(function(ki,ke) {
+				keyValueMaps.push($(ke).val());
+			});
+			env.keyValueMaps = keyValueMaps;
+			var targetServers = [];
+			$(e).parent().find('.targetServer:checked').each(function(ti,te) {
+				targetServers.push($(te).val());
+			});
+			env.targetServers = targetServers;
+			var virtualHosts = [];
+			$(e).parent().find('.virtualHost:checked').each(function(vi,ve) {
+				virtualHosts.push($(ve).val());
+			});
+			env.virtualHosts = virtualHosts;
+			envs.push(env);
+		});
+		
+		$scope.data.formData = envs;
+		
+		$uibModalInstance.close($scope.data);
 	};
 	$scope.cancel = function() {
 		$uibModalInstance.dismiss('cancel');

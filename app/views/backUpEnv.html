@@ -1,0 +1,40 @@
+<div data-ng-include="'views/navbar.html'"></div>
+
+<div class="row">
+	<uib-alert class="col-sm-offset-3 col-md-6" ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>
+</div>
+<div class="row">
+	<h4 style="text-align: center">{{pageHeading}}</h4>
+	<br>
+</div>
+<div class="row">
+	<div class="col-sm-offset-2 col-md-5">
+		<div class="form-group">
+ 			<div>
+				<label for="proxyName">Select Organization and Environments</label>
+			</div>
+        	<select ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs" ng-disabled="!orgMap">
+          		<option value="">Select Organization</option>
+        	</select>
+        	<input ng-model="orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="showOther" />
+        	<!-- <select multiple="multiple" ng-model="environments" name="environments" id="environments" ng-options="env for env in envList">
+          		<option value="">Select Environment</option>
+        	</select> -->
+        	<multiselect ng-model="environments" options="env for env in envList" data-multiple="true" > </multiselect>
+			<img ng-if="!orgMap" class="" ng-src="../images/16x16-spinner.gif"/>
+		</div>
+		<div class="form-group">
+			<div class="row acmAction">
+				<div class="col-sm-2 col-md-2 backupBtn" ng-if="showBackupBtn"><button class="btn btn-primary" ng-click="backUp('backup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> Backup</button><img ng-if="backupupLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+				<div class="col-sm-2 col-md-2 cleanupBtn" ng-if="showCleanupBtn" ><button class="btn btn-danger" ng-click="backUp('cleanup')" ><span class="glyphicon glyphicon-download" aria-hidden="true"></span> <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cleanup</button><img ng-if="cleanupLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div data-ng-include="'views/backupCommonTable.html'"></div>
+
+<div data-ng-include="'views/backUpOrgConsoleInfo.html'"></div>
+
+
+ 

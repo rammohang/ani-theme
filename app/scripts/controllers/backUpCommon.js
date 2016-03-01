@@ -246,7 +246,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			org = $scope.orgText;
 		}
 		if(!org) {
-			$scope.addAlert({ type: 'danger', msg: 'No Organization Selected!!' });
+			$scope.addAlert({ type: 'danger', msg: 'Please Select Organization.' });
 			return false;
 		}
 		
@@ -263,10 +263,14 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 			switch($scope.subsystemid) {
 			case $rootScope.apigeeSubsystems.apiproxies.id:
 				commonConfiguration.proxiesList = data.proxiesList;
+				break;
 			case $rootScope.apigeeSubsystems.proxyrevision.id:
 				commonConfiguration.proxiesList = data.proxiesList;
+				break;
+			case $rootScope.apigeeSubsystems.resources.id:
+				commonConfiguration.environments = data.formData;
+				break;
 			}
-			console.dir(commonConfiguration);
 		} else {
 			if(action == 'cleanup') {
 				switch($scope.subsystemid) {
@@ -276,8 +280,33 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 				case $rootScope.apigeeSubsystems.proxyrevision.id:
 					$scope.showCleanupRevisions(commonConfiguration);
 					return;
+				case $rootScope.apigeeSubsystems.resources.id:
+					$scope.showCleanupResources(commonConfiguration);
+					return;
 				}
 			}
+		}
+		
+		var url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
+		
+		switch($scope.subsystemid) {
+		case $rootScope.apigeeSubsystems.resources.id:
+		case $rootScope.apigeeSubsystems.environments.id:
+			if(!$scope.environments.length) {
+				$scope.addAlert({ type: 'danger', msg: 'Please select environments' });
+				return;
+			}
+			commonConfiguration.selectedEnvironments = $scope.environments;
+			break;
+		case $rootScope.apigeeSubsystems.org.id:
+		case $rootScope.apigeeSubsystems.apiproxies.id:
+		case $rootScope.apigeeSubsystems.apps.id:
+		case $rootScope.apigeeSubsystems.apiproducts.id:
+		case $rootScope.apigeeSubsystems.appdevelopers.id:
+			break;
+		case $rootScope.apigeeSubsystems.proxyrevision.id:
+			url = $rootScope.baseUrl + "apigee/cleanrevisions";
+			break;
 		}
 		
 		var dbmodel = {
@@ -289,12 +318,6 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 				"deleteLoader": false
 		}
 		$scope.orgHis.unshift(dbmodel);
-		
-		$scope.showStatus = true; 
-		var url = $rootScope.baseUrl+ "apigee/backupsubsystems?sys="+ $scope.subsystemid +"&saveandzip=true&action="+action;
-		if($scope.subsystemid == $rootScope.apigeeSubsystems.proxyrevision.id) {
-			url = $rootScope.baseUrl + "apigee/cleanrevisions";
-		}
 		
 		//1.call for backup proxies
 		var responsePromise = $http.post(url, commonConfiguration, {});
@@ -321,6 +344,10 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 				break;
 			case $rootScope.apigeeSubsystems.proxyrevision.id:
 				consoleInfo = data.proxyRevisionBackUpInfo;
+				break;
+			case $rootScope.apigeeSubsystems.environments.id:
+				// TODO
+				consoleInfo = data.environmentsBackUpInfo;
 				break;
 			}
 			
