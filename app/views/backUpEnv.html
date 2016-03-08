@@ -13,7 +13,7 @@
  			<div>
 				<label for="proxyName">Select Organization and Environments</label>
 			</div>
-        	<select ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs" ng-disabled="!orgMap">
+        	<select  ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs" ng-disabled="!orgMap">
           		<option value="">Select Organization</option>
         	</select>
         	<input ng-model="orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="showOther" />
@@ -35,6 +35,7 @@
 <div data-ng-include="'views/backupCommonTable.html'"></div>
 
 <div data-ng-include="'views/backUpOrgConsoleInfo.html'"></div>
+
 
 
  

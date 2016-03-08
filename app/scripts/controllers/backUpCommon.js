@@ -347,7 +347,8 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 				break;
 			case $rootScope.apigeeSubsystems.environments.id:
 				// TODO
-				consoleInfo = data.environmentsBackUpInfo;
+				consoleInfo = data.environmentBackUpInfo;
+				console.log(consoleInfo+"--------> after backup");
 				break;
 			}
 			

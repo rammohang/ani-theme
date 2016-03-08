@@ -32,7 +32,8 @@ app.controller('BackUpEnvCtrl',function($scope, $location, $rootScope, $http, $l
     var responsePromise = $http.post($rootScope.baseUrl
 			+ "apigee/getorgbackuphistory1?sys="+$scope.subsystemid, commonConfiguration, {});
 	responsePromise.success(function(data, status, headers, config) {
-		 $scope.orgHis = $scope.getProcessedHistory(data.orgBackUpInfoList);
+		 $scope.orgHis = $scope.getProcessedHistory(data.environmentBackUpInfoList);
+		 console.log($scope.orgHis);
 	});		
 	responsePromise.error(function(data, status, headers, config) {
 		$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
@@ -51,8 +52,32 @@ app.controller('BackUpEnvCtrl',function($scope, $location, $rootScope, $http, $l
 	}
 	
 	$scope.viewDetailedStatus = function(consoleInfo) {
-		// TODO
+		console.log(consoleInfo);
+		// 1. Proxies Info to be displayed
+		var proxies = JSON.parse(consoleInfo.envProxyInfo);
+		var formattedArray = $scope.getProcessedProxies(proxies);
+		$scope.consoleInfo.proxyInfo = formattedArray;
+		// 2.Resource Info to be displayed
+		var resources = JSON.parse(consoleInfo.resourceInfo);
+		var resourceArray = $scope.getProcessedResources(resources);
+		$scope.consoleInfo.resourceInfo = resourceArray;
+		
+		$scope.open('lg');
 	}
+	
+	$scope.open = function(size) {
+		var modalInstance = $uibModal.open({
+			animation : $scope.animationsEnabled,
+			templateUrl : 'myModalContent.html',
+			controller : 'ModalInstanceCtrl',
+			size : size,
+			resolve : {
+				consoleInfo : function() {
+					return $scope.consoleInfo;
+				}
+			}
+		});
+	};
 	
 });
 
