@@ -13,9 +13,9 @@
  			<div>
 				<label for="proxyName">Select Organization and Environments</label>
 			</div>
-        	<select  ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" ng-options="org for org in orgs" ng-disabled="!orgMap">
-          		<option value="">Select Organization</option>
-        	</select>
+        	<multiselect  ng-model="organization" name="organization" id="organization" ng-change="changeOrg()" options="org for org in orgs" ng-disabled="!orgMap" data-multiple="false">
+          		
+        	</multiselect>
         	<input ng-model="orgText" id="other_organization" name="other_organization" type="text" placeholder="type organization name" ng-show="showOther" />
         	<!-- <select multiple="multiple" ng-model="environments" name="environments" id="environments" ng-options="env for env in envList">
           		<option value="">Select Environment</option>
