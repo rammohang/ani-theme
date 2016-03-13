@@ -61,7 +61,13 @@ app.controller('BackUpEnvCtrl',function($scope, $location, $rootScope, $http, $l
 		var resources = JSON.parse(consoleInfo.resourceInfo);
 		var resourceArray = $scope.getProcessedResources(resources);
 		$scope.consoleInfo.resourceInfo = resourceArray;
-		
+		//3. APPS info to be displayed
+		$scope.consoleInfo.appsInfo = JSON.parse(consoleInfo.appsInfo);
+		//4. PRODUCTS info to be displayed
+		var productData = JSON.parse(consoleInfo.productsInfo);
+		$scope.consoleInfo.productsInfo = productData.PRODUCTS;
+		//5. DEV info to be displayed
+		$scope.consoleInfo.developersInfo = JSON.parse(consoleInfo.developersInfo);
 		$scope.open('lg');
 	}
 	
