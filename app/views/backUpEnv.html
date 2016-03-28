@@ -30,7 +30,60 @@
 			</div>
 		</div>
 	</div>
+	<div class="col-md-4 scheduleBackupContainer" ng-if="showOrgBackupSchedules">
+		<div class="form-group">
+   			<label for="proxyName">Schedule Environment Backup</label>
+   			<p>
+	        	<select ng-model="selOrg" name="selOrg" id="selOrg" ng-change="changeScheduleOrganization(selOrg)" ng-options="org for org in orgs">
+	          		<option value="">Organization</option>
+	        	</select>
+	        	<select ng-model="scheduledEnv" name="scheduledEnv" id="scheduledEnv" ng-options="envt for envt in scheduleEnvList">
+	          		<option value="">Environment</option>
+	        	</select>
+	        	<select ng-model="periodicity" name="periodicity" id="periodicity" ng-options="periodicity for periodicity in periodicities">
+	          		<option value="">Periodicity</option>
+	        	</select>
+	      	</p>
+		</div>
+		<div class="form-group">
+			<button class="btn btn-warning" ng-click="seeAllSchedules()" ><span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span> See All Schedules</button>
+			<button class="btn btn-primary" ng-click="saveBackupSchedule(selOrg,scheduledEnv,periodicity)" ><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Schedule Backup</button>
+		</div>
+	</div>
 </div>
+
+<mymodal class="schedulesModal" title="Scheduled Backups" visible="showBackups">
+ 	<table class="table table-bordered">
+    	<thead>
+    		<tr>
+    			<td class="info">Organization</td>
+    			<td class="info">Environment</td>
+    			<td class="info">Periodicty</td>
+    			<td class="info">Actions</td>
+    		</tr>
+    	</thead>
+    	<tbody>
+    		<tr ng-repeat="backupSchedule in backupSchedules">
+    			<td>{{backupSchedule.organization}}</td>
+    			<td>{{backupSchedule.environment}}</td>
+    			<td>
+    				<select name="{{backupSchedule.organization}}" ng-model="backupSchedule.periodicity">
+		          		<option value="">Select Periodicity</option>
+		          		<option value="Weekly">Weekly</option>
+		          		<option value="Daily">Daily</option>
+		          		<option value="Hourly">Hourly</option>
+		        	</select>
+    			</td>
+    			<td>
+    				<div class="row acmPopupAction">
+						<div class="col-sm-6 col-md-6 deleteBtn"><button class="btn btn-danger btn-xs" ng-click="deleteScheduleEnv(backupSchedule.id)" ><span class="glyphicon glyphicon-trash" aria-hidden="true"></span> Delete </button><img ng-if="backupSchedule.deleteLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+	    				<div class="col-sm-6 col-md-6 updateBtn"><button class="btn btn-primary btn-xs" ng-click="updateScheduleEnv(backupSchedule.organization,backupSchedule.environment,backupSchedule.periodicity,backupSchedule.id)" ><span class="glyphicon glyphicon-save" aria-hidden="true"></span> Update</button><img ng-if="backupSchedule.updateLoader" class="spinner16X16" ng-src="../images/16x16-spinner.gif"/></div>
+    				</div>
+   				</td>
+    		</tr>
+    	</tbody>
+  	</table>
+ </mymodal>
 
 <div data-ng-include="'views/backupCommonTable.html'"></div>
 

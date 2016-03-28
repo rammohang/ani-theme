@@ -7,7 +7,6 @@ app.controller('BackUpOrgCtrl',function($scope, $location, $rootScope, $http, $l
 	$scope.pageHeading = 'Backup Organization';
 	$scope.animationsEnabled = true;
 	$scope.backupSchedules = [];
-	$scope.periodicities = ['Weekly','Daily','Hourly'];
 	$scope.consoleInfo = {};
 	
 	$scope.getScheduledBackups = function() {

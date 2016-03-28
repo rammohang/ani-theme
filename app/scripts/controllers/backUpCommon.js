@@ -12,6 +12,7 @@ app.controller('BackUpCommonCtrl',function($scope, $location, $rootScope, $http,
 	$scope.backupupLoader = false;
 	$scope.cleanupLoader = false;
 	
+	$scope.periodicities = ['Weekly','Daily','Hourly'];
 	$scope.proxyInfo = [];
 	$scope.resourceInfo = [];
 	$scope.developersInfo = [];

@@ -3,7 +3,7 @@ app.controller('BackUpEnvCtrl',function($scope, $location, $rootScope, $http, $l
 	$controller('BackUpCommonCtrl', {$scope: $scope}); //inherits BackUpCommonCtrl controller
 	$scope.subsystem = $rootScope.apigeeSubsystems.environments.name;
 	$scope.subsystemid = $rootScope.apigeeSubsystems.environments.id;
-	$scope.showOrgBackupSchedules = false;
+	$scope.showOrgBackupSchedules = true;
 	$scope.pageHeading = 'Backup Environment';
 	$scope.animationsEnabled = true;
 	$scope.orgMap = undefined;
@@ -51,6 +51,14 @@ app.controller('BackUpEnvCtrl',function($scope, $location, $rootScope, $http, $l
 		}
 	}
 	
+	$scope.changeScheduleOrganization = function(selOrg) {
+		$scope.scheduleEnvList = [];
+		if(selOrg) {
+			$scope.scheduleEnvList = $scope.orgMap[selOrg] || [];
+		} 
+		console.log($scope.scheduleEnvList);
+	}
+	
 	$scope.viewDetailedStatus = function(consoleInfo) {
 		console.log(consoleInfo);
 		// 1. Proxies Info to be displayed
@@ -84,6 +92,117 @@ app.controller('BackUpEnvCtrl',function($scope, $location, $rootScope, $http, $l
 			}
 		});
 	};
+	
+	$scope.seeAllSchedules = function() {
+		$scope.showBackups = !$scope.showBackups;
+		$scope.getScheduledBackups();
+	}
+	
+	$scope.getScheduledBackups = function() {
+		var user = {
+				"email": $rootScope.userDetails.userName
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "envbackup/schduledbackups", user, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.backupSchedules = $scope.getProcessedHistory(data);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
+		});
+	} 
+	
+	if($scope.showOrgBackupSchedules == true) {
+		$scope.getScheduledBackups();
+	}
+	
+	$scope.saveBackupSchedule = function(selOrg,scheduledEnv,periodicity) {
+		if(!selOrg || !scheduledEnv || !periodicity) {
+			$scope.addAlert({ type: 'danger', msg: 'Please select Organization, Environment and periodicity' });
+			return;
+		}
+		var reqObj = {
+				"organization" : selOrg,
+				"environment" : scheduledEnv,
+				"periodicity" : periodicity
+		};
+		var responsePromise = $http.post($rootScope.baseUrl+ "envbackup/save", reqObj, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.backupSchedules = $scope.getProcessedHistory(data);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
+		});
+	}
+	
+	$scope.deleteScheduleEnv = function(id) {
+		for(var i = 0; i < $scope.backupSchedules.length; i++) {
+			if($scope.backupSchedules[i].id == id) {
+				$scope.backupSchedules[i].deleteLoader = true;
+				$scope.backupSchedules.splice(i, 1);
+				break;
+			}
+		}
+		var scheduledBackup = {
+				"id": id
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "envbackup/delete", scheduledBackup, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.scheduledOrg = '';
+			$scope.periodicity = '';
+			for(var i = 0; i < $scope.backupSchedules.length; i++) {
+				if($scope.backupSchedules[i].id == id) {
+					$scope.backupSchedules.splice(i, 1);
+					$scope.backupSchedules[i].deleteLoader = false;
+					break;
+				}
+			}
+		});
+		responsePromise.error(function(data, status, headers,
+				config) {
+			$scope.addAlert({ type: 'danger', msg: 'Failed to delete!!' });
+			for(var i = 0; i < $scope.backupSchedules.length; i++) {
+				if($scope.backupSchedules[i].id == id) {
+					$scope.backupSchedules.splice(i, 1);
+					$scope.backupSchedules[i].deleteLoader = false;
+					break;
+				}
+			}
+		});
+	}
+	
+	$scope.updateScheduleEnv = function(organization,environment,periodicity,id) {
+		for(var i=0;i<$scope.backupSchedules.length;i++) {
+			if(organization==$scope.backupSchedules[i].organization) {
+				$scope.backupSchedules[i].updateLoader = true;
+				break;
+			}
+		}
+		var scheduledBackup = {
+				"id": id,
+				"organization": organization,
+				"environment" : environment,
+				"periodicity":periodicity
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "envbackup/update", scheduledBackup, {});
+		responsePromise.success(function(data, status, headers, config) {
+			for(var i=0;i<$scope.backupSchedules.length;i++) {
+				if(organization==$scope.backupSchedules[i].organization) {
+					$scope.backupSchedules[i].periodicity = periodicity;
+					$scope.backupSchedules[i].updateLoader = false;
+					break;
+				}
+			}
+		});
+		responsePromise.error(function(data, status, headers,config) {
+			$scope.addAlert({ type: 'danger', msg: 'Failed to update!!' });
+			for(var i=0;i<$scope.backupSchedules.length;i++) {
+				if(organization==$scope.backupSchedules[i].organization) {
+					$scope.backupSchedules[i].updateLoader = false;
+					break;
+				}
+			}
+		});
+	}
 	
 });
 
