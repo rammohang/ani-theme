@@ -34,13 +34,13 @@
 		<div class="form-group">
    			<label for="proxyName">Schedule Environment Backup</label>
    			<p>
-	        	<select ng-model="selOrg" name="selOrg" id="selOrg" ng-change="changeScheduleOrganization(selOrg)" ng-options="org for org in orgs">
+	        	<select ng-model="selOrg" name="selOrg" id="selOrg" ng-change="changeScheduleOrganization(selOrg)" ng-options="org for org in orgs" ng-disabled="!orgMap">
 	          		<option value="">Organization</option>
 	        	</select>
-	        	<select ng-model="scheduledEnv" name="scheduledEnv" id="scheduledEnv" ng-options="envt for envt in scheduleEnvList">
+	        	<select ng-model="scheduledEnv" name="scheduledEnv" id="scheduledEnv" ng-options="envt for envt in scheduleEnvList" ng-disabled="!orgMap">
 	          		<option value="">Environment</option>
 	        	</select>
-	        	<select ng-model="periodicity" name="periodicity" id="periodicity" ng-options="periodicity for periodicity in periodicities">
+	        	<select ng-model="periodicity" name="periodicity" id="periodicity" ng-options="periodicity for periodicity in periodicities" ng-disabled="!orgMap">
 	          		<option value="">Periodicity</option>
 	        	</select>
 	      	</p>

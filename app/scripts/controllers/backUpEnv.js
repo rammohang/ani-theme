@@ -127,7 +127,7 @@ app.controller('BackUpEnvCtrl',function($scope, $location, $rootScope, $http, $l
 		};
 		var responsePromise = $http.post($rootScope.baseUrl+ "envbackup/save", reqObj, {});
 		responsePromise.success(function(data, status, headers, config) {
-			$scope.backupSchedules = $scope.getProcessedHistory(data);
+			$scope.addAlert({ type: 'success', msg: 'Saved Successfully!!' });
 		});
 		responsePromise.error(function(data, status, headers, config) {
 			$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });

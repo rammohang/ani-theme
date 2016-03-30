@@ -3,7 +3,7 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,$rootS
 	$controller('BackUpCommonCtrl', {$scope: $scope}); //inherits BackUpCommonCtrl controller
 	$scope.subsystem = $rootScope.apigeeSubsystems.resources.name;
 	$scope.subsystemid = $rootScope.apigeeSubsystems.resources.id;
-	$scope.showOrgBackupSchedules = false;
+	$scope.showOrgBackupSchedules = true;
 	$scope.pageHeading = 'Backup Resources';
 	
 	var commonConfiguration = {
@@ -98,5 +98,114 @@ app.controller('BackUpOrgResourceCtrl', function($scope, $http, $location,$rootS
 			$log.info('Modal dismissed at: ' + new Date());
 		});
 	};
+	
+	$scope.seeAllSchedules = function() {
+		$scope.showBackups = !$scope.showBackups;
+		$scope.getScheduledBackups();
+	}
+	
+	$scope.getScheduledBackups = function() {
+		var user = {
+				"email": $rootScope.userDetails.userName
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "resourcebackup/schduledbackups", user, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.backupSchedules = $scope.getProcessedHistory(data);
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
+		});
+	} 
+	
+	if($scope.showOrgBackupSchedules == true) {
+		$scope.getScheduledBackups();
+	}
+	
+	$scope.saveBackupSchedule = function(selOrg,periodicity) {
+		if(!selOrg || !periodicity) {
+			$scope.addAlert({ type: 'danger', msg: 'Please select Organization and periodicity' });
+			return;
+		}
+		var reqObj = {
+				"organization" : selOrg,
+				"periodicity" : periodicity
+		};
+		var responsePromise = $http.post($rootScope.baseUrl+ "resourcebackup/save", reqObj, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.addAlert({ type: 'success', msg: 'Saved Successfully!!' });
+		});
+		responsePromise.error(function(data, status, headers, config) {
+			$scope.addAlert({ type: 'danger', msg: 'We are facing issues. Please try again later!!' });
+		});
+	}
+	
+	$scope.deleteScheduleResource = function(id) {
+		for(var i = 0; i < $scope.backupSchedules.length; i++) {
+			if($scope.backupSchedules[i].id == id) {
+				$scope.backupSchedules[i].deleteLoader = true;
+				$scope.backupSchedules.splice(i, 1);
+				break;
+			}
+		}
+		var scheduledBackup = {
+				"id": id
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "resourcebackup/delete", scheduledBackup, {});
+		responsePromise.success(function(data, status, headers, config) {
+			$scope.scheduledOrg = '';
+			$scope.periodicity = '';
+			for(var i = 0; i < $scope.backupSchedules.length; i++) {
+				if($scope.backupSchedules[i].id == id) {
+					$scope.backupSchedules.splice(i, 1);
+					$scope.backupSchedules[i].deleteLoader = false;
+					break;
+				}
+			}
+		});
+		responsePromise.error(function(data, status, headers,
+				config) {
+			$scope.addAlert({ type: 'danger', msg: 'Failed to delete!!' });
+			for(var i = 0; i < $scope.backupSchedules.length; i++) {
+				if($scope.backupSchedules[i].id == id) {
+					$scope.backupSchedules.splice(i, 1);
+					$scope.backupSchedules[i].deleteLoader = false;
+					break;
+				}
+			}
+		});
+	}
+	
+	$scope.updateScheduleResource = function(organization,periodicity,id) {
+		for(var i=0;i<$scope.backupSchedules.length;i++) {
+			if(organization==$scope.backupSchedules[i].organization) {
+				$scope.backupSchedules[i].updateLoader = true;
+				break;
+			}
+		}
+		var scheduledBackup = {
+				"id": id,
+				"organization": organization,
+				"periodicity":periodicity
+		}
+		var responsePromise = $http.post($rootScope.baseUrl+ "resourcebackup/update", scheduledBackup, {});
+		responsePromise.success(function(data, status, headers, config) {
+			for(var i=0;i<$scope.backupSchedules.length;i++) {
+				if(organization==$scope.backupSchedules[i].organization) {
+					$scope.backupSchedules[i].periodicity = periodicity;
+					$scope.backupSchedules[i].updateLoader = false;
+					break;
+				}
+			}
+		});
+		responsePromise.error(function(data, status, headers,config) {
+			$scope.addAlert({ type: 'danger', msg: 'Failed to update!!' });
+			for(var i=0;i<$scope.backupSchedules.length;i++) {
+				if(organization==$scope.backupSchedules[i].organization) {
+					$scope.backupSchedules[i].updateLoader = false;
+					break;
+				}
+			}
+		});
+	}
 	
 });
